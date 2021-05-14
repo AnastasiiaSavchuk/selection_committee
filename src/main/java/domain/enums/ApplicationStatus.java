@@ -1,6 +1,6 @@
 package domain.enums;
 
-public enum EnrollmentStatus {
+public enum ApplicationStatus {
     NOT_PROCESSED,
     NOT_APPROVED,
     BUDGET_APPROVED,
