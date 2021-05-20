@@ -2,25 +2,42 @@ package domain;
 
 import domain.enums.ApplicationStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Application {
+public class Application implements Serializable {
+    private static final long serialVersionUID = 5874569853248012540L;
     private int id;
     private Applicant applicant;
     private Faculty faculty;
+    private int sumOfGrade;
     private ApplicationStatus applicationStatus;
     List<String> localList;
 
-    public static Application createApplication(Applicant applicant, Faculty faculty, ApplicationStatus applicationStatus, String[] locals) {
+    public static Application createApplication(int id, Applicant applicant, Faculty faculty, int sumOfGrade,
+                                                ApplicationStatus applicationStatus, List<String> locals) {
+        Application newApplication = new Application();
+        newApplication.id = id;
+        newApplication.applicant = applicant;
+        newApplication.faculty = faculty;
+        newApplication.sumOfGrade = sumOfGrade;
+        newApplication.applicationStatus = applicationStatus;
+        newApplication.localList = new ArrayList<>();
+        newApplication.localList.addAll(locals);
+        return newApplication;
+    }
+
+    public static Application createApplication(Applicant applicant, Faculty faculty, int sumOfGrade,
+                                                ApplicationStatus applicationStatus, List<String> locals) {
         Application newApplication = new Application();
         newApplication.applicant = applicant;
         newApplication.faculty = faculty;
+        newApplication.sumOfGrade = sumOfGrade;
         newApplication.applicationStatus = applicationStatus;
         newApplication.localList = new ArrayList<>();
-        newApplication.localList.addAll(Arrays.asList(locals));
+        newApplication.localList.addAll(locals);
         return newApplication;
     }
 
@@ -48,6 +65,14 @@ public class Application {
         this.faculty = faculty;
     }
 
+    public int getSumOfGrade() {
+        return sumOfGrade;
+    }
+
+    public void setSumOfGrade(int sumOfGrade) {
+        this.sumOfGrade = sumOfGrade;
+    }
+
     public ApplicationStatus getApplicationStatus() {
         return applicationStatus;
     }
@@ -69,22 +94,23 @@ public class Application {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return id == that.id && Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus;
+        return id == that.id && sumOfGrade == that.sumOfGrade && Objects.equals(applicant, that.applicant)
+                && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, applicant, faculty, applicationStatus);
+        return Objects.hash(id, applicant, faculty, sumOfGrade, applicationStatus);
     }
 
     @Override
     public String toString() {
-        return "Application{" +
-                "id=" + id +
-                ", applicant=" + applicant +
-                ", faculty=" + faculty +
-                ", applicationStatus=" + applicationStatus +
-                ", localList=" + localList +
-                '}';
+        return "Application : " +
+                "id : " + id +
+                ", applicant : " + applicant +
+                ", faculty : " + faculty +
+                ", sumOfGrade : " + sumOfGrade +
+                ", applicationStatus : " + applicationStatus +
+                ", localList : " + localList + ';';
     }
 }
