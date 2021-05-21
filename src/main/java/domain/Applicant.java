@@ -8,6 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Applicant entity.
+ *
+ * @author A.Savchuk.
+ */
 public class Applicant implements Serializable {
     private static final long serialVersionUID = 1569874589654123658L;
     private int id;
@@ -24,13 +29,53 @@ public class Applicant implements Serializable {
     private boolean isBlocked;
     List<Application> applicationList;
 
-    public static Applicant createApplicant(int id, String email, String password, Role role) {
+    public static Applicant createApplicant(int id, String email, String password, Role role, String firstName,
+                                            String middleName, String lastName, String city, String state,
+                                            String schoolName, byte[] certificate, boolean isBlocked) {
         Applicant newApplicant = new Applicant();
         newApplicant.id = id;
         newApplicant.email = email;
         newApplicant.password = password;
         newApplicant.role = role;
-        newApplicant.applicationList = new ArrayList<>();
+        newApplicant.firstName = firstName;
+        newApplicant.middleName = middleName;
+        newApplicant.lastName = lastName;
+        newApplicant.city = city;
+        newApplicant.region = state;
+        newApplicant.schoolName = schoolName;
+        newApplicant.certificate = certificate;
+        newApplicant.isBlocked = isBlocked;
+        return newApplicant;
+    }
+
+    public static Applicant createApplicant(int id, String email, String password, String firstName, String middleName,
+                                            String lastName, String city, String state, String schoolName, byte[] certificate) {
+        Applicant newApplicant = new Applicant();
+        newApplicant.id = id;
+        newApplicant.email = email;
+        newApplicant.password = password;
+        newApplicant.firstName = firstName;
+        newApplicant.middleName = middleName;
+        newApplicant.lastName = lastName;
+        newApplicant.city = city;
+        newApplicant.region = state;
+        newApplicant.schoolName = schoolName;
+        newApplicant.certificate = certificate;
+        return newApplicant;
+    }
+
+    public static Applicant createApplicant(int id, String firstName, String middleName, String lastName, String city,
+                                            String state, String schoolName, byte[] certificate, boolean isBlocked) {
+        Applicant newApplicant = new Applicant();
+        newApplicant.id = id;
+        newApplicant.firstName = firstName;
+        newApplicant.middleName = middleName;
+        newApplicant.lastName = lastName;
+        newApplicant.city = city;
+        newApplicant.region = state;
+        newApplicant.schoolName = schoolName;
+        newApplicant.certificate = certificate;
+        newApplicant.isBlocked = isBlocked;
         return newApplicant;
     }
 
@@ -39,44 +84,14 @@ public class Applicant implements Serializable {
         newApplicant.email = email;
         newApplicant.password = password;
         newApplicant.role = role;
-        newApplicant.applicationList = new ArrayList<>();
         return newApplicant;
     }
 
-    public static Applicant createApplicant(int id, String email, Role role, String name, String middleName, String lastName,
-                                            String city, String state, String school, byte[] certificate, boolean isBlocked,
-                                            List<Application> applications) {
+    public static Applicant createApplicant(int id, String firstName,  String lastName) {
         Applicant newApplicant = new Applicant();
         newApplicant.id = id;
-        newApplicant.email = email;
-        newApplicant.role = role;
-        newApplicant.firstName = name;
-        newApplicant.middleName = middleName;
+        newApplicant.firstName = firstName;
         newApplicant.lastName = lastName;
-        newApplicant.city = city;
-        newApplicant.region = state;
-        newApplicant.schoolName = school;
-        newApplicant.certificate = certificate;
-        newApplicant.isBlocked = isBlocked;
-        newApplicant.applicationList = new ArrayList<>();
-        newApplicant.applicationList.addAll(applications);
-        return newApplicant;
-    }
-
-    public static Applicant createApplicant(Role role, String name, String middleName, String lastName, String city, String state,
-                                            String school, byte[] certificate, boolean isBlocked, List<Application> applications) {
-        Applicant newApplicant = new Applicant();
-        newApplicant.role = role;
-        newApplicant.firstName = name;
-        newApplicant.middleName = middleName;
-        newApplicant.lastName = lastName;
-        newApplicant.city = city;
-        newApplicant.region = state;
-        newApplicant.schoolName = school;
-        newApplicant.certificate = certificate;
-        newApplicant.isBlocked = isBlocked;
-        newApplicant.applicationList = new ArrayList<>();
-        newApplicant.applicationList.addAll(applications);
         return newApplicant;
     }
 
@@ -207,19 +222,20 @@ public class Applicant implements Serializable {
 
     @Override
     public String toString() {
-        return "Applicant : " +
-                "id : " + id +
-                ", email : " + email +
-                ", password : " + password +
-                ", role : " + role +
-                ", firstName : " + firstName +
-                ", middleName : " + middleName +
-                ", lastName : " + lastName +
-                ", city : " + city +
-                ", region : " + region +
-                ", schoolName : " + schoolName +
-                ", certificate : " + Arrays.toString(certificate) +
-                ", isBlocked : " + isBlocked +
-                ", applicationList : " + applicationList + ';';
+        return "Applicant{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", city='" + city + '\'' +
+                ", region='" + region + '\'' +
+                ", schoolName='" + schoolName + '\'' +
+                ", certificate=" + Arrays.toString(certificate) +
+                ", isBlocked=" + isBlocked +
+                ", applicationList=" + applicationList +
+                '}';
     }
 }

@@ -2,41 +2,48 @@ package domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Faculty entity.
+ *
+ * @author A.Savchuk.
+ */
 public class Faculty implements Serializable {
     private static final long serialVersionUID = 6985471254800359845L;
     private int id;
-    private String faculty;
     private int budgetQty;
     private int totalQty;
+    List<String> facultyList;
     private List<Subject> subjectList;
-    List<String> locales;
 
-    public static Faculty createFaculty(int id, String faculty, int budgetQty, int totalQty, List<Subject> subjects, String[] localesName) {
+    public static Faculty createFaculty(int id, int budgetQty, int totalQty, List<String> faculties) {
         Faculty newFaculty = new Faculty();
         newFaculty.id = id;
-        newFaculty.faculty = faculty;
         newFaculty.budgetQty = budgetQty;
         newFaculty.totalQty = totalQty;
-        newFaculty.subjectList = new ArrayList<>();
-        newFaculty.subjectList.addAll(subjects);
-        newFaculty.locales = new ArrayList<>();
-        newFaculty.locales.addAll(Arrays.asList(localesName));
+        newFaculty.facultyList = new ArrayList<>();
+        newFaculty.facultyList.addAll(faculties);
         return newFaculty;
     }
 
-    public static Faculty createFaculty(String faculty, int budgetQty, int totalQty, List<Subject> subjects, String[] localesName) {
+    public static Faculty createFaculty(int id, List<String> faculties) {
         Faculty newFaculty = new Faculty();
-        newFaculty.faculty = faculty;
+        newFaculty.id = id;
+        newFaculty.facultyList = new ArrayList<>();
+        newFaculty.facultyList.addAll(faculties);
+        return newFaculty;
+    }
+
+    public static Faculty createFaculty(List<String> faculties, int budgetQty, int totalQty, List<Subject> subjects) {
+        Faculty newFaculty = new Faculty();
+        newFaculty.facultyList = new ArrayList<>();
+        newFaculty.facultyList.addAll(faculties);
         newFaculty.budgetQty = budgetQty;
         newFaculty.totalQty = totalQty;
         newFaculty.subjectList = new ArrayList<>();
         newFaculty.subjectList.addAll(subjects);
-        newFaculty.locales = new ArrayList<>();
-        newFaculty.locales.addAll(Arrays.asList(localesName));
         return newFaculty;
     }
 
@@ -46,14 +53,6 @@ public class Faculty implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getFaculty() {
-        return faculty;
-    }
-
-    public void setFaculty(String faculty) {
-        this.faculty = faculty;
     }
 
     public int getBudgetQty() {
@@ -72,6 +71,14 @@ public class Faculty implements Serializable {
         this.totalQty = totalQty;
     }
 
+    public List<String> getFacultyList() {
+        return facultyList;
+    }
+
+    public void setFacultyList(List<String> facultyList) {
+        this.facultyList = facultyList;
+    }
+
     public List<Subject> getSubjectList() {
         return subjectList;
     }
@@ -80,36 +87,27 @@ public class Faculty implements Serializable {
         this.subjectList = subjectList;
     }
 
-    public List<String> getLocales() {
-        return locales;
-    }
-
-    public void setLocales(List<String> locales) {
-        this.locales = locales;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Faculty faculty1 = (Faculty) o;
-        return id == faculty1.id && budgetQty == faculty1.budgetQty && totalQty == faculty1.totalQty
-                && Objects.equals(faculty, faculty1.faculty) && Objects.equals(subjectList, faculty1.subjectList);
+        Faculty faculty = (Faculty) o;
+        return id == faculty.id && budgetQty == faculty.budgetQty && totalQty == faculty.totalQty && Objects.equals(facultyList, faculty.facultyList) && Objects.equals(subjectList, faculty.subjectList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, faculty, budgetQty, totalQty, subjectList);
+        return Objects.hash(id, budgetQty, totalQty, facultyList, subjectList);
     }
 
     @Override
     public String toString() {
-        return "Faculty : " +
-                "id : " + id +
-                ", faculty : " + faculty +
-                ", budgetQty : " + budgetQty +
-                ", totalQty : " + totalQty +
-                ", subjectList : " + subjectList +
-                ", locales : " + locales + ';';
+        return "Faculty{" +
+                "id=" + id +
+                ", budgetQty=" + budgetQty +
+                ", totalQty=" + totalQty +
+                ", facultyList=" + facultyList +
+                ", subjectList=" + subjectList +
+                '}';
     }
 }

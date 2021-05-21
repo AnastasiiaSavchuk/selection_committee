@@ -1,4 +1,4 @@
-package util;
+package sql;
 
 import org.apache.log4j.Logger;
 
@@ -6,8 +6,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * DB manager. Works with MySQL DB.
@@ -61,6 +60,32 @@ public class DBManager {
     }
 
     /**
+     * Close the given prepare statement.
+     *
+     * @param ps is a prepared statement to be closed.
+     */
+    public void close(PreparedStatement ps) {
+        try {
+            ps.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Close the given result set.
+     *
+     * @param rs is a result set to be closed.
+     */
+    public void close(ResultSet rs) {
+        try {
+            rs.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Rollbacks and close the given connection.
      *
      * @param connection Connection to be rollbacks and closed.
@@ -72,5 +97,22 @@ public class DBManager {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public Connection getConnectionWithDriverManager() {
+        Connection con = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/selection_committee?user=root&password=140418nD&serverTimezone=UTC");
+            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            con.setAutoCommit(false);
+        } catch (SQLException e) {
+            logger.debug("getConnectionWithDriverManager --> " + "after connection", e);
+        }
+        return con;
     }
 }

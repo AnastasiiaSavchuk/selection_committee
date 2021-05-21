@@ -3,10 +3,14 @@ package domain;
 import domain.enums.ApplicationStatus;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Application entity.
+ *
+ * @author A.Savchuk.
+ */
 public class Application implements Serializable {
     private static final long serialVersionUID = 5874569853248012540L;
     private int id;
@@ -14,30 +18,26 @@ public class Application implements Serializable {
     private Faculty faculty;
     private int sumOfGrade;
     private ApplicationStatus applicationStatus;
-    List<String> localList;
+    private List<Grade> gradesList;
 
     public static Application createApplication(int id, Applicant applicant, Faculty faculty, int sumOfGrade,
-                                                ApplicationStatus applicationStatus, List<String> locals) {
+                                                ApplicationStatus applicationStatus) {
         Application newApplication = new Application();
         newApplication.id = id;
         newApplication.applicant = applicant;
         newApplication.faculty = faculty;
         newApplication.sumOfGrade = sumOfGrade;
         newApplication.applicationStatus = applicationStatus;
-        newApplication.localList = new ArrayList<>();
-        newApplication.localList.addAll(locals);
         return newApplication;
     }
 
     public static Application createApplication(Applicant applicant, Faculty faculty, int sumOfGrade,
-                                                ApplicationStatus applicationStatus, List<String> locals) {
+                                                ApplicationStatus applicationStatus) {
         Application newApplication = new Application();
         newApplication.applicant = applicant;
         newApplication.faculty = faculty;
         newApplication.sumOfGrade = sumOfGrade;
         newApplication.applicationStatus = applicationStatus;
-        newApplication.localList = new ArrayList<>();
-        newApplication.localList.addAll(locals);
         return newApplication;
     }
 
@@ -81,12 +81,12 @@ public class Application implements Serializable {
         this.applicationStatus = applicationStatus;
     }
 
-    public List<String> getLocalList() {
-        return localList;
+    public List<Grade> getGradesList() {
+        return gradesList;
     }
 
-    public void setLocalList(List<String> localList) {
-        this.localList = localList;
+    public void setGradesList(List<Grade> gradesList) {
+        this.gradesList = gradesList;
     }
 
     @Override
@@ -94,23 +94,23 @@ public class Application implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return id == that.id && sumOfGrade == that.sumOfGrade && Objects.equals(applicant, that.applicant)
-                && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus;
+        return id == that.id && sumOfGrade == that.sumOfGrade && Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus && Objects.equals(gradesList, that.gradesList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, applicant, faculty, sumOfGrade, applicationStatus);
+        return Objects.hash(id, applicant, faculty, sumOfGrade, applicationStatus, gradesList);
     }
 
     @Override
     public String toString() {
-        return "Application : " +
-                "id : " + id +
-                ", applicant : " + applicant +
-                ", faculty : " + faculty +
-                ", sumOfGrade : " + sumOfGrade +
-                ", applicationStatus : " + applicationStatus +
-                ", localList : " + localList + ';';
+        return "Application{" +
+                "id=" + id +
+                ", applicant=" + applicant +
+                ", faculty=" + faculty +
+                ", sumOfGrade=" + sumOfGrade +
+                ", applicationStatus=" + applicationStatus +
+                ", gradesList=" + gradesList +
+                '}';
     }
 }

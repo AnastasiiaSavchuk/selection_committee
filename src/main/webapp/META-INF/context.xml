@@ -39,7 +39,7 @@ Data source and connection pool configuration
               type="javax.sql.DataSource"
               maxActive="100" maxIdle="30" maxWait="10000"
               username="root" password="140418nD"
-              driverClassName="com.mysql.jdbc.Driver"
+              driverClassName="com.mysql.cj.jdbc.Driver"
               defaultAutoCommit="false"
               defaultTransactionIsolation="READ_COMMITTED"
               url="jdbc:mysql://localhost:3306/selection_committee?serverTimezone=UTC&amp;useSSL=false&amp;user=root&amp;password=140418nD&amp;useEncoding=true&amp;characterEncoding=UTF-8"/>

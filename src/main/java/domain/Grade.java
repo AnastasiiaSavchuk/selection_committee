@@ -3,7 +3,11 @@ package domain;
 import java.io.Serializable;
 import java.util.Objects;
 
-
+/**
+ * Grade entity.
+ *
+ * @author A.Savchuk.
+ */
 public class Grade implements Serializable {
     private static final long serialVersionUID = 6478965852012365048L;
     private int id;
@@ -64,9 +68,10 @@ public class Grade implements Serializable {
 
     @Override
     public String toString() {
-        return "Grade : " +
-                "id : " + id +
-                ", subject : " + subject +
-                ", grade : " + grade + ';';
+        return "Grade{" +
+                "id=" + id +
+                ", subject=" + subject +
+                ", grade=" + grade +
+                '}';
     }
 }

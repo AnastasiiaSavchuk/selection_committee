@@ -16,7 +16,7 @@ VALUES ('English', 'en'),
 CREATE TABLE IF NOT EXISTS role
 (
     id   INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    role VARCHAR(45)
+    role VARCHAR(45) UNIQUE
 );
 
 INSERT INTO role(role)
@@ -73,38 +73,6 @@ VALUES (1, 'Anastasiia', 'Andriivna', 'Osadchuk', 'Kropyvnytskyi', 'Kirovohrad r
        (10, 'Catherine', 'Abdulovna', 'Kuznetsova', 'Sumy', 'Sumy region', 'Lyceum №65', '', 0),
        (11, 'Inna', 'Mykolayivna', 'Rosinkova', 'Dnipropetrovsk', 'Dnipropetrovsk region', 'School №92', '', 0);
 
-CREATE TABLE IF NOT EXISTS faculty
-(
-    id         INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    budget_qty INT NOT NULL,
-    total_qty  INT NOT NULL
-);
-
-INSERT INTO faculty(budget_qty, total_qty)
-VALUES (7, 15),
-       (8, 15),
-       (5, 10),
-       (3, 8);
-
-CREATE TABLE IF NOT EXISTS faculty_translation
-(
-    faculty_id  INT           NOT NULL,
-    language_id INT           NOT NULL,
-    faculty     NVARCHAR(120) NOT NULL,
-    FOREIGN KEY (faculty_id) REFERENCES faculty (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (language_id) REFERENCES language (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-INSERT INTO faculty_translation(faculty_id, language_id, faculty)
-VALUES (1, 1, 'Faculty of Electronics and computer technologies'),
-       (1, 2, 'Факультет електроніки та комп’ютерних технологій'),
-       (2, 1, 'Faculty of Foreign Languages'),
-       (2, 2, 'Факультет іноземних мов'),
-       (1, 1, 'Faculty of Applied Mathematics and Informatics'),
-       (3, 2, 'Факультет прикладної математики та інформатики'),
-       (1, 1, 'Faculty of Financial Management and Business'),
-       (4, 2, 'Факультет управління фінансами та бізнесу');
-
 CREATE TABLE IF NOT EXISTS subject
 (
     id            INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -122,7 +90,7 @@ CREATE TABLE IF NOT EXISTS subject_translation
 (
     subject_id  INT           NOT NULL,
     language_id INT           NOT NULL,
-    subject     NVARCHAR(120) NOT NULL,
+    subject     NVARCHAR(120) NOT NULL UNIQUE,
     FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (language_id) REFERENCES language (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -138,6 +106,39 @@ VALUES (1, 1, 'Maths'),
        (4, 2, 'Українська мова'),
        (5, 1, 'History'),
        (5, 2, 'Історія');
+
+
+CREATE TABLE IF NOT EXISTS faculty
+(
+    id         INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    budget_qty INT NOT NULL,
+    total_qty  INT NOT NULL
+);
+
+INSERT INTO faculty(budget_qty, total_qty)
+VALUES (7, 15),
+       (8, 15),
+       (5, 10),
+       (3, 8);
+
+CREATE TABLE IF NOT EXISTS faculty_translation
+(
+    faculty_id  INT           NOT NULL,
+    language_id INT           NOT NULL,
+    faculty     NVARCHAR(120) NOT NULL UNIQUE,
+    FOREIGN KEY (faculty_id) REFERENCES faculty (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (language_id) REFERENCES language (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO faculty_translation(faculty_id, language_id, faculty)
+VALUES (1, 1, 'Faculty of Electronics and Computer Technologies'),
+       (1, 2, 'Факультет електроніки та комп’ютерних технологій'),
+       (2, 1, 'Faculty of Foreign Languages'),
+       (2, 2, 'Факультет іноземних мов'),
+       (3, 1, 'Faculty of Applied Mathematics and Informatics'),
+       (3, 2, 'Факультет прикладної математики та інформатики'),
+       (4, 1, 'Faculty of Financial Management and Business'),
+       (4, 2, 'Факультет управління фінансами та бізнесу');
 
 CREATE TABLE IF NOT EXISTS faculty_subject
 (
@@ -161,13 +162,13 @@ VALUES (1, 1),
        (4, 4),
        (4, 5);
 
-CREATE TABLE IF NOT EXISTS applicationStatus
+CREATE TABLE IF NOT EXISTS application_status
 (
     id     INT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
     status VARCHAR(20) NOT NULL
 );
 
-INSERT INTO applicationStatus(status)
+INSERT INTO application_status(status)
 VALUES ('NOT_PROCESSED'),
        ('BLOCKED'),
        ('NOT_APPROVED'),
@@ -183,7 +184,7 @@ CREATE TABLE IF NOT EXISTS application
     sum_of_grades        INT,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (faculty_id) REFERENCES faculty (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (applicationStatus_id) REFERENCES applicationStatus (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (applicationStatus_id) REFERENCES application_status (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO application (user_id, faculty_id, applicationStatus_id, sum_of_grades)
@@ -275,14 +276,24 @@ VALUES (1, 195),
        (3, 145),
        (4, 180);
 
-
 CREATE TABLE IF NOT EXISTS application_grade
 (
     application_id INT NOT NULL,
-    grade_id       INT NOT NULL,
+    grade_id       INT NOT NULL UNIQUE,
     FOREIGN KEY (application_id) REFERENCES application (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (grade_id) REFERENCES grade (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TRIGGER application_grade_AFTER_INSERT
+    AFTER INSERT
+    ON application_grade
+    FOR EACH ROW
+    UPDATE application
+    SET sum_of_grades = (SELECT SUM(g.grade)
+                         FROM grade g
+                                  INNER JOIN application_grade ag ON ag.grade_id = g.id
+                                  INNER JOIN subject s ON s.id = g.subject_id
+                         WHERE ag.application_id = application.id);
 
 INSERT INTO application_grade(application_id, grade_id)
 VALUES (1, 1),
