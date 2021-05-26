@@ -11,7 +11,7 @@ public interface SubjectDao extends AbstractCRUDOperations<Subject> {
      *
      * @param subject is the subject to insert.
      */
-    void createSubject(Subject subject);
+    void createSubjectTranslation(Subject subject,List<String> locales);
 
     /**
      * Get the current list of all subject's details from DB by faculty id.
@@ -26,5 +26,5 @@ public interface SubjectDao extends AbstractCRUDOperations<Subject> {
      *
      * @param subject is the subject to update.
      */
-    void updateSubjectPassingGrade(Subject subject);
+    void updateSubjectTranslation(Subject subject, List<String> locales);
 }

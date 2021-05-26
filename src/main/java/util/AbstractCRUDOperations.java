@@ -14,9 +14,8 @@ public interface AbstractCRUDOperations<E> {
      * Insert the single entity into DB.
      *
      * @param e       is the object of type entity to insert.
-     * @param locales is the locales data.
      */
-    void create(E e, List<String> locales);
+    void create(E e);
 
     /**
      * Get the current list of all entities accounts details from DB.
@@ -30,18 +29,16 @@ public interface AbstractCRUDOperations<E> {
      * Get the entity details by id from DB.
      *
      * @param id      is the entity details id.
-     * @param locales is the locales data.
      * @return the single entity.
      */
-    E readById(int id, List<String> locales);
+    E readById(int id);
 
     /**
      * Updates the entity's details in the DB.
      *
      * @param e       is the entity to update.
-     * @param locales is the locales data.
      */
-    public void update(E e, List<String> locales);
+    public void update(E e);
 
     /**
      * Deletes the entity based on its identifier.

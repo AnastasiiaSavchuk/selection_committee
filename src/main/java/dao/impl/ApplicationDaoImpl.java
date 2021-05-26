@@ -25,7 +25,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
     private final ApplicationCreator mapper = new ApplicationCreator();
 
     @Override
-    public void create(Application application, List<String> locales) {
+    public void create(Application application) {
 //        Application application = null;
 //        Connection connection = null;
 //        PreparedStatement ps = null;
@@ -78,7 +78,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
     }
 
     @Override
-    public Application readById(int id, List<String> locales) {
+    public Application readById(int id) {
         Application application = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -91,8 +91,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
             if (rs.next()) {
                 application = mapper.mapRow(rs);
             }
-            Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(),
-                    new ArrayList<>(Arrays.asList("us", "uk")));
+            Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId());
             application.setFaculty(faculty);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
@@ -106,7 +105,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
     }
 
     @Override
-    public void update(Application application, List<String> locales) {
+    public void update(Application application) {
 //        Application application = null;
 //        Connection connection = null;
 //        PreparedStatement ps = null;

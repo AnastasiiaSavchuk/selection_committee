@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class ApplicantDaoImpl implements ApplicantDao {
     private static final Logger logger = Logger.getLogger(ApplicantDaoImpl.class);
-    private final ApplicantCreator mapper = new ApplicantCreator();
+    private final ApplicantCreator creator = new ApplicantCreator();
 
     @Override
     public void loginApplicant(String email, String password) {
@@ -39,7 +39,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public void create(Applicant applicant, List<String> locales) {
+    public void create(Applicant applicant) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -76,7 +76,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps = connection.prepareStatement(SQLConstants.GET_ALL_APPLICANT);
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicants.add(mapper.mapRow(rs));
+                applicants.add(creator.mapRow(rs));
             }
             logger.info("Received list of applicants");
         } catch (SQLException ex) {
@@ -91,7 +91,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public Applicant readById(int id, List<String> locales) {
+    public Applicant readById(int id) {
         Applicant applicant = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -102,7 +102,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicant = mapper.mapRow(rs);
+                applicant = creator.mapRow(rs);
             }
             logger.info("Received applicant by id: " + id + ", " + applicant);
         } catch (SQLException ex) {
@@ -144,7 +144,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public void update(Applicant applicant, List<String> locales) {
+    public void update(Applicant applicant) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {

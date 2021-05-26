@@ -20,10 +20,29 @@ import java.util.regex.Pattern;
 
 public class SubjectDaoImpl implements SubjectDao {
     private static final Logger logger = Logger.getLogger(ApplicantDaoImpl.class);
-    private final SubjectCreator mapper = new SubjectCreator();
+    private final SubjectCreator creator = new SubjectCreator();
 
     @Override
-    public void create(Subject subject, List<String> locales) {
+    public void create(Subject subject) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT);
+            ps.setInt(1, subject.getPassingGrade());
+            ps.executeUpdate();
+            logger.info("Inserted subject's passing grade");
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to insert subject's passing grade: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+        }
+    }
+
+    @Override
+    public void createSubjectTranslation(Subject subject, List<String> locales) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -36,25 +55,6 @@ public class SubjectDaoImpl implements SubjectDao {
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
             logger.error("Failed to insert subject's details: " + ex.getMessage());
-        } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-        }
-    }
-
-    @Override
-    public void createSubject(Subject subject) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
-            ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT);
-            ps.setInt(1, subject.getPassingGrade());
-            ps.executeUpdate();
-            logger.info("Inserted subject's passing grade");
-        } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to insert subject's passing grade: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -76,7 +76,7 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setString(1, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next())
-                subjectList.add(mapper.mapRow(rs));
+                subjectList.add(creator.mapRow(rs));
             logger.info("Received list of subjects: " + subjectList);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
@@ -106,7 +106,7 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next())
-                subjectList.add(mapper.mapRow(rs));
+                subjectList.add(creator.mapRow(rs));
             logger.info("Received list of subjects by faculty_id: " + subjectList);
         } catch (SQLException ex) {
             logger.error("Failed to get list of subjects by faculty_id: " + ex.getMessage());
@@ -120,7 +120,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public Subject readById(int id, List<String> locales) {
+    public Subject readById(int id) {
         Subject subject = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -131,7 +131,7 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-                subject = mapper.mapRow(rs);
+                subject = creator.mapRow(rs);
             }
             logger.info("Received subject by id: " + id + ", " + subject);
         } catch (SQLException ex) {
@@ -146,7 +146,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void updateSubjectPassingGrade(Subject subject) {
+    public void update(Subject subject) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -155,7 +155,7 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setInt(1, subject.getPassingGrade());
             ps.setInt(2, subject.getId());
             ps.executeUpdate();
-            logger.info("Updated subject's passing grade: " + subject.getPassingGrade());
+            logger.info("Updated subject's passing grade");
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
             logger.error("Failed to update subject's passing grade: " + ex.getMessage());
@@ -166,7 +166,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void update(Subject subject, List<String> locales) {
+    public void updateSubjectTranslation(Subject subject, List<String> locales) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -188,7 +188,7 @@ public class SubjectDaoImpl implements SubjectDao {
                 ps.executeUpdate();
             }
             ps.executeUpdate();
-            logger.info("Updated subject's details: " + subject);
+            logger.info("Updated subject's details");
         } catch (
                 SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);

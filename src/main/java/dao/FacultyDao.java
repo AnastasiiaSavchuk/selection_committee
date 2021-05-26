@@ -3,13 +3,15 @@ package dao;
 import domain.Faculty;
 import util.AbstractCRUDOperations;
 
+import java.util.List;
+
 public interface FacultyDao extends AbstractCRUDOperations<Faculty> {
     /**
      * Insert the faculty's details into DB.
      *
      * @param faculty is the faculty to insert.
      */
-    void createFaculty(Faculty faculty);
+    void createFacultyTranslation(Faculty faculty, List<String> locales);
 
     /**
      * Insert the subjects to the faculty in the DB.
@@ -23,5 +25,5 @@ public interface FacultyDao extends AbstractCRUDOperations<Faculty> {
      *
      * @param faculty is the faculty to update.
      */
-    void updateFaculty(Faculty faculty);
+    void updateFacultyTranslation(Faculty faculty,List<String> locales);
 }

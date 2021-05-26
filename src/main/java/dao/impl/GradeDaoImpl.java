@@ -7,7 +7,7 @@ import java.util.List;
 
 public class GradeDaoImpl implements GradleDao {
     @Override
-    public void create(Grade grade, List<String> locales) {
+    public void create(Grade grade) {
 
     }
 
@@ -17,12 +17,12 @@ public class GradeDaoImpl implements GradleDao {
     }
 
     @Override
-    public Grade readById(int id, List<String> locales) {
+    public Grade readById(int id) {
         return null;
     }
 
     @Override
-    public void update(Grade grade, List<String> locales) {
+    public void update(Grade grade) {
 
     }
 
