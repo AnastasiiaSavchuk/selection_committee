@@ -1,9 +1,5 @@
 import dao.*;
 import dao.impl.*;
-import domain.Applicant;
-import domain.Subject;
-
-import java.util.Arrays;
 
 public class Main {
 

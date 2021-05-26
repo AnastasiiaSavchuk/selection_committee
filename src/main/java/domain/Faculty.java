@@ -12,10 +12,10 @@ import java.util.Objects;
  */
 public class Faculty implements Serializable {
     private static final long serialVersionUID = 6985471254800359845L;
+    List<String> facultyList;
     private int id;
     private int budgetQty;
     private int totalQty;
-    List<String> facultyList;
     private List<Subject> subjectList;
 
     public static Faculty createFaculty(int id, int budgetQty, int totalQty, List<String> faculties) {

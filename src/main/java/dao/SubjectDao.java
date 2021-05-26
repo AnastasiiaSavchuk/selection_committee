@@ -15,7 +15,7 @@ public interface SubjectDao extends AbstractCRUDOperations<Subject> {
     void createSubjectTranslation(Subject subject, List<String> locales);
 
     /**
-     * Get the current list of all subjects account's details from DB by faculty id.
+     * Get the current list of all subject's details from DB by faculty id.
      *
      * @param locales is the locales data.
      * @returnList the list of subjects type.

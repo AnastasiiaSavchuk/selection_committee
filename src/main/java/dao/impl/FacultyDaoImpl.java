@@ -20,6 +20,11 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
+    public void createFacultyTranslation(Faculty faculty, List<String> locales) {
+
+    }
+
+    @Override
     public List<Faculty> readAll(List<String> locales) {
         return null;
     }
@@ -31,6 +36,11 @@ public class FacultyDaoImpl implements FacultyDao {
 
     @Override
     public void update(Faculty faculty, List<String> locales) {
+
+    }
+
+    @Override
+    public void updateFaculty(Faculty faculty) {
 
     }
 

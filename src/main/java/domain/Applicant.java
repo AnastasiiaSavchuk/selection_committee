@@ -3,7 +3,6 @@ package domain;
 import domain.enums.Role;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +14,7 @@ import java.util.Objects;
  */
 public class Applicant implements Serializable {
     private static final long serialVersionUID = 1569874589654123658L;
+    List<Application> applicationList;
     private int id;
     private String email;
     private String password;
@@ -27,7 +27,6 @@ public class Applicant implements Serializable {
     private String schoolName;
     private byte[] certificate;
     private boolean isBlocked;
-    List<Application> applicationList;
 
     public static Applicant createApplicant(int id, String email, String password, Role role, String firstName,
                                             String middleName, String lastName, String city, String state,
@@ -87,7 +86,7 @@ public class Applicant implements Serializable {
         return newApplicant;
     }
 
-    public static Applicant createApplicant(int id, String firstName,  String lastName) {
+    public static Applicant createApplicant(int id, String firstName, String lastName) {
         Applicant newApplicant = new Applicant();
         newApplicant.id = id;
         newApplicant.firstName = firstName;

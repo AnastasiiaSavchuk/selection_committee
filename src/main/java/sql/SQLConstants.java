@@ -60,7 +60,7 @@ public class SQLConstants {
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE f.id = ? GROUP BY f.id";
     public static final String GET_ALL_FACULTIES = "SELECT f.id, f.budget_qty, f.total_qty, ft.faculty " +
-            "FROM faculty f, faculty_translation ft"+
+            "FROM faculty f, faculty_translation ft" +
             "INNER JOIN language l ON ft.language_id = l.id " +
             "WHERE f.id = ft.faculty_id AND l.lang_code = ?";
     public static final String UPDATE_FACULTY = "UPDATE faculty SET  budget_qty = ?, total_qty = ? WHERE id = ?";

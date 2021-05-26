@@ -1,7 +1,7 @@
 package dao;
 
-import util.AbstractCRUDOperations;
 import domain.Grade;
+import util.AbstractCRUDOperations;
 
 public interface GradleDao extends AbstractCRUDOperations<Grade> {
 }
