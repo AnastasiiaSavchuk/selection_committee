@@ -2,6 +2,7 @@ package dao.impl;
 
 import dao.ApplicantDao;
 import domain.Applicant;
+import domain.Application;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
 import sql.DBManager;
@@ -23,7 +24,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_USER_FIELDS);
             ps.setString(1, email);
             ps.setString(2, password);
@@ -43,7 +44,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_FULL_FIELDS);
             ps.setInt(1, applicant.getId());
             ps.setString(2, applicant.getFirstName());
@@ -67,18 +68,24 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
     @Override
     public List<Applicant> readAll(List<String> locales) {
-        List<Applicant> applicants = new ArrayList<>();
+        List<Applicant> applicantList = new ArrayList<>();
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.GET_ALL_APPLICANT);
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicants.add(creator.mapRow(rs));
+                applicantList.add(creator.mapRow(rs));
             }
-            logger.info("Received list of applicants");
+
+            if (applicantList.size() > 0) {
+                for (Applicant applicant : applicantList) {
+                    applicant.setApplicationList(new ApplicationDaoImpl().readApplicationsByUserId(Objects.requireNonNull(applicant).getId(), locales));
+                }
+            }
+            logger.info("Received list of applicants:" + applicantList);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
             logger.error("Failed to get list of applicants: " + ex.getMessage());
@@ -87,23 +94,26 @@ public class ApplicantDaoImpl implements ApplicantDao {
             DBManager.getInstance().close(Objects.requireNonNull(ps));
             DBManager.getInstance().close(Objects.requireNonNull(rs));
         }
-        return applicants;
+        return applicantList;
     }
 
     @Override
-    public Applicant readById(int id) {
+    public Applicant readById(int id, List<String> locales) {
         Applicant applicant = null;
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICANT_BY_ID);
             ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
                 applicant = creator.mapRow(rs);
             }
+
+            List<Application> applications = new ApplicationDaoImpl().readApplicationsByUserId(Objects.requireNonNull(applicant).getId(), locales);
+            applicant.setApplicationList(applications);
             logger.info("Received applicant by id: " + id + ", " + applicant);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
@@ -123,13 +133,15 @@ public class ApplicantDaoImpl implements ApplicantDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICANT_BY_LOGIN);
             ps.setString(1, login);
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicant = Applicant.createApplicant(rs.getString(SQLFields.APPLICANT_EMAIL),
-                        rs.getString(SQLFields.APPLICANT_PASSWORD), Role.valueOf(rs.getString(SQLFields.USER_ROLE)));
+                applicant = new Applicant();
+                applicant.setEmail(rs.getString(SQLFields.APPLICANT_EMAIL));
+                applicant.setPassword(rs.getString(SQLFields.APPLICANT_PASSWORD));
+                applicant.setRole(Role.valueOf(rs.getString(SQLFields.USER_ROLE)));
             }
             logger.info("Received applicant by login: " + login + ", " + applicant);
         } catch (SQLException ex) {
@@ -148,7 +160,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICANT);
             ps.setString(1, applicant.getEmail());
             ps.setString(2, applicant.getPassword());
@@ -176,7 +188,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICANT_BY_ADMIN);
             ps.setInt(1, isBlocked ? 1 : 0);
             ps.setInt(2, id);
@@ -196,7 +208,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnection();
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.DELETE_APPLICANT);
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -217,6 +229,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
         @Override
         public Applicant mapRow(ResultSet rs) {
+            Applicant applicant = new Applicant();
             byte[] certificate = null;
             try {
                 Blob blob = rs.getBlob(SQLFields.APPLICANT_CERTIFICATE);
@@ -224,22 +237,22 @@ public class ApplicantDaoImpl implements ApplicantDao {
                     int blobLength = (int) blob.length();
                     certificate = blob.getBytes(1, blobLength);
                 }
-                return Applicant.createApplicant(rs.getInt(SQLFields.APPLICANT_ID),
-                        rs.getString(SQLFields.APPLICANT_EMAIL),
-                        rs.getString(SQLFields.APPLICANT_PASSWORD),
-                        Role.valueOf((rs.getInt(SQLFields.APPLICANT_ROLE) == 1 ? "ADMIN" : "USER")),
-                        rs.getString(SQLFields.APPLICANT_FIRST_NAME),
-                        rs.getString(SQLFields.APPLICANT_MIDDLE_NAME),
-                        rs.getString(SQLFields.APPLICANT_LAST_NAME),
-                        rs.getString(SQLFields.APPLICANT_CITY),
-                        rs.getString(SQLFields.APPLICANT_REGION),
-                        rs.getString(SQLFields.APPLICANT_SCHOOL_NAME),
-                        certificate,
-                        (rs.getInt(SQLFields.APPLICANT_IS_BLOCKED) != 0));
+                applicant.setId(rs.getInt(SQLFields.APPLICANT_ID));
+                applicant.setEmail(rs.getString(SQLFields.APPLICANT_EMAIL));
+                applicant.setPassword(rs.getString(SQLFields.APPLICANT_PASSWORD));
+                applicant.setRole(Role.valueOf((rs.getInt(SQLFields.APPLICANT_ROLE) == 1 ? "ADMIN" : "USER")));
+                applicant.setFirstName(rs.getString(SQLFields.APPLICANT_FIRST_NAME));
+                applicant.setMiddleName(rs.getString(SQLFields.APPLICANT_MIDDLE_NAME));
+                applicant.setLastName(rs.getString(SQLFields.APPLICANT_LAST_NAME));
+                applicant.setCity(rs.getString(SQLFields.APPLICANT_CITY));
+                applicant.setRegion(rs.getString(SQLFields.APPLICANT_REGION));
+                applicant.setSchoolName(rs.getString(SQLFields.APPLICANT_SCHOOL_NAME));
+                applicant.setCertificate(certificate);
+                applicant.setBlocked(rs.getInt(SQLFields.APPLICANT_IS_BLOCKED) != 0);
             } catch (SQLException ex) {
                 logger.error("Failed to get and map applicant from DB: " + ex.getMessage());
             }
-            return null;
+            return applicant;
         }
     }
 }

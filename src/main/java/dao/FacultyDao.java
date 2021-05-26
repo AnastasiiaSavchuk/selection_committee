@@ -3,27 +3,25 @@ package dao;
 import domain.Faculty;
 import util.AbstractCRUDOperations;
 
-import java.util.List;
-
 public interface FacultyDao extends AbstractCRUDOperations<Faculty> {
     /**
-     * Insert the faculty's details into DB.
+     * Insert faculty's details into DB.
      *
-     * @param faculty is the faculty to insert.
+     * @param faculty entity to insert.
      */
-    void createFacultyTranslation(Faculty faculty, List<String> locales);
+    void createFacultyTranslation(Faculty faculty);
 
     /**
-     * Insert the subjects to the faculty in the DB.
+     * Insert subjects to the faculty in the DB.
      *
-     * @param faculty is the faculty to insert.
+     * @param faculty entity to insert.
      */
     void createFacultySubject(Faculty faculty);
 
     /**
-     * Updates the faculty's details in the DB.
+     * Update faculty's details in the DB.
      *
-     * @param faculty is the faculty to update.
+     * @param faculty entity to update.
      */
-    void updateFacultyTranslation(Faculty faculty,List<String> locales);
+    void updateFacultyTranslation(Faculty faculty);
 }

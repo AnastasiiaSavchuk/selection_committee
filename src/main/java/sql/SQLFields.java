@@ -15,20 +15,19 @@ public class SQLFields {
     public static final String APPLICANT_IS_BLOCKED = "is_blocked";
     public static final String APPLICANT_ROLE = "role_id";
     public static final String USER_ROLE = "role";
-    //application
-    public static final String APPLICATION_ID = "id";
-    public static final String APPLICATION_SUM_OF_GRADES = "sum_of_grades";
-    public static final String STATUS_ID = "id";
-    public static final String STATUS = "status";
+    //subject
+    public static final String SUBJECT_ID = "id";
+    public static final String SUBJECT_PASSING_GRADE = "passing_grade";
+    public static final String SUBJECT = "subject";
     //faculty
     public static final String FACULTY_ID = "id";
     public static final String FACULTY = "faculty";
     public static final String FACULTY_BUDGET_QTY = "budget_qty";
     public static final String FACULTY_TOTAL_QTY = "total_qty";
-    //subject
-    public static final String SUBJECT_ID = "id";
-    public static final String SUBJECT_PASSING_GRADE = "passing_grade";
-    public static final String SUBJECT = "subject";
+    //application
+    public static final String APPLICATION_ID = "id";
+    public static final String APPLICATION_SUM_OF_GRADES = "sum_of_grades";
+    public static final String STATUS_ID = "applicationStatus_id";
     //grade
     public static final String GRADE_ID = "id";
     public static final String GRADE = "grade";

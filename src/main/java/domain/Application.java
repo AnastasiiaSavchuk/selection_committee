@@ -16,30 +16,9 @@ public class Application implements Serializable {
     private int id;
     private Applicant applicant;
     private Faculty faculty;
-    private int sumOfGrade;
+    private int sumOfGrades;
     private ApplicationStatus applicationStatus;
     private List<Grade> gradesList;
-
-    public static Application createApplication(int id, Applicant applicant, Faculty faculty, int sumOfGrade,
-                                                ApplicationStatus applicationStatus) {
-        Application newApplication = new Application();
-        newApplication.id = id;
-        newApplication.applicant = applicant;
-        newApplication.faculty = faculty;
-        newApplication.sumOfGrade = sumOfGrade;
-        newApplication.applicationStatus = applicationStatus;
-        return newApplication;
-    }
-
-    public static Application createApplication(Applicant applicant, Faculty faculty, int sumOfGrade,
-                                                ApplicationStatus applicationStatus) {
-        Application newApplication = new Application();
-        newApplication.applicant = applicant;
-        newApplication.faculty = faculty;
-        newApplication.sumOfGrade = sumOfGrade;
-        newApplication.applicationStatus = applicationStatus;
-        return newApplication;
-    }
 
     public int getId() {
         return id;
@@ -65,12 +44,12 @@ public class Application implements Serializable {
         this.faculty = faculty;
     }
 
-    public int getSumOfGrade() {
-        return sumOfGrade;
+    public int getSumOfGrades() {
+        return sumOfGrades;
     }
 
-    public void setSumOfGrade(int sumOfGrade) {
-        this.sumOfGrade = sumOfGrade;
+    public void setSumOfGrades(int sumOfGrades) {
+        this.sumOfGrades = sumOfGrades;
     }
 
     public ApplicationStatus getApplicationStatus() {
@@ -94,12 +73,13 @@ public class Application implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return id == that.id && sumOfGrade == that.sumOfGrade && Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus && Objects.equals(gradesList, that.gradesList);
+        return id == that.id && sumOfGrades == that.sumOfGrades && Objects.equals(applicant, that.applicant) &&
+                Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus && Objects.equals(gradesList, that.gradesList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, applicant, faculty, sumOfGrade, applicationStatus, gradesList);
+        return Objects.hash(id, applicant, faculty, sumOfGrades, applicationStatus, gradesList);
     }
 
     @Override
@@ -108,7 +88,7 @@ public class Application implements Serializable {
                 "id=" + id +
                 ", applicant=" + applicant +
                 ", faculty=" + faculty +
-                ", sumOfGrade=" + sumOfGrade +
+                ", sumOfGrades=" + sumOfGrades +
                 ", applicationStatus=" + applicationStatus +
                 ", gradesList=" + gradesList +
                 '}';

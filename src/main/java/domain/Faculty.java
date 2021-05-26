@@ -1,7 +1,6 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,40 +11,11 @@ import java.util.Objects;
  */
 public class Faculty implements Serializable {
     private static final long serialVersionUID = 6985471254800359845L;
-    List<String> facultyList;
     private int id;
     private int budgetQty;
     private int totalQty;
+    private List<String> facultyList;
     private List<Subject> subjectList;
-
-    public static Faculty createFaculty(int id, int budgetQty, int totalQty, List<String> faculties) {
-        Faculty newFaculty = new Faculty();
-        newFaculty.id = id;
-        newFaculty.budgetQty = budgetQty;
-        newFaculty.totalQty = totalQty;
-        newFaculty.facultyList = new ArrayList<>();
-        newFaculty.facultyList.addAll(faculties);
-        return newFaculty;
-    }
-
-    public static Faculty createFaculty(int id, List<String> faculties) {
-        Faculty newFaculty = new Faculty();
-        newFaculty.id = id;
-        newFaculty.facultyList = new ArrayList<>();
-        newFaculty.facultyList.addAll(faculties);
-        return newFaculty;
-    }
-
-    public static Faculty createFaculty(List<String> faculties, int budgetQty, int totalQty, List<Subject> subjects) {
-        Faculty newFaculty = new Faculty();
-        newFaculty.facultyList = new ArrayList<>();
-        newFaculty.facultyList.addAll(faculties);
-        newFaculty.budgetQty = budgetQty;
-        newFaculty.totalQty = totalQty;
-        newFaculty.subjectList = new ArrayList<>();
-        newFaculty.subjectList.addAll(subjects);
-        return newFaculty;
-    }
 
     public int getId() {
         return id;
@@ -92,7 +62,8 @@ public class Faculty implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Faculty faculty = (Faculty) o;
-        return id == faculty.id && budgetQty == faculty.budgetQty && totalQty == faculty.totalQty && Objects.equals(facultyList, faculty.facultyList) && Objects.equals(subjectList, faculty.subjectList);
+        return id == faculty.id && budgetQty == faculty.budgetQty && totalQty == faculty.totalQty &&
+                Objects.equals(facultyList, faculty.facultyList) && Objects.equals(subjectList, faculty.subjectList);
     }
 
     @Override

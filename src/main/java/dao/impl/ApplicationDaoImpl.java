@@ -4,6 +4,7 @@ import dao.ApplicationDao;
 import domain.Applicant;
 import domain.Application;
 import domain.Faculty;
+import domain.Grade;
 import domain.enums.ApplicationStatus;
 import org.apache.log4j.Logger;
 import sql.DBManager;
@@ -22,63 +23,153 @@ import java.util.Objects;
 
 public class ApplicationDaoImpl implements ApplicationDao {
     private static final Logger logger = Logger.getLogger(ApplicationDaoImpl.class);
-    private final ApplicationCreator mapper = new ApplicationCreator();
+    private final ApplicationCreator creator = new ApplicationCreator();
 
     @Override
     public void create(Application application) {
-//        Application application = null;
-//        Connection connection = null;
-//        PreparedStatement ps = null;
-//        ResultSet rs = null;
-//        try {
-//            connection = DBManager.getInstance().getConnectionWithDriverManager();
-//            ps = connection.prepareStatement(SQLConstants.GET_APPLICATION_BY_ID);
-//            ps.setInt(1, id);
-//        } catch (SQLException ex) {
-//            DBManager.getInstance().rollbackAndClose(connection);
-//            logger.error("Cannot insert new applicant into DB: " + ex.getMessage());
-//        } finally {
-//            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-//            DBManager.getInstance().close(Objects.requireNonNull(ps));
-//        }
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION);
+            ps.setInt(1, application.getApplicant().getId());
+            ps.setInt(2, application.getFaculty().getId());
+            ps.setString(3, String.valueOf(application.getApplicationStatus()));
+            ps.executeUpdate();
+            logger.info("Inserted application");
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to insert application: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+        }
 
     }
 
     @Override
     public List<Application> readAll(List<String> locales) {
-        List<Application> applications = new ArrayList<>();
-        Application application = null;
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
-            if (locales.get(2).equals("APPLICANT")) {
-                logger.info("Get the applications by user_id");
-                ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_USER_ID);
-                ps.setInt(1, Integer.parseInt(locales.get(1)));
-                ps.setString(2, locales.get(0));
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    application = mapper.mapRow(rs);
-                }
-
-            } else {
-                logger.info("Get the applications by faculty_id");
-                ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_FACULTY_ID);
-            }
-        } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Cannot insert new applicant into DB: " + ex.getMessage());
-        } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-        }
+//        List<Application> applicationList = new ArrayList<>();
+//        Connection connection = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs = null;
+//        if (locales == null || locales.size() == 0)
+//            return applicationList;
+//
+//        try {
+//            connection = DBManager.getInstance().getConnectionWithDriverManager();
+//            if (locales.get(2).equals("APPLICANT")) {
+//                ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_USER_ID);
+//                ps.setInt(1, Integer.parseInt(locales.get(1)));
+//                ps.setString(2, locales.get(0));
+//                rs = ps.executeQuery();
+//                while (rs.next()) {
+//                    applicationList.add(creator.mapRow(rs));
+//                }
+//                logger.info("Received list of application by userId" + applicationList);
+//            } else {
+//                ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_FACULTY_ID);
+//                ps.setInt(1, Integer.parseInt(locales.get(1)));
+//                ps.setString(2, locales.get(0));
+//                rs = ps.executeQuery();
+//                while (rs.next())
+//                    applicationList.add(creator.mapRow(rs));
+//                logger.info("Received list of application by facultyId: " + applicationList);
+//            }
+//
+//            if (applicationList.size() > 0) {
+//                for (Application application : applicationList) {
+//                    application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
+//                    application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            DBManager.getInstance().rollbackAndClose(connection);
+//            logger.error("Failed to get list of application: " + ex.getMessage());
+//        } finally {
+//            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+//            DBManager.getInstance().close(Objects.requireNonNull(ps));
+//            DBManager.getInstance().close(Objects.requireNonNull(rs));
+//        }
         return null;
     }
 
     @Override
-    public Application readById(int id) {
+    public List<Application> readApplicationsByUserId(int userId, List<String> locales) {
+        List<Application> applicationList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        if (locales == null || locales.size() == 0)
+            return applicationList;
+
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_USER_ID);
+            ps.setInt(1, userId);
+            ps.setString(2, locales.get(0));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                applicationList.add(creator.mapRow(rs));
+            }
+
+            if (applicationList.size() > 0) {
+                for (Application application : applicationList) {
+                    application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
+                    application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
+                }
+            }
+            logger.info("Received list of application by userId" + applicationList);
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to get list of application: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DBManager.getInstance().close(Objects.requireNonNull(rs));
+        }
+        return applicationList;
+    }
+
+    @Override
+    public List<Application> readApplicationByFacultyId(int facultyId, List<String> locales) {
+        List<Application> applicationList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        if (locales == null || locales.size() == 0)
+            return applicationList;
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_FACULTY_ID);
+            ps.setInt(1, facultyId);
+            ps.setString(2, locales.get(0));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                applicationList.add(creator.mapRow(rs));
+            }
+
+            if (applicationList.size() > 0) {
+                for (Application application : applicationList) {
+                    application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
+                    application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
+                }
+            }
+            logger.info("Received list of application by facultyId: " + applicationList);
+        } catch (
+                SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to get list of application by facultyId: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DBManager.getInstance().close(Objects.requireNonNull(rs));
+        }
+        return applicationList;
+    }
+
+    @Override
+    public Application readById(int id, List<String> locales) {
         Application application = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -87,15 +178,20 @@ public class ApplicationDaoImpl implements ApplicationDao {
             connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICATION_BY_ID);
             ps.setInt(1, id);
+            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
-                application = mapper.mapRow(rs);
+                application = creator.mapRow(rs);
             }
-            Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId());
+
+            Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales);
             application.setFaculty(faculty);
+            List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales);
+            application.setGradesList(gradeList);
+            logger.info("Received application by id: " + application);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Cannot read application by id from DB: " + ex.getMessage());
+            logger.error("Failed to get application by id: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -106,61 +202,68 @@ public class ApplicationDaoImpl implements ApplicationDao {
 
     @Override
     public void update(Application application) {
-//        Application application = null;
-//        Connection connection = null;
-//        PreparedStatement ps = null;
-//        ResultSet rs = null;
-//        try {
-//            connection = DBManager.getInstance().getConnectionWithDriverManager();
-//            ps = connection.prepareStatement(SQLConstants.GET_APPLICATION_BY_ID);
-//            ps.setInt(1, id);
-//        } catch (SQLException ex) {
-//            DBManager.getInstance().rollbackAndClose(connection);
-//            logger.error("Cannot insert new applicant into DB: " + ex.getMessage());
-//        } finally {
-//            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-//            DBManager.getInstance().close(Objects.requireNonNull(ps));
-//        }
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICATION);
+            ps.setString(1, String.valueOf(application.getApplicationStatus()));
+            ps.setInt(2, application.getId());
+            ps.executeUpdate();
+            logger.info("Updated application status");
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to update application status: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+        }
     }
 
     @Override
     public void delete(int id) {
-//        Application application = null;
-//        Connection connection = null;
-//        PreparedStatement ps = null;
-//        ResultSet rs = null;
-//        try {
-//            connection = DBManager.getInstance().getConnectionWithDriverManager();
-//            ps = connection.prepareStatement(SQLConstants.GET_APPLICATION_BY_ID);
-//            ps.setInt(1, id);
-//        } catch (SQLException ex) {
-//            DBManager.getInstance().rollbackAndClose(connection);
-//            logger.error("Cannot insert new applicant into DB: " + ex.getMessage());
-//        } finally {
-//            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-//            DBManager.getInstance().close(Objects.requireNonNull(ps));
-//        }
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.DELETE_APPLICATION);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            logger.info("Deleted application by id: " + id);
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to delete application: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+        }
     }
 
     private static class ApplicationCreator implements EntityCreator<Application> {
 
         @Override
         public Application mapRow(ResultSet rs) {
+            Application application = new Application();
             try {
-                Applicant applicant = Applicant.createApplicant(rs.getInt(SQLFields.APPLICANT_ID),
-                        rs.getString(SQLFields.APPLICANT_LAST_NAME),
-                        rs.getString(SQLFields.APPLICANT_FIRST_NAME));
-                Faculty faculty = Faculty.createFaculty(rs.getInt(SQLFields.FACULTY_ID),
-                        Arrays.asList(rs.getString(SQLFields.FACULTY)));
-                return Application.createApplication(rs.getInt(SQLFields.APPLICATION_ID),
-                        applicant,
-                        faculty,
-                        rs.getInt(SQLFields.APPLICATION_SUM_OF_GRADES),
-                        ApplicationStatus.values()[rs.getInt(SQLFields.STATUS_ID)]);
+                Applicant applicant = new Applicant();
+                applicant.setId(rs.getInt(SQLFields.APPLICANT_ID));
+                applicant.setFirstName(rs.getString(SQLFields.APPLICANT_FIRST_NAME));
+                applicant.setLastName(rs.getString(SQLFields.APPLICANT_LAST_NAME));
+
+                Faculty faculty = new Faculty();
+                faculty.setId(rs.getInt(SQLFields.FACULTY_ID));
+                faculty.setFacultyList(Arrays.asList(rs.getString(SQLFields.FACULTY)));
+
+                application.setId(rs.getInt(SQLFields.APPLICATION_ID));
+                application.setApplicant(applicant);
+                application.setFaculty(faculty);
+                application.setSumOfGrades(rs.getInt(SQLFields.APPLICATION_SUM_OF_GRADES));
+                application.setApplicationStatus(ApplicationStatus.values()[rs.getInt(SQLFields.STATUS_ID)]);
             } catch (SQLException ex) {
-                logger.error("Cannot read and map application from DB: " + ex.getMessage());
+                logger.error("Couldn't to get and map application from DB: " + ex.getMessage());
             }
-            return null;
+            return application;
         }
     }
 }

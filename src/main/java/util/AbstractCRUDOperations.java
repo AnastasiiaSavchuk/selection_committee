@@ -5,45 +5,45 @@ import java.util.List;
 /**
  * Abstract CRUD operations for entities with DB.
  *
- * @param <E> is a type of entity.
+ * @param <E> type of entity.
  * @author A.Savchuk.
  */
 public interface AbstractCRUDOperations<E> {
 
     /**
-     * Insert the single entity into DB.
+     * Insert single entity into DB.
      *
-     * @param e       is the object of type entity to insert.
+     * @param e type of entity to insert.
      */
     void create(E e);
 
     /**
-     * Get the current list of all entities accounts details from DB.
+     * Get the current list of all entities from DB.
      *
-     * @param locales is the locales data.
-     * @return the list of objects type.
+     * @param locales locales data.
+     * @return list type of entities.
      */
     List<E> readAll(List<String> locales);
 
     /**
-     * Get the entity details by id from DB.
+     * Get entity details by id from DB.
      *
-     * @param id      is the entity details id.
-     * @return the single entity.
+     * @param id entity details id.
+     * @return single entity.
      */
-    E readById(int id);
+    E readById(int id, List<String> locales);
 
     /**
-     * Updates the entity's details in the DB.
+     * Update entity's details in the DB.
      *
-     * @param e       is the entity to update.
+     * @param e entity to update.
      */
     public void update(E e);
 
     /**
-     * Deletes the entity based on its identifier.
+     * Delete entity based from DB.
      *
-     * @param id is the entity details id.
+     * @param id entity details id.
      */
     void delete(int id);
 }

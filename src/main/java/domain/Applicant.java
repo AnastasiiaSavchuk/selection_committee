@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 public class Applicant implements Serializable {
     private static final long serialVersionUID = 1569874589654123658L;
-    List<Application> applicationList;
     private int id;
     private String email;
     private String password;
@@ -27,72 +26,7 @@ public class Applicant implements Serializable {
     private String schoolName;
     private byte[] certificate;
     private boolean isBlocked;
-
-    public static Applicant createApplicant(int id, String email, String password, Role role, String firstName,
-                                            String middleName, String lastName, String city, String state,
-                                            String schoolName, byte[] certificate, boolean isBlocked) {
-        Applicant newApplicant = new Applicant();
-        newApplicant.id = id;
-        newApplicant.email = email;
-        newApplicant.password = password;
-        newApplicant.role = role;
-        newApplicant.firstName = firstName;
-        newApplicant.middleName = middleName;
-        newApplicant.lastName = lastName;
-        newApplicant.city = city;
-        newApplicant.region = state;
-        newApplicant.schoolName = schoolName;
-        newApplicant.certificate = certificate;
-        newApplicant.isBlocked = isBlocked;
-        return newApplicant;
-    }
-
-    public static Applicant createApplicant(int id, String email, String password, String firstName, String middleName,
-                                            String lastName, String city, String state, String schoolName, byte[] certificate) {
-        Applicant newApplicant = new Applicant();
-        newApplicant.id = id;
-        newApplicant.email = email;
-        newApplicant.password = password;
-        newApplicant.firstName = firstName;
-        newApplicant.middleName = middleName;
-        newApplicant.lastName = lastName;
-        newApplicant.city = city;
-        newApplicant.region = state;
-        newApplicant.schoolName = schoolName;
-        newApplicant.certificate = certificate;
-        return newApplicant;
-    }
-
-    public static Applicant createApplicant(int id, String firstName, String middleName, String lastName, String city,
-                                            String state, String schoolName, byte[] certificate, boolean isBlocked) {
-        Applicant newApplicant = new Applicant();
-        newApplicant.id = id;
-        newApplicant.firstName = firstName;
-        newApplicant.middleName = middleName;
-        newApplicant.lastName = lastName;
-        newApplicant.city = city;
-        newApplicant.region = state;
-        newApplicant.schoolName = schoolName;
-        newApplicant.certificate = certificate;
-        newApplicant.isBlocked = isBlocked;
-        return newApplicant;
-    }
-
-    public static Applicant createApplicant(String email, String password, Role role) {
-        Applicant newApplicant = new Applicant();
-        newApplicant.email = email;
-        newApplicant.password = password;
-        newApplicant.role = role;
-        return newApplicant;
-    }
-
-    public static Applicant createApplicant(int id, String firstName, String lastName) {
-        Applicant newApplicant = new Applicant();
-        newApplicant.id = id;
-        newApplicant.firstName = firstName;
-        newApplicant.lastName = lastName;
-        return newApplicant;
-    }
+    List<Application> applicationList;
 
     public int getId() {
         return id;

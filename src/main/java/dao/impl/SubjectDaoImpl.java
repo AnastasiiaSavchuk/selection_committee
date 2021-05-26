@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class SubjectDaoImpl implements SubjectDao {
-    private static final Logger logger = Logger.getLogger(ApplicantDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(SubjectDaoImpl.class);
     private final SubjectCreator creator = new SubjectCreator();
 
     @Override
@@ -42,7 +42,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void createSubjectTranslation(Subject subject, List<String> locales) {
+    public void createSubjectTranslation(Subject subject) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -91,7 +91,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public List<Subject> getSubjectsByFacultyId(int facultyId, List<String> locales) {
+    public List<Subject> readSubjectsByFacultyId(int facultyId, List<String> locales) {
         List<Subject> subjectList = new ArrayList<>();
         Connection connection = null;
         PreparedStatement ps = null;
@@ -120,7 +120,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public Subject readById(int id) {
+    public Subject readById(int id, List<String> locales) {
         Subject subject = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -129,6 +129,7 @@ public class SubjectDaoImpl implements SubjectDao {
             connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.GET_SUBJECT_BY_ID);
             ps.setInt(1, id);
+            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
                 subject = creator.mapRow(rs);
@@ -166,7 +167,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void updateSubjectTranslation(Subject subject, List<String> locales) {
+    public void updateSubjectTranslation(Subject subject) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -225,14 +226,15 @@ public class SubjectDaoImpl implements SubjectDao {
 
         @Override
         public Subject mapRow(ResultSet rs) {
+            Subject subject = new Subject();
             try {
-                return Subject.createSubject(rs.getInt(SQLFields.SUBJECT_ID),
-                        rs.getInt(SQLFields.SUBJECT_PASSING_GRADE),
-                        Arrays.asList(rs.getString(SQLFields.SUBJECT).split(Pattern.quote("/"))));
+                subject.setId(rs.getInt(SQLFields.SUBJECT_ID));
+                subject.setPassingGrade(rs.getInt(SQLFields.SUBJECT_PASSING_GRADE));
+                subject.setSubjectList(Arrays.asList(rs.getString(SQLFields.SUBJECT).split(Pattern.quote("/"))));
             } catch (SQLException ex) {
                 logger.error("Couldn't get and map the subject from DB: " + ex.getMessage());
             }
-            return null;
+            return subject;
         }
     }
 }

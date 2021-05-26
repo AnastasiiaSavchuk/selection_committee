@@ -14,21 +14,6 @@ public class Grade implements Serializable {
     private Subject subject;
     private int grade;
 
-    public static Grade createGrade(int id, Subject subject, int grade) {
-        Grade newGrade = new Grade();
-        newGrade.id = id;
-        newGrade.subject = subject;
-        newGrade.grade = grade;
-        return newGrade;
-    }
-
-    public static Grade createGrade(Subject subject, int grade) {
-        Grade newGrade = new Grade();
-        newGrade.subject = subject;
-        newGrade.grade = grade;
-        return newGrade;
-    }
-
     public int getId() {
         return id;
     }

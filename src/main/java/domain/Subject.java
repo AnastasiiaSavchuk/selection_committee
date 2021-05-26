@@ -1,7 +1,6 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,36 +14,6 @@ public class Subject implements Serializable {
     private int id;
     private int passingGrade;
     private List<String> subjectList;
-
-    public static Subject createSubject(int id, int passingGrade, List<String> subjects) {
-        Subject newSubject = new Subject();
-        newSubject.id = id;
-        newSubject.passingGrade = passingGrade;
-        newSubject.subjectList = new ArrayList<>();
-        newSubject.subjectList.addAll(subjects);
-        return newSubject;
-    }
-
-    public static Subject createSubject(int id, int passingGrade) {
-        Subject newSubject = new Subject();
-        newSubject.id = id;
-        newSubject.passingGrade = passingGrade;
-        return newSubject;
-    }
-
-    public static Subject createSubject(int id, List<String> subjects) {
-        Subject newSubject = new Subject();
-        newSubject.id = id;
-        newSubject.subjectList = new ArrayList<>();
-        newSubject.subjectList.addAll(subjects);
-        return newSubject;
-    }
-
-    public static Subject createSubject(int passingGrade) {
-        Subject newSubject = new Subject();
-        newSubject.passingGrade = passingGrade;
-        return newSubject;
-    }
 
     public int getId() {
         return id;

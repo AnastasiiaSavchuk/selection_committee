@@ -43,7 +43,7 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void createFacultyTranslation(Faculty faculty, List<String> locales) {
+    public void createFacultyTranslation(Faculty faculty) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -67,8 +67,8 @@ public class FacultyDaoImpl implements FacultyDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
             for (Subject subject : faculty.getSubjectList()) {
-                connection = DBManager.getInstance().getConnectionWithDriverManager();
                 ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY_SUBJECT);
                 ps.setInt(1, faculty.getId());
                 ps.setInt(2, subject.getId());
@@ -98,8 +98,14 @@ public class FacultyDaoImpl implements FacultyDao {
             ps = connection.prepareStatement(SQLConstants.GET_ALL_FACULTIES);
             ps.setString(1, locales.get(0));
             rs = ps.executeQuery();
-            while (rs.next())
+            while (rs.next()) {
                 facultyList.add(creator.mapRow(rs));
+            }
+            if (facultyList.size() > 0) {
+                for (Faculty faculty : facultyList) {
+                    faculty.setSubjectList(new SubjectDaoImpl().readSubjectsByFacultyId(Objects.requireNonNull(faculty).getId(), locales));
+                }
+            }
             logger.info("Received list of faculties: " + facultyList);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
@@ -114,7 +120,7 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public Faculty readById(int id) {
+    public Faculty readById(int id, List<String> locales) {
         Faculty faculty = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -123,10 +129,13 @@ public class FacultyDaoImpl implements FacultyDao {
             connection = DBManager.getInstance().getConnectionWithDriverManager();
             ps = connection.prepareStatement(SQLConstants.GET_FACULTY_BY_ID);
             ps.setInt(1, id);
+            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
                 faculty = creator.mapRow(rs);
             }
+            List<Subject> subjects = new SubjectDaoImpl().readSubjectsByFacultyId(Objects.requireNonNull(faculty).getId(), locales);
+            faculty.setSubjectList(subjects);
             logger.info("Received faculty by id: " + id + ", " + faculty);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
@@ -145,7 +154,7 @@ public class FacultyDaoImpl implements FacultyDao {
         PreparedStatement ps = null;
         try {
             connection = DBManager.getInstance().getConnectionWithDriverManager();
-            ps = connection.prepareStatement(SQLConstants.UPDATE_SUBJECT);
+            ps = connection.prepareStatement(SQLConstants.UPDATE_FACULTY);
             ps.setInt(1, faculty.getBudgetQty());
             ps.setInt(2, faculty.getTotalQty());
             ps.setInt(3, faculty.getId());
@@ -161,7 +170,7 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void updateFacultyTranslation(Faculty faculty, List<String> locales) {
+    public void updateFacultyTranslation(Faculty faculty) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -187,7 +196,7 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (
                 SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to update subject's details: " + ex.getMessage());
+            logger.error("Failed to update faculty's details: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -196,22 +205,37 @@ public class FacultyDaoImpl implements FacultyDao {
 
     @Override
     public void delete(int id) {
-
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            ps = connection.prepareStatement(SQLConstants.DELETE_FACULTY);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            logger.info("Deleted faculty by id: " + id);
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(connection);
+            logger.error("Failed to delete faculty: " + ex.getMessage());
+        } finally {
+            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
+            DBManager.getInstance().close(Objects.requireNonNull(ps));
+        }
     }
 
     private static class FacultyCreator implements EntityCreator<Faculty> {
 
         @Override
         public Faculty mapRow(ResultSet rs) {
+            Faculty faculty = new Faculty();
             try {
-                return Faculty.createFaculty(rs.getInt(SQLFields.FACULTY_ID),
-                        rs.getInt(SQLFields.FACULTY_BUDGET_QTY),
-                        rs.getInt(SQLFields.FACULTY_TOTAL_QTY),
-                        Arrays.asList(rs.getString(SQLFields.FACULTY).split("/")));
+                faculty.setId(rs.getInt(SQLFields.FACULTY_ID));
+                faculty.setBudgetQty(rs.getInt(SQLFields.FACULTY_BUDGET_QTY));
+                faculty.setTotalQty(rs.getInt(SQLFields.FACULTY_TOTAL_QTY));
+                faculty.setFacultyList(Arrays.asList(rs.getString(SQLFields.FACULTY).split("/")));
             } catch (SQLException ex) {
                 logger.error("Couldn't read and map the faculty from DB: " + ex.getMessage());
             }
-            return null;
+            return faculty;
         }
     }
 }

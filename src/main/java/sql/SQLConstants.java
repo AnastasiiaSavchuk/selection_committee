@@ -39,11 +39,11 @@ public class SQLConstants {
     public static final String GET_SUBJECTS_BY_FACULTY_ID = "SELECT s.id, s.passing_grade, st.subject " +
             "FROM faculty f, faculty_subject fs, subject s, subject_translation st, language l " +
             "WHERE f.id = fs.faculty_id AND fs.subject_id = s.id AND s.id = st.subject_id AND st.language_id = l.id AND f.id = ? AND l.lang_code = ?";
-    public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject " +
+    public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, st.subject " +
             "FROM subject s " +
             "INNER JOIN subject_translation st ON s.id = st.subject_id " +
             "INNER JOIN language l ON l.id = st.language_id " +
-            "WHERE s.id = ? GROUP BY s.id";
+            "WHERE s.id = ? AND l.lang_code = ?";
     public static final String UPDATE_SUBJECT = "UPDATE subject SET passing_grade = ? WHERE id = ?";
     public static final String UPDATE_SUBJECT_TRANSLATION = "UPDATE subject_translation SET subject = ? " +
             "WHERE subject_id = ? AND language_id = ?";
@@ -54,39 +54,39 @@ public class SQLConstants {
             "VALUES ((SELECT MAX(id) FROM faculty), (SELECT id FROM language WHERE lang_code = 'en'), ?), " +
             "((SELECT MAX(id) FROM faculty), (SELECT id FROM language WHERE lang_code = 'uk'), ?)";
     public static final String INSERT_FACULTY_SUBJECT = "INSERT INTO faculty_subject(faculty_id, subject_id) VALUES (?, ?)";
-    public static final String GET_FACULTY_BY_ID = "SELECT f.id, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as name " +
-            "FROM faculty f " +
-            "INNER JOIN faculty_translation ft ON f.id = ft.faculty_id " +
-            "INNER JOIN language l ON l.id = ft.language_id " +
-            "WHERE f.id = ? GROUP BY f.id";
     public static final String GET_ALL_FACULTIES = "SELECT f.id, f.budget_qty, f.total_qty, ft.faculty " +
-            "FROM faculty f, faculty_translation ft" +
+            "FROM faculty f, faculty_translation ft " +
             "INNER JOIN language l ON ft.language_id = l.id " +
             "WHERE f.id = ft.faculty_id AND l.lang_code = ?";
+    public static final String GET_FACULTY_BY_ID = "SELECT f.id, f.budget_qty, f.total_qty, ft.faculty " +
+            "FROM faculty f " +
+            "INNER JOIN faculty_translation ft ON f.id = ft.faculty_id " +
+            "INNER JOIN language l ON ft.language_id = l.id " +
+            "WHERE f.id = ? AND l.lang_code = ?";
     public static final String UPDATE_FACULTY = "UPDATE faculty SET  budget_qty = ?, total_qty = ? WHERE id = ?";
     public static final String UPDATE_FACULTY_TRANSLATION = "UPDATE faculty_translation SET faculty = ? " +
             "WHERE faculty_id = ? AND language_id = ?";
     public static final String DELETE_FACULTY = "DELETE FROM faculty WHERE id = ?";
     //application
-    public static final String INSERT_APPLICATION = "INSERT INTO application (user_id, faculty_id, sum_of_grades, applicationStatus_id) " +
-            "SELECT ?, ?, ?, id FROM application_status WHERE status = ?";
+    public static final String INSERT_APPLICATION = "INSERT INTO application (user_id, faculty_id, applicationStatus_id) " +
+            "SELECT ?, ?, id FROM application_status WHERE status = ?";
     public static final String GET_APPLICATION_BY_ID = "SELECT ap.id, ap.user_id, a.first_name, a.last_name, ap.faculty_id, " +
             "ft.faculty, ap.sum_of_grades, ap.applicationStatus_id " +
             "FROM application ap, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
-            "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.id = ? and l.lang_code = ?";
+            "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.id = ? AND l.lang_code = ?";
     public static final String GET_APPLICATIONS_BY_USER_ID = "SELECT ap.id, ap.user_id, a.first_name, a.last_name, " +
             "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.applicationStatus_id " +
             "FROM application ap, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
-            "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.user_id = ? AND l.lang_code = '?'";
-    public static final String GET_APPLICATIONS_BY_FACULTY_ID = "SELECT ap.id, ap.user_id, a.last_name, a.first_name, " +
+            "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.user_id = ? AND l.lang_code = ?";
+    public static final String GET_APPLICATIONS_BY_FACULTY_ID = "SELECT ap.id, ap.user_id, a.first_name, a.last_name, " +
             "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.applicationStatus_id " +
             "FROM application ap, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.faculty_id = ? AND l.lang_code = ?";
-    public static final String UPDATE_APPLICATION = "UPDATE application SET applicationStatus_id = (SELECT id FROM application_status WHERE status = ?) " +
-            "WHERE id = ?";
+    public static final String UPDATE_APPLICATION = "UPDATE application SET applicationStatus_id = " +
+            "(SELECT id FROM application_status WHERE status = ?) WHERE id = ?";
     public static final String DELETE_APPLICATION = "DELETE FROM application WHERE id = ?";
     //grade
     public static final String INSERT_GRADE = "INSERT INTO grade(subject_id, grade)VALUES(?, ?)";
