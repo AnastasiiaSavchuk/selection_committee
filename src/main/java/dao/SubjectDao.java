@@ -10,9 +10,8 @@ public interface SubjectDao extends AbstractCRUDOperations<Subject> {
      * Insert the subject's details into DB.
      *
      * @param subject is the subject to insert.
-     * @param locales is the locales data.
      */
-    void createSubjectTranslation(Subject subject, List<String> locales);
+    void createSubject(Subject subject);
 
     /**
      * Get the current list of all subject's details from DB by faculty id.

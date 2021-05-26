@@ -28,10 +28,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setString(1, email);
             ps.setString(2, password);
             ps.execute();
-            logger.info("Inserted the user with login: " + email);
+            logger.info("Inserted user with login: " + email);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't insert new user: " + ex.getMessage());
+            logger.error("Failed to insert new user: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -55,10 +55,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setBytes(8, applicant.getCertificate());
             ps.setInt(9, applicant.isBlocked() ? 1 : 0);
             ps.executeUpdate();
-            logger.info("Inserted the applicant's details with id: " + applicant.getId());
+            logger.info("Inserted applicant's details with id: " + applicant.getId());
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't insert the applicant's details: " + ex.getMessage());
+            logger.error("Failed to insert applicant's details: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -78,10 +78,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             while (rs.next()) {
                 applicants.add(mapper.mapRow(rs));
             }
-            logger.info("Received the list of applicants");
+            logger.info("Received list of applicants");
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't get the list of applicants: " + ex.getMessage());
+            logger.error("Failed to get list of applicants: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -104,10 +104,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             while (rs.next()) {
                 applicant = mapper.mapRow(rs);
             }
-            logger.info("Received the applicant by id: " + id + ", " + applicant);
+            logger.info("Received applicant by id: " + id + ", " + applicant);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't read the applicant by id: " + ex.getMessage());
+            logger.error("Failed to get applicant by id: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -131,10 +131,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 applicant = Applicant.createApplicant(rs.getString(SQLFields.APPLICANT_EMAIL),
                         rs.getString(SQLFields.APPLICANT_PASSWORD), Role.valueOf(rs.getString(SQLFields.USER_ROLE)));
             }
-            logger.info("Received the applicant by login: " + login + ", " + applicant);
+            logger.info("Received applicant by login: " + login + ", " + applicant);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't read the applicant by login: " + ex.getMessage());
+            logger.error("Failed to get applicant by login: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -161,10 +161,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setBytes(9, applicant.getCertificate());
             ps.setInt(10, applicant.getId());
             ps.executeUpdate();
-            logger.info("Updated the applicant's details: " + applicant);
+            logger.info("Updated applicant's details: " + applicant);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't update the applicant's details: " + ex.getMessage());
+            logger.error("Failed to update applicant's details: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -181,10 +181,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setInt(1, isBlocked ? 1 : 0);
             ps.setInt(2, id);
             ps.executeUpdate();
-            logger.info("Updated the applicant's blocked status");
+            logger.info("Updated applicant's blocked status");
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't update the applicant's blocked status: " + ex.getMessage());
+            logger.error("Failed to update applicant's blocked status: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -200,10 +200,10 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps = connection.prepareStatement(SQLConstants.DELETE_APPLICANT);
             ps.setInt(1, id);
             ps.executeUpdate();
-            logger.info("Deleted the applicant by id: " + id);
+            logger.info("Deleted applicant by id: " + id);
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Couldn't delete the applicant: " + ex.getMessage());
+            logger.error("Failed to delete applicant: " + ex.getMessage());
         } finally {
             DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
             DBManager.getInstance().close(Objects.requireNonNull(ps));
@@ -237,7 +237,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
                         certificate,
                         (rs.getInt(SQLFields.APPLICANT_IS_BLOCKED) != 0));
             } catch (SQLException ex) {
-                logger.error("Couldn't read and map the applicant from DB: " + ex.getMessage());
+                logger.error("Failed to get and map applicant from DB: " + ex.getMessage());
             }
             return null;
         }
