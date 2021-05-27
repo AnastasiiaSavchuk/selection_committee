@@ -1,5 +1,6 @@
 package util;
 
+
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public interface AbstractCRUDOperations<E> {
      *
      * @param e type of entity to insert.
      */
-    void create(E e);
+    boolean create(E e);
 
     /**
      * Get the current list of all entities from DB.
@@ -38,7 +39,7 @@ public interface AbstractCRUDOperations<E> {
      *
      * @param e entity to update.
      */
-    public void update(E e);
+    void update(E e);
 
     /**
      * Delete entity based from DB.

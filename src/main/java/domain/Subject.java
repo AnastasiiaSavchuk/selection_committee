@@ -56,8 +56,8 @@ public class Subject implements Serializable {
     public String toString() {
         return "Subject{" +
                 "id=" + id +
+                ", subject=" + subjectList +
                 ", passingGrade=" + passingGrade +
-                ", subjectList=" + subjectList +
                 '}';
     }
 }

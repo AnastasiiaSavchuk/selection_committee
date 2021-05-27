@@ -1,5 +1,10 @@
 import dao.*;
 import dao.impl.*;
+import domain.*;
+import domain.enums.ApplicationStatus;
+import util.Helper;
+
+import java.util.Arrays;
 
 public class Main {
 
@@ -33,16 +38,16 @@ public class Main {
 //        applicant2.setRegion("Lviv region");
 //        applicant2.setSchoolName("School №92");
 //        applicant2.setCertificate(new byte[1]);
-
+//
 //        APPLICANT_DAO.loginApplicant("LOomova@gmail.com","123654");
 //        APPLICANT_DAO.create(applicant1);
-//       APPLICANT_DAO.readAll(Arrays.asList("en"));
+//        APPLICANT_DAO.readAll(Arrays.asList("en"));
 //        APPLICANT_DAO.readById(2, Arrays.asList("uk"));
 //        APPLICANT_DAO.readByLogin("admin@gmail.com");
 //        APPLICANT_DAO.update(applicant2);
 //        APPLICANT_DAO.updateByAdmin(12, true);
 //        APPLICANT_DAO.delete(12);
-//
+
 //        Subject subject1 = new Subject();
 //        subject1.setPassingGrade(155);
 //
@@ -77,7 +82,7 @@ public class Main {
 //
 //        Faculty faculty3 = new Faculty();
 //        faculty3.setId(5);
-//        faculty3.setSubjectList(Arrays.asList(SUBJECT_DAO.readById(2, Arrays.asList("en")), SUBJECT_DAO.readById(6, Arrays.asList("en"))));
+//        faculty3.setSubjectList(Arrays.asList(SUBJECT_DAO.readById(2, Arrays.asList("en")), SUBJECT_DAO.readById(5, Arrays.asList("en"))));
 //
 //        Faculty faculty4 = new Faculty();
 //        faculty4.setId(5);
@@ -122,7 +127,7 @@ public class Main {
 //
 //        GRADLE_DAO.create(grade1);
 //        GRADLE_DAO.createApplicationGrade(19, grade2);
-//       GRADLE_DAO.readGradesByApplicationId(1, Arrays.asList("uk"));
+//        GRADLE_DAO.readGradesByApplicationId(1, Arrays.asList("uk"));
 //        GRADLE_DAO.readById(15, Arrays.asList("uk"));
 //        GRADLE_DAO.delete(1);
     }

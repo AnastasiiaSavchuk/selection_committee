@@ -3,6 +3,8 @@ package dao;
 import domain.Applicant;
 import util.AbstractCRUDOperations;
 
+import java.sql.SQLException;
+
 public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
 
     /**
@@ -10,16 +12,17 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
      *
      * @param email    applicant's login.
      * @param password applicant's password.
+     * @return
      */
-    void loginApplicant(String email, String password);
+    Applicant loginApplicant(String email, String password);
 
     /**
      * Returns user by login.
      *
-     * @param login applicant's login.
+     * @param email applicant's login.
      * @return single applicant.
      */
-    Applicant readByLogin(String login);
+    Applicant readByEmail(String email) throws SQLException;
 
     /**
      * Update applicant's blocked status in the DB.

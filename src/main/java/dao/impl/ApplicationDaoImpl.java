@@ -23,74 +23,35 @@ import java.util.Objects;
 
 public class ApplicationDaoImpl implements ApplicationDao {
     private static final Logger logger = Logger.getLogger(ApplicationDaoImpl.class);
-    private final ApplicationCreator creator = new ApplicationCreator();
+    private static final DBManager DB_MANAGER = DBManager.getInstance();
+    private static final ApplicationCreator CREATOR = new ApplicationCreator();
 
     @Override
-    public void create(Application application) {
+    public boolean create(Application application) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION);
             ps.setInt(1, application.getApplicant().getId());
             ps.setInt(2, application.getFaculty().getId());
             ps.setString(3, String.valueOf(application.getApplicationStatus()));
             ps.executeUpdate();
             logger.info("Inserted application");
+            return true;
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert application: " + ex.getMessage());
+            return false;
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
 
     }
 
     @Override
     public List<Application> readAll(List<String> locales) {
-//        List<Application> applicationList = new ArrayList<>();
-//        Connection connection = null;
-//        PreparedStatement ps = null;
-//        ResultSet rs = null;
-//        if (locales == null || locales.size() == 0)
-//            return applicationList;
-//
-//        try {
-//            connection = DBManager.getInstance().getConnectionWithDriverManager();
-//            if (locales.get(2).equals("APPLICANT")) {
-//                ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_USER_ID);
-//                ps.setInt(1, Integer.parseInt(locales.get(1)));
-//                ps.setString(2, locales.get(0));
-//                rs = ps.executeQuery();
-//                while (rs.next()) {
-//                    applicationList.add(creator.mapRow(rs));
-//                }
-//                logger.info("Received list of application by userId" + applicationList);
-//            } else {
-//                ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_FACULTY_ID);
-//                ps.setInt(1, Integer.parseInt(locales.get(1)));
-//                ps.setString(2, locales.get(0));
-//                rs = ps.executeQuery();
-//                while (rs.next())
-//                    applicationList.add(creator.mapRow(rs));
-//                logger.info("Received list of application by facultyId: " + applicationList);
-//            }
-//
-//            if (applicationList.size() > 0) {
-//                for (Application application : applicationList) {
-//                    application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
-//                    application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            DBManager.getInstance().rollbackAndClose(connection);
-//            logger.error("Failed to get list of application: " + ex.getMessage());
-//        } finally {
-//            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-//            DBManager.getInstance().close(Objects.requireNonNull(ps));
-//            DBManager.getInstance().close(Objects.requireNonNull(rs));
-//        }
         return null;
     }
 
@@ -104,13 +65,13 @@ public class ApplicationDaoImpl implements ApplicationDao {
             return applicationList;
 
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_USER_ID);
             ps.setInt(1, userId);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicationList.add(creator.mapRow(rs));
+                applicationList.add(CREATOR.mapRow(rs));
             }
 
             if (applicationList.size() > 0) {
@@ -119,14 +80,14 @@ public class ApplicationDaoImpl implements ApplicationDao {
                     application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
                 }
             }
-            logger.info("Received list of application by userId" + applicationList);
+            logger.info("Received list of application by userId: " + userId);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to get list of application: " + ex.getMessage());
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get list of application by userId: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return applicationList;
     }
@@ -140,13 +101,13 @@ public class ApplicationDaoImpl implements ApplicationDao {
         if (locales == null || locales.size() == 0)
             return applicationList;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_FACULTY_ID);
             ps.setInt(1, facultyId);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicationList.add(creator.mapRow(rs));
+                applicationList.add(CREATOR.mapRow(rs));
             }
 
             if (applicationList.size() > 0) {
@@ -155,15 +116,14 @@ public class ApplicationDaoImpl implements ApplicationDao {
                     application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
                 }
             }
-            logger.info("Received list of application by facultyId: " + applicationList);
-        } catch (
-                SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            logger.info("Received list of application by facultyId: " + facultyId);
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of application by facultyId: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return applicationList;
     }
@@ -175,27 +135,27 @@ public class ApplicationDaoImpl implements ApplicationDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICATION_BY_ID);
             ps.setInt(1, id);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
-                application = creator.mapRow(rs);
+                application = CREATOR.mapRow(rs);
             }
 
             Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales);
             application.setFaculty(faculty);
             List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales);
             application.setGradesList(gradeList);
-            logger.info("Received application by id: " + application);
+            logger.info("Received application by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get application by id: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return application;
     }
@@ -206,18 +166,18 @@ public class ApplicationDaoImpl implements ApplicationDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICATION);
             ps.setString(1, String.valueOf(application.getApplicationStatus()));
             ps.setInt(2, application.getId());
             ps.executeUpdate();
             logger.info("Updated application status");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update application status: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -226,17 +186,17 @@ public class ApplicationDaoImpl implements ApplicationDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.DELETE_APPLICATION);
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted application by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete application: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 

@@ -14,7 +14,7 @@ public class SQLConstants {
             "a.first_name, a.middle_name, a.last_name, a.city, a.region, a.school_name, a.certificate, a.is_blocked " +
             "FROM user u INNER JOIN applicant a ON u.id = a.user_id, role r " +
             "WHERE u.role_id = r.id and u.id = ?";
-    public static final String GET_APPLICANT_BY_LOGIN = "SELECT u.id, u.email, u.password, r.role " +
+    public static final String GET_APPLICANT_BY_EMAIL = "SELECT u.id, u.email, u.password, r.role " +
             "FROM user u, role r " +
             "WHERE u.role_id = r.id AND u.email = ?";
     public static final String UPDATE_APPLICANT = "UPDATE user u, applicant a SET u.email = ?,u.password = ?, " +
@@ -89,10 +89,11 @@ public class SQLConstants {
             "(SELECT id FROM application_status WHERE status = ?) WHERE id = ?";
     public static final String DELETE_APPLICATION = "DELETE FROM application WHERE id = ?";
     //grade
-    public static final String INSERT_GRADE = "INSERT INTO grade(subject_id, grade)VALUES(?, ?)";
-    public static final String INSERT_APPLICATION_GRADE = "INSERT INTO application_grade(application_id, grade_id)VALUES(?, ?)";
+    public static final String INSERT_GRADE = "INSERT INTO grade(subject_id, grade) VALUES(?, ?)";
+    public static final String INSERT_APPLICATION_GRADE = "INSERT INTO application_grade(application_id, grade_id) VALUES (?, ?)";
     public static final String GET_GRADE_BY_ID = "SELECT g.id, s.id, st.subject, s.passing_grade, g.grade " +
-            "FROM grade g INNER JOIN subject s ON s.id = g.subject_id INNER JOIN subject_translation st ON st.subject_id = s.id " +
+            "FROM grade g INNER JOIN subject s ON s.id = g.subject_id " +
+            "INNER JOIN subject_translation st ON st.subject_id = s.id " +
             "INNER JOIN language la ON la.id = st.language_id " +
             "WHERE g.id = ? AND la.lang_code = ?";
     public static final String GET_GRADES_BY_APPLICATION_ID = "SELECT g.id, s.id as subj_id, st.subject, s.passing_grade, g.grade " +

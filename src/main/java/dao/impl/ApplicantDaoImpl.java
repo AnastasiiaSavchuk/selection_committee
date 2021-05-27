@@ -2,7 +2,6 @@ package dao.impl;
 
 import dao.ApplicantDao;
 import domain.Applicant;
-import domain.Application;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
 import sql.DBManager;
@@ -17,34 +16,46 @@ import java.util.Objects;
 
 public class ApplicantDaoImpl implements ApplicantDao {
     private static final Logger logger = Logger.getLogger(ApplicantDaoImpl.class);
-    private final ApplicantCreator creator = new ApplicantCreator();
+    private static final DBManager DB_MANAGER = DBManager.getInstance();
+    private static final ApplicantCreator CREATOR = new ApplicantCreator();
 
     @Override
-    public void loginApplicant(String email, String password) {
+    public Applicant loginApplicant(String email, String password) {
+        Applicant applicant = null;
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
-            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_USER_FIELDS);
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_USER_FIELDS, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, email);
             ps.setString(2, password);
-            ps.execute();
-            logger.info("Inserted user with login: " + email);
+            if (ps.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        applicant = new Applicant();
+                        applicant.setId(generatedKeys.getInt(1));
+                        applicant.setEmail(email);
+                        applicant.setRole(Role.USER);
+                        logger.info("Inserted applicant with login: " + email);
+                    }
+                }
+            }
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to insert new user: " + ex.getMessage());
+            logger.error("Failed to insert applicant: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
+        return applicant;
     }
 
     @Override
-    public void create(Applicant applicant) {
+    public boolean create(Applicant applicant) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_FULL_FIELDS);
             ps.setInt(1, applicant.getId());
             ps.setString(2, applicant.getFirstName());
@@ -57,12 +68,14 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setInt(9, applicant.isBlocked() ? 1 : 0);
             ps.executeUpdate();
             logger.info("Inserted applicant's details with id: " + applicant.getId());
+            return true;
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert applicant's details: " + ex.getMessage());
+            return false;
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -73,11 +86,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_ALL_APPLICANT);
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicantList.add(creator.mapRow(rs));
+                applicantList.add(CREATOR.mapRow(rs));
             }
 
             if (applicantList.size() > 0) {
@@ -85,14 +98,14 @@ public class ApplicantDaoImpl implements ApplicantDao {
                     applicant.setApplicationList(new ApplicationDaoImpl().readApplicationsByUserId(Objects.requireNonNull(applicant).getId(), locales));
                 }
             }
-            logger.info("Received list of applicants:" + applicantList);
+            logger.info("Received list of applicants");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of applicants: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return applicantList;
     }
@@ -104,38 +117,36 @@ public class ApplicantDaoImpl implements ApplicantDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICANT_BY_ID);
             ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
-                applicant = creator.mapRow(rs);
+                applicant = CREATOR.mapRow(rs);
             }
 
-            List<Application> applications = new ApplicationDaoImpl().readApplicationsByUserId(Objects.requireNonNull(applicant).getId(), locales);
-            applicant.setApplicationList(applications);
-            logger.info("Received applicant by id: " + id + ", " + applicant);
+            logger.info("Received applicant by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get applicant by id: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return applicant;
     }
 
     @Override
-    public Applicant readByLogin(String login) {
+    public Applicant readByEmail(String email) {
         Applicant applicant = null;
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
-            ps = connection.prepareStatement(SQLConstants.GET_APPLICANT_BY_LOGIN);
-            ps.setString(1, login);
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_APPLICANT_BY_EMAIL);
+            ps.setString(1, email);
             rs = ps.executeQuery();
             while (rs.next()) {
                 applicant = new Applicant();
@@ -143,14 +154,14 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 applicant.setPassword(rs.getString(SQLFields.APPLICANT_PASSWORD));
                 applicant.setRole(Role.valueOf(rs.getString(SQLFields.USER_ROLE)));
             }
-            logger.info("Received applicant by login: " + login + ", " + applicant);
+            logger.info("Received applicant by login: " + email);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get applicant by login: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return applicant;
     }
@@ -160,7 +171,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICANT);
             ps.setString(1, applicant.getEmail());
             ps.setString(2, applicant.getPassword());
@@ -173,13 +184,13 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setBytes(9, applicant.getCertificate());
             ps.setInt(10, applicant.getId());
             ps.executeUpdate();
-            logger.info("Updated applicant's details: " + applicant);
+            logger.info("Updated applicant's details");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update applicant's details: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -188,18 +199,18 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICANT_BY_ADMIN);
             ps.setInt(1, isBlocked ? 1 : 0);
             ps.setInt(2, id);
             ps.executeUpdate();
             logger.info("Updated applicant's blocked status");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update applicant's blocked status: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -208,17 +219,17 @@ public class ApplicantDaoImpl implements ApplicantDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.DELETE_APPLICANT);
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted applicant by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete applicant: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 

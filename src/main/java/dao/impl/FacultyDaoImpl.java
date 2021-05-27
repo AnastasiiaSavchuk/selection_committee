@@ -20,25 +20,28 @@ import java.util.Objects;
 
 public class FacultyDaoImpl implements FacultyDao {
     private static final Logger logger = Logger.getLogger(FacultyDaoImpl.class);
-    private static final FacultyCreator creator = new FacultyCreator();
+    private static final DBManager DB_MANAGER = DBManager.getInstance();
+    private static final FacultyCreator CREATOR = new FacultyCreator();
 
     @Override
-    public void create(Faculty faculty) {
+    public boolean create(Faculty faculty) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY);
             ps.setInt(1, faculty.getBudgetQty());
             ps.setInt(2, faculty.getTotalQty());
             ps.executeUpdate();
             logger.info("Inserted faculty");
+            return true;
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert faculty: " + ex.getMessage());
+            return false;
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -47,18 +50,18 @@ public class FacultyDaoImpl implements FacultyDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY_TRANSLATION);
             ps.setString(1, faculty.getFacultyList().get(0));
             ps.setString(2, faculty.getFacultyList().get(1));
             ps.executeUpdate();
-            logger.info("Inserted faculty's details");
+            logger.info("Inserted faculty's translation");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert faculty's details: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -67,7 +70,7 @@ public class FacultyDaoImpl implements FacultyDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             for (Subject subject : faculty.getSubjectList()) {
                 ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY_SUBJECT);
                 ps.setInt(1, faculty.getId());
@@ -76,11 +79,11 @@ public class FacultyDaoImpl implements FacultyDao {
             }
             logger.info("Inserted subjects to faculty");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert subjects to faculty: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -94,27 +97,21 @@ public class FacultyDaoImpl implements FacultyDao {
             return facultyList;
 
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_ALL_FACULTIES);
             ps.setString(1, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next()) {
-                facultyList.add(creator.mapRow(rs));
+                facultyList.add(CREATOR.mapRow(rs));
             }
-            if (facultyList.size() > 0) {
-                for (Faculty faculty : facultyList) {
-                    faculty.setSubjectList(new SubjectDaoImpl().readSubjectsByFacultyId(Objects.requireNonNull(faculty).getId(), locales));
-                }
-            }
-            logger.info("Received list of faculties: " + facultyList);
+            logger.info("Received list of faculties");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            ex.printStackTrace();
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of faculties: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return facultyList;
     }
@@ -126,24 +123,22 @@ public class FacultyDaoImpl implements FacultyDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_FACULTY_BY_ID);
             ps.setInt(1, id);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
-                faculty = creator.mapRow(rs);
+                faculty = CREATOR.mapRow(rs);
             }
-            List<Subject> subjects = new SubjectDaoImpl().readSubjectsByFacultyId(Objects.requireNonNull(faculty).getId(), locales);
-            faculty.setSubjectList(subjects);
-            logger.info("Received faculty by id: " + id + ", " + faculty);
+            logger.info("Received faculty by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get faculty by id: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return faculty;
     }
@@ -153,7 +148,7 @@ public class FacultyDaoImpl implements FacultyDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_FACULTY);
             ps.setInt(1, faculty.getBudgetQty());
             ps.setInt(2, faculty.getTotalQty());
@@ -161,11 +156,11 @@ public class FacultyDaoImpl implements FacultyDao {
             ps.executeUpdate();
             logger.info("Updated faculty");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update faculty: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -174,7 +169,7 @@ public class FacultyDaoImpl implements FacultyDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_FACULTY_TRANSLATION);
             for (int i = 0; i < faculty.getFacultyList().size(); i++) {
                 switch (i) {
@@ -188,18 +183,19 @@ public class FacultyDaoImpl implements FacultyDao {
                         ps.setInt(2, faculty.getId());
                         ps.setInt(3, 2);
                         break;
+                    default:
+                        break;
                 }
                 ps.executeUpdate();
             }
-            ps.executeUpdate();
-            logger.info("Updated faculty's details");
+            logger.info("Updated faculty's translation");
         } catch (
                 SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update faculty's details: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -208,17 +204,17 @@ public class FacultyDaoImpl implements FacultyDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.DELETE_FACULTY);
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted faculty by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete faculty: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 

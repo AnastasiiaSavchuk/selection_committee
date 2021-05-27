@@ -4,6 +4,7 @@ import domain.enums.Role;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -131,6 +132,8 @@ public class Applicant implements Serializable {
     public void setApplicationList(List<Application> applicationList) {
         this.applicationList = applicationList;
     }
+
+    public static Comparator<Applicant> COMPARE_BY_ID = Comparator.comparing(Applicant::getId);
 
     @Override
     public boolean equals(Object o) {

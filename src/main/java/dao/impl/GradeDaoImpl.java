@@ -1,7 +1,6 @@
 package dao.impl;
 
 import dao.GradleDao;
-import domain.Application;
 import domain.Grade;
 import domain.Subject;
 import org.apache.log4j.Logger;
@@ -22,52 +21,49 @@ import java.util.regex.Pattern;
 
 public class GradeDaoImpl implements GradleDao {
     private static final Logger logger = Logger.getLogger(GradeDaoImpl.class);
-    private final GradeCreator creator = new GradeCreator();
+    private static final DBManager DB_MANAGER = DBManager.getInstance();
+    private static final GradeCreator CREATOR = new GradeCreator();
 
     @Override
-    public void create(Grade grade) {
+    public boolean create(Grade grade) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_GRADE);
             ps.setInt(1, grade.getSubject().getId());
             ps.setInt(2, grade.getGrade());
             ps.executeUpdate();
             logger.info("Inserted grade");
+            return true;
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert applicant's details: " + ex.getMessage());
+            return false;
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
     @Override
-    public void createApplicationGrade(Application application) {
+    public void createApplicationGrade(int applicationId, Grade grade) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
-            for (Grade grade : application.getGradesList()) {
-                ps = connection.prepareStatement(SQLConstants.INSERT_GRADE);
-                ps.setInt(1, grade.getSubject().getId());
-                ps.setInt(2, grade.getGrade());
-                ps.executeUpdate();
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION_GRADE);
+            ps.setInt(1, applicationId);
+            ps.setInt(2, grade.getId());
+            ps.executeUpdate();
 
-                ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION_GRADE);
-                ps.setInt(1, application.getId());
-                ps.setInt(2, grade.getId());
-                ps.executeUpdate();
-            }
             logger.info("Inserted grades to application");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert grades to application: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -86,22 +82,22 @@ public class GradeDaoImpl implements GradleDao {
             return gradeList;
 
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_GRADES_BY_APPLICATION_ID);
             ps.setInt(1, applicationId);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next()) {
-                gradeList.add(creator.mapRow(rs));
+                gradeList.add(CREATOR.mapRow(rs));
             }
-            logger.info("Received list of grades by applicationId" + gradeList);
+            logger.info("Received list of grades by applicationId");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of grades by applicationId: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return gradeList;
     }
@@ -113,22 +109,22 @@ public class GradeDaoImpl implements GradleDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_GRADE_BY_ID);
             ps.setInt(1, id);
-            ps.setString(1, locales.get(0));
+            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
-                grade = creator.mapRow(rs);
+                grade = CREATOR.mapRow(rs);
             }
-            logger.info("Received grade by id: " + grade);
+            logger.info("Received grade by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get grade by id: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return grade;
     }
@@ -142,17 +138,17 @@ public class GradeDaoImpl implements GradleDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.DELETE_GRADE);
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted grade by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete grade: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 

@@ -50,7 +50,7 @@ FROM user u
 WHERE u.role_id = r.id
   and u.id = 12;
 
-# GET_APPLICANT_BY_LOGIN 
+# GET_APPLICANT_BY_EMAIL
 SELECT u.id, u.email, u.password, r.role
 FROM user u,
      role r
@@ -252,7 +252,7 @@ FROM application ap,
          INNER JOIN language l ON l.id = ft.language_id
 WHERE a.user_id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
-  AND ap.faculty_id = 1
+  AND ap.faculty_id = 4
   AND l.lang_code = 'uk';
 
 # UPDATE_APPLICATION 
@@ -276,7 +276,7 @@ VALUES (3, 196);
 
 # INSERT_APPLICATION_GRADE
 INSERT INTO application_grade(application_id, grade_id)
-VALUES (17, 59);
+VALUES (19, 59);
 INSERT INTO application_grade(application_id, grade_id)
 VALUES (18, 60);
 INSERT INTO application_grade(application_id, grade_id)

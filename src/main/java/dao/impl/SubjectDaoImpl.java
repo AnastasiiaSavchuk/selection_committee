@@ -20,24 +20,27 @@ import java.util.regex.Pattern;
 
 public class SubjectDaoImpl implements SubjectDao {
     private static final Logger logger = Logger.getLogger(SubjectDaoImpl.class);
-    private final SubjectCreator creator = new SubjectCreator();
+    private static final DBManager DB_MANAGER = DBManager.getInstance();
+    private static final SubjectCreator CREATOR = new SubjectCreator();
 
     @Override
-    public void create(Subject subject) {
+    public boolean create(Subject subject) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT);
             ps.setInt(1, subject.getPassingGrade());
             ps.executeUpdate();
-            logger.info("Inserted subject's passing grade");
+            logger.info("Inserted subject");
+            return true;
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to insert subject's passing grade: " + ex.getMessage());
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to insert subject: " + ex.getMessage());
+            return false;
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -46,18 +49,18 @@ public class SubjectDaoImpl implements SubjectDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT_TRANSLATION);
             ps.setString(1, subject.getSubjectList().get(0));
             ps.setString(2, subject.getSubjectList().get(1));
             ps.executeUpdate();
-            logger.info("Inserted subject's details");
+            logger.info("Inserted subject's translation");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to insert subject's details: " + ex.getMessage());
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to insert subject's translation: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -71,21 +74,20 @@ public class SubjectDaoImpl implements SubjectDao {
             return subjectList;
 
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_ALL_SUBJECTS);
             ps.setString(1, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next())
-                subjectList.add(creator.mapRow(rs));
-            logger.info("Received list of subjects: " + subjectList);
+                subjectList.add(CREATOR.mapRow(rs));
+            logger.info("Received list of subjects");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            ex.printStackTrace();
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of subjects: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return subjectList;
     }
@@ -100,21 +102,21 @@ public class SubjectDaoImpl implements SubjectDao {
             return subjectList;
 
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_SUBJECTS_BY_FACULTY_ID);
             ps.setInt(1, facultyId);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next())
-                subjectList.add(creator.mapRow(rs));
-            logger.info("Received list of subjects by faculty_id: " + subjectList);
+                subjectList.add(CREATOR.mapRow(rs));
+            logger.info("Received list of subjects by faculty_id: " + facultyId);
         } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of subjects by faculty_id: " + ex.getMessage());
-            DBManager.getInstance().rollbackAndClose(connection);
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return subjectList;
     }
@@ -126,22 +128,22 @@ public class SubjectDaoImpl implements SubjectDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_SUBJECT_BY_ID);
             ps.setInt(1, id);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
-                subject = creator.mapRow(rs);
+                subject = CREATOR.mapRow(rs);
             }
-            logger.info("Received subject by id: " + id + ", " + subject);
+            logger.info("Received subject by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get subject by id: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
-            DBManager.getInstance().close(Objects.requireNonNull(rs));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return subject;
     }
@@ -151,18 +153,18 @@ public class SubjectDaoImpl implements SubjectDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_SUBJECT);
             ps.setInt(1, subject.getPassingGrade());
             ps.setInt(2, subject.getId());
             ps.executeUpdate();
             logger.info("Updated subject's passing grade");
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update subject's passing grade: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -171,7 +173,7 @@ public class SubjectDaoImpl implements SubjectDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_SUBJECT_TRANSLATION);
             for (int i = 0; i < subject.getSubjectList().size(); i++) {
                 switch (i) {
@@ -185,18 +187,19 @@ public class SubjectDaoImpl implements SubjectDao {
                         ps.setInt(2, subject.getId());
                         ps.setInt(3, 2);
                         break;
+                    default:
+                        break;
                 }
                 ps.executeUpdate();
             }
             ps.executeUpdate();
-            logger.info("Updated subject's details");
-        } catch (
-                SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
-            logger.error("Failed to update subject's details: " + ex.getMessage());
+            logger.info("Updated subject's translation");
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to update subject's translation: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 
@@ -205,17 +208,17 @@ public class SubjectDaoImpl implements SubjectDao {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
-            connection = DBManager.getInstance().getConnectionWithDriverManager();
+            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.DELETE_SUBJECT);
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted subject by id: " + id);
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete subject: " + ex.getMessage());
         } finally {
-            DBManager.getInstance().commitAndClose(Objects.requireNonNull(connection));
-            DBManager.getInstance().close(Objects.requireNonNull(ps));
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
 

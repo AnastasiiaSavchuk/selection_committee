@@ -32,7 +32,6 @@ public class DBManager {
      */
     public Connection getConnection() {
         Connection con = null;
-        logger.info("Started getConnection method.");
         try {
             Context initContext = new InitialContext();
             Context envContext = (Context) initContext.lookup("java:/comp/env");
@@ -41,7 +40,6 @@ public class DBManager {
         } catch (NamingException | SQLException ex) {
             logger.error("Unable to get connection from a pool : ", ex);
         }
-        logger.info("Finished getConnection method.");
         return con;
     }
 
@@ -97,22 +95,5 @@ public class DBManager {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }
-
-    public Connection getConnectionWithDriverManager() {
-        Connection con = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/selection_committee?user=root&password=140418nD&serverTimezone=UTC");
-            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-            con.setAutoCommit(false);
-        } catch (SQLException e) {
-            logger.debug("getConnectionWithDriverManager --> " + "after connection", e);
-        }
-        return con;
     }
 }
