@@ -27,10 +27,8 @@ public class SignupCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         logger.info("SingUpCommand starts");
         String errorMessage;
-        String forward = Path.ERROR;
 
         HttpSession session = request.getSession();
-
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -38,31 +36,27 @@ public class SignupCommand extends Command {
             errorMessage = "Email and password cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return forward;
-        }
+            return Path.ERROR;
+        } else {
+            //password = Helper.getPasswordHash(password);
+            if (!Objects.isNull(new ApplicantDaoImpl().readByEmail(email))) {
+                errorMessage = "Such applicant with email is already exists!";
+                request.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + errorMessage);
+                return Path.ERROR;
+            }
 
-//        password = Helper.getPasswordHash(password);
-        if (Objects.isNull(new ApplicantDaoImpl().readByEmail(email))) {
-            logger.info("Signup new applicant started");
             Applicant applicant = new ApplicantDaoImpl().loginApplicant(email, password);
 
             session.setAttribute("applicant", applicant);
-            logger.trace("Set the session attribute: applicant --> " + applicant);
+            logger.info("Set the session attribute: applicant --> " + applicant);
 
             Role applicantRole = applicant.getRole();
             session.setAttribute("applicantRole", applicantRole);
-            logger.trace("Set the session attribute: applicantRole --> " + applicantRole);
+            logger.info("Set the session attribute: applicantRole --> " + applicantRole);
 
-            logger.info(applicant + " logged as " + applicant.getEmail());
-            forward = Path.SIGNUP_DETAILS;
-        } else {
-            errorMessage = "Such applicant with email is already exists!";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Path.ERROR;
+            logger.info("SingUpCommand finished");
+            return Path.SIGNUP_DETAILS;
         }
-
-        logger.info("SingUpCommand finished");
-        return forward;
     }
 }

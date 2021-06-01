@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,6 +39,8 @@ public class Subject implements Serializable {
     public void setSubjectList(List<String> subjectList) {
         this.subjectList = subjectList;
     }
+
+    public static Comparator<Subject> COMPARE_BY_ID = Comparator.comparing(Subject::getId);
 
     @Override
     public boolean equals(Object o) {

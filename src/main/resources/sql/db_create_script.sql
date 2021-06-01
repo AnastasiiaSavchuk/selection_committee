@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS user
 );
 
 INSERT INTO user(email, password, role_id)
-VALUES ('admin@gmail.com', 'qwerty', 1),
+VALUES ('savchuknesty@gmail.com', 'qwerty', 1),
        ('rasyansky@gmail.com', 'ytrewq', 2),
        ('kulbabyn@gmail.com', 'qetuop', 2),
        ('gevorga@gmail.com', 'pouteq', 2),
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS applicant
 
 INSERT INTO applicant(user_id, first_name, middle_name, last_name, city, region, school_name, certificate,
                       is_blocked)
-VALUES (1, 'Anastasiia', 'Andriivna', 'Osadchuk', 'Kropyvnytskyi', 'Kirovohrad region', 'School №25', '', 0),
+VALUES (1, 'Anastasiia', 'Andriivna', 'Savchuk', 'Kropyvnytskyi', 'Kirovohrad region', 'School №25', '', 0),
        (2, 'Petro', 'Anatoliyovych', 'Rasyansky', 'Lviv', 'Lviv region', 'School №25', '', 0),
        (3, 'Roman', 'Dmitrovich', 'Kulbabyn', 'Odessa', 'Odessa region', 'Gymnasium №25', '', 0),
        (4, 'Sandra', 'Semenivna', 'Gevorga', 'Poltava', 'Poltava region', 'Lyceum №15', '', 0),

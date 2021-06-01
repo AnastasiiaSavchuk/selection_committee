@@ -12,10 +12,7 @@ import sql.SQLConstants;
 import sql.SQLFields;
 import util.EntityCreator;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,11 +29,17 @@ public class ApplicationDaoImpl implements ApplicationDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION);
+            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, application.getApplicant().getId());
             ps.setInt(2, application.getFaculty().getId());
             ps.setString(3, String.valueOf(application.getApplicationStatus()));
-            ps.executeUpdate();
+            if (ps.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        application.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
             logger.info("Inserted application");
             return true;
         } catch (SQLException ex) {
@@ -161,7 +164,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
     }
 
     @Override
-    public void update(Application application) {
+    public boolean update(Application application) {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -172,9 +175,11 @@ public class ApplicationDaoImpl implements ApplicationDao {
             ps.setInt(2, application.getId());
             ps.executeUpdate();
             logger.info("Updated application status");
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update application status: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
@@ -182,7 +187,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -191,9 +196,11 @@ public class ApplicationDaoImpl implements ApplicationDao {
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted application by id: " + id);
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete application: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

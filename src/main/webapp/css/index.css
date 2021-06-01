@@ -25,3 +25,21 @@
     background: #4d0026;
     cursor: pointer;
 }
+
+.container {
+    margin-top: 100px;
+}
+
+.container a, .container address, .container a:hover {
+    color: #151e1e;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    outline: none;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+#contact .card:hover i, #contact .card:hover h4 {
+    color: #75a3a3;
+}

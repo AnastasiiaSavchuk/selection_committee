@@ -8,10 +8,7 @@ import sql.SQLConstants;
 import sql.SQLFields;
 import util.EntityCreator;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,35 +26,27 @@ public class SubjectDaoImpl implements SubjectDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT);
+            ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, subject.getPassingGrade());
-            ps.executeUpdate();
+            if (ps.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        subject.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
             logger.info("Inserted subject");
-            return true;
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to insert subject: " + ex.getMessage());
-            return false;
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-        }
-    }
 
-    @Override
-    public void createSubjectTranslation(Subject subject) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT_TRANSLATION);
             ps.setString(1, subject.getSubjectList().get(0));
             ps.setString(2, subject.getSubjectList().get(1));
             ps.executeUpdate();
             logger.info("Inserted subject's translation");
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to insert subject's translation: " + ex.getMessage());
+            logger.error("Failed to insert subject: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
@@ -78,8 +67,9 @@ public class SubjectDaoImpl implements SubjectDao {
             ps = connection.prepareStatement(SQLConstants.GET_ALL_SUBJECTS);
             ps.setString(1, locales.get(0));
             rs = ps.executeQuery();
-            while (rs.next())
+            while (rs.next()) {
                 subjectList.add(CREATOR.mapRow(rs));
+            }
             logger.info("Received list of subjects");
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -98,17 +88,18 @@ public class SubjectDaoImpl implements SubjectDao {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        if (locales == null || locales.size() == 0)
+        if (locales == null || locales.size() == 0) {
             return subjectList;
+        }
 
         try {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_SUBJECTS_BY_FACULTY_ID);
             ps.setInt(1, facultyId);
-            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
-            while (rs.next())
+            while (rs.next()) {
                 subjectList.add(CREATOR.mapRow(rs));
+            }
             logger.info("Received list of subjects by faculty_id: " + facultyId);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -149,7 +140,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void update(Subject subject) {
+    public boolean update(Subject subject) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -159,9 +150,11 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setInt(2, subject.getId());
             ps.executeUpdate();
             logger.info("Updated subject's passing grade");
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update subject's passing grade: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
@@ -204,7 +197,7 @@ public class SubjectDaoImpl implements SubjectDao {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -213,9 +206,11 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted subject by id: " + id);
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete subject: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

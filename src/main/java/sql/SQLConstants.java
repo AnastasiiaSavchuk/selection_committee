@@ -39,11 +39,11 @@ public class SQLConstants {
     public static final String GET_SUBJECTS_BY_FACULTY_ID = "SELECT s.id, s.passing_grade, st.subject " +
             "FROM faculty f, faculty_subject fs, subject s, subject_translation st, language l " +
             "WHERE f.id = fs.faculty_id AND fs.subject_id = s.id AND s.id = st.subject_id AND st.language_id = l.id AND f.id = ? AND l.lang_code = ?";
-    public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, st.subject " +
+    public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject " +
             "FROM subject s " +
             "INNER JOIN subject_translation st ON s.id = st.subject_id " +
             "INNER JOIN language l ON l.id = st.language_id " +
-            "WHERE s.id = ? AND l.lang_code = ?";
+            "WHERE s.id = ?";
     public static final String UPDATE_SUBJECT = "UPDATE subject SET passing_grade = ? WHERE id = ?";
     public static final String UPDATE_SUBJECT_TRANSLATION = "UPDATE subject_translation SET subject = ? " +
             "WHERE subject_id = ? AND language_id = ?";
@@ -58,11 +58,11 @@ public class SQLConstants {
             "FROM faculty f, faculty_translation ft " +
             "INNER JOIN language l ON ft.language_id = l.id " +
             "WHERE f.id = ft.faculty_id AND l.lang_code = ?";
-    public static final String GET_FACULTY_BY_ID = "SELECT f.id, f.budget_qty, f.total_qty, ft.faculty " +
+    public static final String GET_FACULTY_BY_ID = "SELECT f.id, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty " +
             "FROM faculty f " +
             "INNER JOIN faculty_translation ft ON f.id = ft.faculty_id " +
-            "INNER JOIN language l ON ft.language_id = l.id " +
-            "WHERE f.id = ? AND l.lang_code = ?";
+            "INNER JOIN language l ON l.id = ft.language_id " +
+            "WHERE f.id = ?";
     public static final String UPDATE_FACULTY = "UPDATE faculty SET  budget_qty = ?, total_qty = ? WHERE id = ?";
     public static final String UPDATE_FACULTY_TRANSLATION = "UPDATE faculty_translation SET faculty = ? " +
             "WHERE faculty_id = ? AND language_id = ?";

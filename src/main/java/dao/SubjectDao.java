@@ -7,13 +7,6 @@ import java.util.List;
 
 public interface SubjectDao extends AbstractCRUDOperations<Subject> {
     /**
-     * Insert subject's details into DB.
-     *
-     * @param subject entity to insert.
-     */
-    void createSubjectTranslation(Subject subject);
-
-    /**
      * Get list of all subject's details by faculty id from DB.
      *
      * @param locales locales data.

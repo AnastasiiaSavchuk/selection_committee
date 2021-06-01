@@ -58,6 +58,8 @@ public class Faculty implements Serializable {
         this.subjectList = subjectList;
     }
 
+    public static Comparator<Faculty> COMPARE_BY_ID = Comparator.comparing(Faculty::getId);
+
     public static Comparator<Faculty> COMPARE_BY_NAME = Comparator.comparing(faculty -> faculty.getFacultyList().get(0));
 
     public static Comparator<Faculty> COMPARE_BY_BUDGET_QTY = Comparator.comparing(Faculty::getBudgetQty);

@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Settle language to session which was preferred by user
+ * Settle language to session which was preferred by user.
+ *
+ * @author A.Savchuk
  */
 public class SetLanguageCommand extends Command {
     private static final long serialVersionUID = -5176355668225804896L;
@@ -21,12 +23,12 @@ public class SetLanguageCommand extends Command {
         HttpSession session = request.getSession();
 
         String locale = request.getParameter("language");
-        log.debug("Request parameter: locale --> " + locale);
+        log.info("Request parameter: locale --> " + locale);
 
         String forward = Path.INDEX;
         session.setAttribute("elanguage", locale);
 
-        log.debug("LanguageSetCommand finished");
+        log.info("LanguageSetCommand finished");
         return forward;
     }
 }

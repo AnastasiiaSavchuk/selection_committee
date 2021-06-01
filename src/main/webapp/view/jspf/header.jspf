@@ -1,9 +1,14 @@
 <%@ include file="/view/jspf/directive.jspf" %>
 <%@ include file="/view/jspf/localesSettings.jsp" %>
+<c:set var="role" value="${sessionScope['applicantRole']}"/>
+<c:set var="applicant" value="${sessionScope['applicant']}"/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" id="bootstrap-css">
 
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <style>
     <%@include file="../../css/header.css" %>
 </style>
@@ -15,20 +20,49 @@
     </a>
     <nav id="nav-menu-container">
         <div class="nav-menu">
-            <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=getFaculties">
-                <fmt:message key="faculties.Faculties"/></a></p>
+            <c:if test="${not empty role}">
+                <c:choose>
+                    <c:when test="${role == 'ADMIN'}">
+                        <p class="menu-active"><a
+                                href="${pageContext.request.contextPath}/controller?command=adminPage">
+                            <c:out value="${applicant.getFirstName()} ${applicant.getLastName()}"/></a></p>
+                        <p class="menu-active"><a
+                                href="${pageContext.request.contextPath}/controller?command=statementPage">
+                            <fmt:message key="statement.Statement"/></a></p>
+                    </c:when>
 
-            <p class="menu-active"><a href="${pageContext.request.contextPath}/view/contacts.jsp">
+                    <c:when test="${role == 'USER'}">
+                        <p class="menu-active"><a
+                                href="${pageContext.request.contextPath}/controller?command=applicantPage">
+                            <c:out value="${applicant.getFirstName()} ${applicant.getLastName()}"/></a></p>
+                    </c:when>
+                </c:choose>
+            </c:if>
+
+            <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=getFaculties">
+                <fmt:message key="faculty.Faculties"/></a></p>
+
+            <p class="menu-active"><a href="${pageContext.request.contextPath}/view/jsp/contacts.jsp">
                 <fmt:message key="contacts.Contacts"/></a></p>
 
-            <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=loginChoice">
-                <fmt:message key="login.Login"/></a></p>
+            <c:if test="${empty role}">
+                <p class="menu-active">
+                    <a href="${pageContext.request.contextPath}/controller?command=loginChoice">
+                        <fmt:message key="login.Login"/></a></p>
 
-            <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=signupChoice">
-                <fmt:message key="signup.Signup"/></a></p>
+                <p class="menu-active">
+                    <a href="${pageContext.request.contextPath}/controller?command=signupChoice">
+                        <fmt:message key="signup.Signup"/></a></p>
+            </c:if>
+
+            <c:if test="${not empty role}">
+                <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=logout">
+                    <fmt:message key="logout.Logout"/></a></p>
+            </c:if>
 
             <p class="menu-active">
                 <a class="nav-link" href="" id="english-id" onclick="setLanguage(this); return false;">EN</a></p>
+
             <p class="menu-active">
                 <a class="nav-link" href="" id="ukrainian-id" onclick="setLanguage(this); return false;">UK</a></p>
         </div>

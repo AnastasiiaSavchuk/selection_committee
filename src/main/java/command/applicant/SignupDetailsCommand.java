@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 /**
  * SignupDetails command. Get all details from the applicant for second registration.
+ *
+ * @author A.Savchuk.
  */
 @MultipartConfig(maxFileSize = 1024 * 1024 * 3)
 public class SignupDetailsCommand extends Command {
@@ -23,13 +25,10 @@ public class SignupDetailsCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         logger.info("SignupDetailsCommand starts");
+        String errorMessage;
 
         HttpSession session = request.getSession();
         Applicant sessionApplicant = (Applicant) session.getAttribute("applicant");
-
-        String errorMessage;
-        String forward = Path.ERROR;
-
         int applicantId = sessionApplicant.getId();
         String email = sessionApplicant.getEmail();
 
@@ -45,36 +44,36 @@ public class SignupDetailsCommand extends Command {
             errorMessage = "Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return forward;
+            return Path.ERROR;
+        } else {
+            Applicant applicant = new Applicant();
+
+            applicant.setId(applicantId);
+            applicant.setEmail(email);
+            applicant.setFirstName(firstName);
+            applicant.setMiddleName(middleName);
+            applicant.setLastName(lastName);
+            applicant.setCity(city);
+            applicant.setRegion(region);
+            applicant.setSchoolName(schoolName);
+            applicant.setCertificate(new byte[]{});
+            applicant.setBlocked(false);
+            applicant.setApplicationList(new ArrayList<>());
+
+            boolean isInsert = new ApplicantDaoImpl().create(applicant);
+
+            if (!isInsert) {
+                errorMessage = "Unable to insert the applicant to the system. Please enter the correct data!";
+                request.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + errorMessage);
+                return Path.ERROR;
+            }
+
+            session.setAttribute("applicant", applicant);
+            logger.info("Set the session attribute: applicant --> " + applicant);
+
+            logger.info("SignupDetailsCommand finished");
+            return Path.APPLICANT_INSERT_APPLICATION;
         }
-
-        Applicant applicant = new Applicant();
-        applicant.setId(applicantId);
-        applicant.setEmail(email);
-        applicant.setFirstName(firstName);
-        applicant.setMiddleName(middleName);
-        applicant.setLastName(lastName);
-        applicant.setCity(city);
-        applicant.setRegion(region);
-        applicant.setSchoolName(schoolName);
-        applicant.setCertificate(new byte[]{});
-        applicant.setBlocked(false);
-        applicant.setApplicationList(new ArrayList<>());
-
-        boolean isInsert = new ApplicantDaoImpl().create(applicant);
-
-        if (!isInsert) {
-            errorMessage = "Unable to insert the applicant to the system. Please enter the correct data!";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return forward;
-        }
-
-        session.setAttribute("applicant", applicant);
-        logger.trace("Set the session attribute: applicant --> " + applicant);
-        forward = Path.APPLICANT_INSERT_APPLICATION;
-
-        logger.info("SignupDetailsCommand finished");
-        return forward;
     }
 }

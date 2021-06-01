@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Forward request to signup page
+ * Forward request to signup page.
+ *
+ * @author A.Savchuk.
  */
 public class SignupChoiceCommand extends Command {
     private static final long serialVersionUID = 1666483864804192503L;
@@ -16,7 +18,7 @@ public class SignupChoiceCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        log.debug("RegistrationChoiceCommand finished");
+        log.info("RegistrationChoiceCommand finished");
         return Path.SIGNUP;
     }
 }

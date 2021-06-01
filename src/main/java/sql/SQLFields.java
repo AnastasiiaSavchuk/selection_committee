@@ -2,6 +2,8 @@ package sql;
 
 public class SQLFields {
     //applicant
+    public static final String USER_ID = "id";
+    public static final String USER_ROLE = "role";
     public static final String APPLICANT_ID = "user_id";
     public static final String APPLICANT_EMAIL = "email";
     public static final String APPLICANT_PASSWORD = "password";
@@ -14,7 +16,6 @@ public class SQLFields {
     public static final String APPLICANT_CERTIFICATE = "certificate";
     public static final String APPLICANT_IS_BLOCKED = "is_blocked";
     public static final String APPLICANT_ROLE = "role_id";
-    public static final String USER_ROLE = "role";
     //subject
     public static final String SUBJECT_ID = "id";
     public static final String SUBJECT_PASSING_GRADE = "passing_grade";

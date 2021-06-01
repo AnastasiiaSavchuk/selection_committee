@@ -3,6 +3,7 @@ package domain;
 import domain.enums.ApplicationStatus;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,6 +68,8 @@ public class Application implements Serializable {
     public void setGradesList(List<Grade> gradesList) {
         this.gradesList = gradesList;
     }
+
+    public static Comparator<Application> COMPARE_BY_ID = Comparator.comparing(Application::getId);
 
     @Override
     public boolean equals(Object o) {

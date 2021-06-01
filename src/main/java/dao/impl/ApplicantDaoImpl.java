@@ -56,7 +56,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_FULL_FIELDS);
+            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_FULL_FIELDS, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, applicant.getId());
             ps.setString(2, applicant.getFirstName());
             ps.setString(3, applicant.getMiddleName());
@@ -66,7 +66,13 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setString(7, applicant.getSchoolName());
             ps.setBytes(8, applicant.getCertificate());
             ps.setInt(9, applicant.isBlocked() ? 1 : 0);
-            ps.executeUpdate();
+            if (ps.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        applicant.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
             logger.info("Inserted applicant's details with id: " + applicant.getId());
             return true;
         } catch (SQLException ex) {
@@ -91,12 +97,6 @@ public class ApplicantDaoImpl implements ApplicantDao {
             rs = ps.executeQuery();
             while (rs.next()) {
                 applicantList.add(CREATOR.mapRow(rs));
-            }
-
-            if (applicantList.size() > 0) {
-                for (Applicant applicant : applicantList) {
-                    applicant.setApplicationList(new ApplicationDaoImpl().readApplicationsByUserId(Objects.requireNonNull(applicant).getId(), locales));
-                }
             }
             logger.info("Received list of applicants");
         } catch (SQLException ex) {
@@ -124,7 +124,6 @@ public class ApplicantDaoImpl implements ApplicantDao {
             while (rs.next()) {
                 applicant = CREATOR.mapRow(rs);
             }
-
             logger.info("Received applicant by id: " + id);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -150,6 +149,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             rs = ps.executeQuery();
             while (rs.next()) {
                 applicant = new Applicant();
+                applicant.setId(rs.getInt(SQLFields.USER_ID));
                 applicant.setEmail(rs.getString(SQLFields.APPLICANT_EMAIL));
                 applicant.setPassword(rs.getString(SQLFields.APPLICANT_PASSWORD));
                 applicant.setRole(Role.valueOf(rs.getString(SQLFields.USER_ROLE)));
@@ -167,7 +167,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public void update(Applicant applicant) {
+    public boolean update(Applicant applicant) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -185,9 +185,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setInt(10, applicant.getId());
             ps.executeUpdate();
             logger.info("Updated applicant's details");
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update applicant's details: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
@@ -215,7 +217,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -224,9 +226,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted applicant by id: " + id);
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete applicant: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

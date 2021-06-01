@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/view/jspf/directive.jspf" %>
 <%@ include file="/view/jspf/localesSettings.jsp" %>
 <!DOCTYPE html>
@@ -11,6 +10,7 @@
 </head>
 <body>
 <%@ include file="/view/jspf/header.jspf" %>
+
 <div class="slideshow">
     <div class="start-photo">
         <img src="image/GAF1.jpg" alt="" width="2560" height="550">
@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<div class="container indexMainCtr" style="margin-top: 80px">
+<div class="container indexMainCtr">
     <h2><fmt:message key="about.About"/></h2>
     <hr>
     <div id="about-us-text-id">

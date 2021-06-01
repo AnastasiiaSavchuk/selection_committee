@@ -122,12 +122,11 @@ WHERE f.id = fs.faculty_id
   AND l.lang_code = 'en';
 
 # GET_SUBJECT_BY_ID
-SELECT s.id, s.passing_grade, st.subject
+SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject
 FROM subject s
          INNER JOIN subject_translation st ON s.id = st.subject_id
          INNER JOIN language l ON l.id = st.language_id
-WHERE s.id = 4
-  AND l.lang_code = 'uk';
+WHERE s.id = 4;
 
 # UPDATE_SUBJECT
 UPDATE subject
@@ -162,12 +161,11 @@ INSERT INTO faculty_subject(faculty_id, subject_id)
 VALUES (5, 5);
 
 # GET_FACULTY_BY_ID
-SELECT f.id, f.budget_qty, f.total_qty, ft.faculty
+SELECT f.id, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ' as name faculty
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
-WHERE f.id = 1
-  AND l.lang_code = 'uk';
+WHERE f.id = 1;
 
 # GET_ALL_FACULTIES
 SELECT f.id, f.budget_qty, f.total_qty, ft.faculty

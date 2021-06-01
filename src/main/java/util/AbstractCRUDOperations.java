@@ -39,12 +39,12 @@ public interface AbstractCRUDOperations<E> {
      *
      * @param e entity to update.
      */
-    void update(E e);
+    boolean update(E e);
 
     /**
      * Delete entity based from DB.
      *
      * @param id entity details id.
      */
-    void delete(int id);
+    boolean delete(int id);
 }

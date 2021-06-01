@@ -13,7 +13,7 @@
 
 <div class="login-page">
     <div class="form">
-        <form class="login-form" action="controller" method="post">
+        <form class="login-form" method="post" action="controller">
             <input type="hidden" name="command" value="login"/>
             <h2><fmt:message key="login.Login"/></h2>
             <hr>

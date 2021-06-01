@@ -20,7 +20,7 @@ public class CommandAccessFilter implements Filter {
     private static final Logger logger = Logger.getLogger(CommandAccessFilter.class);
 
     // commands access
-    private static Map<Role, List<String>> accessMap = new HashMap<>();
+    private static final Map<Role, List<String>> accessMap = new HashMap<>();
     private static List<String> commons = new ArrayList<>();
     private static List<String> outOfControl = new ArrayList<>();
 
@@ -38,9 +38,8 @@ public class CommandAccessFilter implements Filter {
             chain.doFilter(request, response);
         } else {
             String errorMessages = "You do not have permission to access the requested resource";
-
             request.setAttribute("errorMessage", errorMessages);
-            logger.trace("Set the request attribute: errorMessage --> " + errorMessages);
+            logger.error("Set the request attribute: errorMessage --> " + errorMessages);
 
             request.getRequestDispatcher(Path.ERROR).forward(request, response);
         }
@@ -74,15 +73,15 @@ public class CommandAccessFilter implements Filter {
         // roles
         accessMap.put(Role.ADMIN, asList(fConfig.getInitParameter("ADMIN")));
         accessMap.put(Role.USER, asList(fConfig.getInitParameter("USER")));
-        logger.trace("Access map --> " + accessMap);
+        logger.info("Access map --> " + accessMap);
 
         // commons
         commons = asList(fConfig.getInitParameter("COMMON"));
-        logger.trace("Common commands --> " + commons);
+        logger.info("Common commands --> " + commons);
 
         // out of control
         outOfControl = asList(fConfig.getInitParameter("OUT-OF-CONTROL"));
-        logger.trace("Out of control commands --> " + outOfControl);
+        logger.info("Out of control commands --> " + outOfControl);
 
         logger.info("Filter initialization finished");
     }

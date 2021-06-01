@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -37,6 +38,8 @@ public class Grade implements Serializable {
     public void setGrade(int grade) {
         this.grade = grade;
     }
+
+    public static Comparator<Grade> COMPARE_BY_ID = Comparator.comparing(Grade::getId);
 
     @Override
     public boolean equals(Object o) {

@@ -2,7 +2,7 @@
 <%@ include file="/view/jspf/localesSettings.jsp" %>
 <html>
 <head>
-    <title>Contacts</title>
+    <title>Faculty by id</title>
 </head>
 <body>
 <%@ include file="/view/jspf/header.jspf" %>

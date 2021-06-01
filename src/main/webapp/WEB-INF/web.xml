@@ -70,8 +70,7 @@
         <filter-class>util.filter.CommandAccessFilter</filter-class>
         <init-param>
             <param-name>ADMIN</param-name>
-            <param-value>adminPage
-            </param-value>
+            <param-value>adminPage facultyCreateChoice facultyCreate facultyUpdate facultyDelete</param-value>
         </init-param>
         <init-param>
             <param-name>USER</param-name>
@@ -99,10 +98,10 @@
     <!--==================== Error page =====================-->
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/view/error/errorPage.jsp</location>
+        <location>/view/jsp/errorPage.jsp</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/view/error/errorPage.jsp</location>
+        <location>/view/jsp/errorPage.jsp</location>
     </error-page>
 </web-app>

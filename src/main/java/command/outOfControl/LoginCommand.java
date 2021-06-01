@@ -2,9 +2,7 @@ package command.outOfControl;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
-import dao.impl.FacultyDaoImpl;
 import domain.Applicant;
-import domain.Faculty;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
 import util.Path;
@@ -12,7 +10,7 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,8 +32,8 @@ public class LoginCommand extends Command {
         String forward = Path.ERROR;
 
         HttpSession session = request.getSession();
+        String localeLang = request.getLocale().getLanguage();
         String language = (String) session.getAttribute("elanguage");
-
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -44,45 +42,46 @@ public class LoginCommand extends Command {
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return forward;
+        } else {
+            //password = Helper.getPasswordHash(password);
+            Applicant applicantByEmail = new ApplicantDaoImpl().readByEmail(email);
+
+            if (Objects.isNull(applicantByEmail)) {
+                errorMessage = "The email you entered isn’t connected to an account. Please try again!";
+                request.setAttribute("errorMessage", errorMessage);
+                logger.error("errorMessage --> " + errorMessage);
+                return forward;
+            } else {
+                if (!password.equals((applicantByEmail.getPassword()))) {
+                    errorMessage = "Incorrect password. Please try again!";
+                    request.setAttribute("errorMessage", errorMessage);
+                    logger.error("errorMessage --> " + errorMessage);
+                    return forward;
+                } else {
+                    Role applicantRole = applicantByEmail.getRole();
+
+                    if (applicantRole == Role.ADMIN) {
+                        forward = Path.ADMIN;
+
+                        List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
+                        applicantList.sort(Applicant.COMPARE_BY_ID);
+
+                        session.setAttribute("applicantList", applicantList);
+                        logger.info("Set the session attribute for admin page: applicant --> " + applicantList);
+                    } else {
+                        forward = Path.APPLICANT;
+
+                    }
+
+                    Applicant applicant = new ApplicantDaoImpl().readById(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
+                    session.setAttribute("applicant", applicant);
+                    logger.info("Set the session attribute: applicant --> " + applicant);
+
+                    session.setAttribute("applicantRole", applicantRole);
+                    logger.info("Set the session attribute: applicantRole --> " + applicantRole);
+                }
+            }
         }
-
-//        password = Helper.getPasswordHash(password);
-        Applicant applicantByEmail = new ApplicantDaoImpl().readByEmail(email);
-
-        if (Objects.isNull(applicantByEmail)) {
-            errorMessage = "The email you entered isn’t connected to an account. Please try again!";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return forward;
-        }
-
-        if (!password.equals((applicantByEmail.getPassword()))) {
-            errorMessage = "Incorrect password. Please try again!";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return forward;
-        }
-
-        Role applicantRole = applicantByEmail.getRole();
-
-        if (applicantRole == Role.ADMIN) {
-            forward = Path.ADMIN;
-
-            List<Faculty> facultyList = new FacultyDaoImpl().readAll(Arrays.asList(language));
-            logger.info("FacultiesList to admin dash size --> " + facultyList.size());
-            session.setAttribute("facultyList --> ", facultyList);
-            return forward;
-        }
-
-        forward = Path.APPLICANT;
-
-        Applicant applicant = new ApplicantDaoImpl().readById(applicantByEmail.getId(), Arrays.asList(language));
-        session.setAttribute("applicant", applicant);
-        logger.trace("Set the session attribute --> " + applicant);
-
-        session.setAttribute("applicantRole", applicantRole);
-        logger.trace("Set the session attribute: applicantRole --> " + applicantRole);
-
         logger.info("LoginCommand finished");
         return forward;
     }

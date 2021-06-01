@@ -13,22 +13,24 @@
 
 <div class="login-page">
     <div class="form">
-        <form class="signup-form" action="controller" method="post">
+        <form class="signup-form" method="post" action="controller">
             <input type="hidden" name="command" value="signupDetails"/>
             <h2><fmt:message key="signup.Signup"/></h2>
             <hr>
             <div class="input-group mb-3"><input class="form-control" name="firstName" type="text"
-                                                 placeholder="<fmt:message key="signup.FirstName"/>" required/></div>
+                                                 placeholder="<fmt:message key="firstName.FirstName"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="middleName" type="text"
-                                                 placeholder="<fmt:message key="signup.MiddleName"/>" required/></div>
+                                                 placeholder="<fmt:message key="middleName.MiddleName"/>" required/>
+            </div>
             <div class="input-group mb-3"><input class="form-control" name="lastName" type="text"
-                                                 placeholder="<fmt:message key="signup.LastName"/>" required/></div>
+                                                 placeholder="<fmt:message key="lastName.LastName"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="city" type="text"
-                                                 placeholder="<fmt:message key="signup.City"/>" required/></div>
+                                                 placeholder="<fmt:message key="city.City"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="region" type="text"
-                                                 placeholder="<fmt:message key="signup.Region"/>" required/></div>
+                                                 placeholder="<fmt:message key="region.Region"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="schoolName" type="text"
-                                                 placeholder="<fmt:message key="signup.SchoolName"/>" required/></div>
+                                                 placeholder="<fmt:message key="schoolName.SchoolName"/>" required/>
+            </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="signup.Signup"/></button>
             </div>

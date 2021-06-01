@@ -8,7 +8,7 @@
 }
 
 .pull-left {
-    margin: 7px 0 0 100px !important;
+    margin: 0.7% 0 0 6% !important;
 }
 
 .pull-left h1 {
@@ -18,7 +18,7 @@
 #nav-menu-container {
     float: right;
     position: relative;
-    padding: 0 100px 27px 0;
+    padding: 0 6% 2% 0;
 }
 
 .nav-menu p {
@@ -132,7 +132,7 @@ body.mobile-nav-active #mobile-nav {
     border-bottom: 2px solid #75a3a3;
 }
 
-@media (max-width: 1241px) {
+@media (max-width: 1240px) {
     #nav-menu-container {
         display: none;
     }

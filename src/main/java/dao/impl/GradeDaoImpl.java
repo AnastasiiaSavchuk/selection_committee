@@ -9,10 +9,7 @@ import sql.SQLConstants;
 import sql.SQLFields;
 import util.EntityCreator;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,10 +27,16 @@ public class GradeDaoImpl implements GradleDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_GRADE);
+            ps = connection.prepareStatement(SQLConstants.INSERT_GRADE, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, grade.getSubject().getId());
             ps.setInt(2, grade.getGrade());
-            ps.executeUpdate();
+            if (ps.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        grade.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
             logger.info("Inserted grade");
             return true;
         } catch (SQLException ex) {
@@ -130,11 +133,12 @@ public class GradeDaoImpl implements GradleDao {
     }
 
     @Override
-    public void update(Grade grade) {
+    public boolean update(Grade grade) {
+        return false;
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -143,9 +147,11 @@ public class GradeDaoImpl implements GradleDao {
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted grade by id: " + id);
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete grade: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

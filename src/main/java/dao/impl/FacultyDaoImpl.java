@@ -9,10 +9,7 @@ import sql.SQLConstants;
 import sql.SQLFields;
 import util.EntityCreator;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,11 +26,26 @@ public class FacultyDaoImpl implements FacultyDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY);
+            ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, faculty.getBudgetQty());
             ps.setInt(2, faculty.getTotalQty());
-            ps.executeUpdate();
+
+            if (ps.executeUpdate() > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        faculty.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
             logger.info("Inserted faculty");
+
+            ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY_TRANSLATION);
+            ps.setString(1, faculty.getFacultyList().get(0));
+            ps.setString(2, faculty.getFacultyList().get(1));
+            ps.executeUpdate();
+            logger.info("Inserted faculty's translation");
+
+            createFacultySubject(connection, faculty);
             return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -46,31 +58,9 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void createFacultyTranslation(Faculty faculty) {
-        Connection connection = null;
+    public void createFacultySubject(Connection connection, Faculty faculty) {
         PreparedStatement ps = null;
         try {
-            connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY_TRANSLATION);
-            ps.setString(1, faculty.getFacultyList().get(0));
-            ps.setString(2, faculty.getFacultyList().get(1));
-            ps.executeUpdate();
-            logger.info("Inserted faculty's translation");
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to insert faculty's details: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-        }
-    }
-
-    @Override
-    public void createFacultySubject(Faculty faculty) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DB_MANAGER.getConnection();
             for (Subject subject : faculty.getSubjectList()) {
                 ps = connection.prepareStatement(SQLConstants.INSERT_FACULTY_SUBJECT);
                 ps.setInt(1, faculty.getId());
@@ -79,10 +69,8 @@ public class FacultyDaoImpl implements FacultyDao {
             }
             logger.info("Inserted subjects to faculty");
         } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert subjects to faculty: " + ex.getMessage());
         } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
         }
     }
@@ -103,9 +91,6 @@ public class FacultyDaoImpl implements FacultyDao {
             rs = ps.executeQuery();
             while (rs.next()) {
                 facultyList.add(CREATOR.mapRow(rs));
-            }
-            for (Faculty faculty : facultyList) {
-                faculty.setSubjectList(new SubjectDaoImpl().readSubjectsByFacultyId(faculty.getId(), locales));
             }
             logger.info("Received list of faculties");
         } catch (SQLException ex) {
@@ -129,14 +114,10 @@ public class FacultyDaoImpl implements FacultyDao {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_FACULTY_BY_ID);
             ps.setInt(1, id);
-            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
                 faculty = CREATOR.mapRow(rs);
             }
-
-            List<Subject> subjectList = new SubjectDaoImpl().readSubjectsByFacultyId(id, locales);
-            Objects.requireNonNull(faculty).getSubjectList().addAll(subjectList);
             logger.info("Received faculty by id: " + id);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -150,7 +131,7 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void update(Faculty faculty) {
+    public boolean update(Faculty faculty) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -161,21 +142,7 @@ public class FacultyDaoImpl implements FacultyDao {
             ps.setInt(3, faculty.getId());
             ps.executeUpdate();
             logger.info("Updated faculty");
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to update faculty: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-        }
-    }
 
-    @Override
-    public void updateFacultyTranslation(Faculty faculty) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_FACULTY_TRANSLATION);
             for (int i = 0; i < faculty.getFacultyList().size(); i++) {
                 switch (i) {
@@ -195,10 +162,11 @@ public class FacultyDaoImpl implements FacultyDao {
                 ps.executeUpdate();
             }
             logger.info("Updated faculty's translation");
-        } catch (
-                SQLException ex) {
+            return true;
+        } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to update faculty's details: " + ex.getMessage());
+            logger.error("Failed to update faculty: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
@@ -206,7 +174,7 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -215,9 +183,11 @@ public class FacultyDaoImpl implements FacultyDao {
             ps.setInt(1, id);
             ps.executeUpdate();
             logger.info("Deleted faculty by id: " + id);
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to delete faculty: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

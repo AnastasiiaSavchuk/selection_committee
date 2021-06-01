@@ -24,7 +24,7 @@ public class NoCommand extends Command {
         request.setAttribute("errorMessage", errorMessage);
         logger.error("Set the request attribute: errorMessage --> " + errorMessage);
 
-        logger.info("Command finished forwarded to --> " + Path.ERROR);
+        logger.info("Command finished");
         return Path.ERROR;
     }
 }
