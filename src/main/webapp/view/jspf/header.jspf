@@ -9,22 +9,28 @@
 </style>
 
 <header id="header">
-    <div class="pull-left"><h1 class="scrollto"><fmt:message key="title.Title"/></h1></div>
+    <a href="${pageContext.request.contextPath}/index.jsp">
+        <div class="pull-left">
+            <h1 class="scrollto"><fmt:message key="title.Title"/></h1></div>
+    </a>
     <nav id="nav-menu-container">
         <div class="nav-menu">
-            <p class="menu-active"><a href="../index.jsp" onclick="displayAbout(); return false;">
-                <fmt:message key="about.About"/></a></p>
             <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=getFaculties">
                 <fmt:message key="faculties.Faculties"/></a></p>
-            <p class="menu-active"><a href=""><fmt:message key="contacts.Contacts"/></a></p>
+
+            <p class="menu-active"><a href="${pageContext.request.contextPath}/view/contacts.jsp">
+                <fmt:message key="contacts.Contacts"/></a></p>
+
             <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=loginChoice">
                 <fmt:message key="login.Login"/></a></p>
+
             <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=signupChoice">
                 <fmt:message key="signup.Signup"/></a></p>
+
             <p class="menu-active">
-                <a class="nav-link" id="english-id" onclick="setLanguage(this); return false;">EN</a></p>
+                <a class="nav-link" href="" id="english-id" onclick="setLanguage(this); return false;">EN</a></p>
             <p class="menu-active">
-                <a class="nav-link" id="ukrainian-id" onclick="setLanguage(this); return false;">UK</a></p>
+                <a class="nav-link" href="" id="ukrainian-id" onclick="setLanguage(this); return false;">UK</a></p>
         </div>
     </nav>
 </header>

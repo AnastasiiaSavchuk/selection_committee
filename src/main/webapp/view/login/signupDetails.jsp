@@ -2,20 +2,14 @@
 <%@ include file="/view/jspf/localesSettings.jsp" %>
 <html>
 <head>
-    <title>Sign Up Details</title>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" id="bootstrap-css">
+    <title>Signup Details</title>
     <style>
         <%@include file="../../css/login.css" %>
     </style>
 </head>
 <body>
 
-<%@ include file="../jspf/headerForSignup.jspf" %>
+<%@ include file="../jspf/header.jspf" %>
 
 <div class="login-page">
     <div class="form">
@@ -39,7 +33,6 @@
                 <button type="submit" class="btn btn-customized"><fmt:message key="signup.Signup"/></button>
             </div>
         </form>
-
     </div>
 </div>
 <!-- Optional JavaScript -->

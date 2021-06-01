@@ -80,11 +80,11 @@ CREATE TABLE IF NOT EXISTS subject
 );
 
 INSERT INTO subject(passing_grade)
-VALUES (160),
-       (150),
+VALUES (140),
+       (135),
        (145),
-       (165),
-       (140);
+       (140),
+       (135);
 
 CREATE TABLE IF NOT EXISTS subject_translation
 (

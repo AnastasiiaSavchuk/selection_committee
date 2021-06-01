@@ -7,11 +7,12 @@
     box-shadow: 5px 0 15px #c3c3c3;
 }
 
-.pull-left{
-    margin: 7px 0 0 100px;
+.pull-left {
+    margin: 7px 0 0 100px !important;
 }
-.pull-left h1{
-    color: #75a3a3;
+
+.pull-left h1 {
+    color: #75a3a3 !important;
 }
 
 #nav-menu-container {
@@ -131,7 +132,7 @@ body.mobile-nav-active #mobile-nav {
     border-bottom: 2px solid #75a3a3;
 }
 
-@media (max-width: 1048px) {
+@media (max-width: 1241px) {
     #nav-menu-container {
         display: none;
     }

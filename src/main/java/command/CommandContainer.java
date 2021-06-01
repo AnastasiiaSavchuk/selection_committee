@@ -1,9 +1,10 @@
 package command;
 
 import command.admin.AdminPageCommand;
+import command.applicant.SignupDetailsCommand;
+import command.common.LogoutCommand;
 import command.common.NoCommand;
 import command.outOfControl.*;
-import command.user.SignupDetailsCommand;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -22,7 +23,7 @@ public class CommandContainer {
 
         //common commands
         commands.put("noCommand", new NoCommand());
-        commands.put("logout", new NoCommand());
+        commands.put("logout", new LogoutCommand());
 
         //out of control commands
         commands.put("setLanguage", new SetLanguageCommand());
@@ -30,6 +31,7 @@ public class CommandContainer {
         commands.put("login", new LoginCommand());
         commands.put("signupChoice", new SignupChoiceCommand());
         commands.put("signup", new SignupCommand());
+        commands.put("getFaculties", new GetFacultiesCommand());
     }
 
     public static Command get(String commandName) {

@@ -25,7 +25,7 @@ body {
     font-weight: normal;
     text-align: center;
     color: #ffffff;
-    font-size: 3rem;
+    font-size: 2rem;
     margin-top: 25px;
     margin-bottom: 5px;
 }
@@ -46,25 +46,24 @@ body {
     background-color: #334d4d;
     color: #ffffff;
     border-color: #334d4d;
-    border-radius: 5px 0 0 5px;
 }
 
 .form .input-group input {
     border: 1px solid #00796b;
-    border-radius: 0 5px 5px 0;
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
 }
 
 .btn-customized {
-    width: 120px;
-    height: 30px;
+    width: 150px;
+    height: 40px;
     background-color: #334d4d;
     margin-top: 30px;
     outline: none;
     color: #ffffff;
     border-color: #334d4d;
-    border-radius: 12px;
+    font-size: 12px;
+    border-radius: 5px;
 }
 
 .btn-customized:hover, .btn-customized:focus, .btn-customized:active {

@@ -1,4 +1,4 @@
-package command.user;
+package command.applicant;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
