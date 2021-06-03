@@ -27,7 +27,6 @@ public class Applicant implements Serializable {
     private String schoolName;
     private byte[] certificate;
     private boolean isBlocked;
-    List<Application> applicationList;
 
     public int getId() {
         return id;
@@ -125,14 +124,6 @@ public class Applicant implements Serializable {
         isBlocked = blocked;
     }
 
-    public List<Application> getApplicationList() {
-        return applicationList;
-    }
-
-    public void setApplicationList(List<Application> applicationList) {
-        this.applicationList = applicationList;
-    }
-
     public static Comparator<Applicant> COMPARE_BY_ID = Comparator.comparing(Applicant::getId);
 
     @Override
@@ -140,18 +131,12 @@ public class Applicant implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Applicant applicant = (Applicant) o;
-        return id == applicant.id && isBlocked == applicant.isBlocked && Objects.equals(email, applicant.email)
-                && Objects.equals(password, applicant.password) && role == applicant.role
-                && Objects.equals(firstName, applicant.firstName) && Objects.equals(middleName, applicant.middleName)
-                && Objects.equals(lastName, applicant.lastName) && Objects.equals(city, applicant.city)
-                && Objects.equals(region, applicant.region) && Objects.equals(schoolName, applicant.schoolName)
-                && Arrays.equals(certificate, applicant.certificate) && Objects.equals(applicationList, applicant.applicationList);
+        return id == applicant.id && isBlocked == applicant.isBlocked && Objects.equals(email, applicant.email) && Objects.equals(password, applicant.password) && role == applicant.role && Objects.equals(firstName, applicant.firstName) && Objects.equals(middleName, applicant.middleName) && Objects.equals(lastName, applicant.lastName) && Objects.equals(city, applicant.city) && Objects.equals(region, applicant.region) && Objects.equals(schoolName, applicant.schoolName) && Arrays.equals(certificate, applicant.certificate);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, email, password, role, firstName, middleName, lastName, city, region, schoolName,
-                isBlocked, applicationList);
+        int result = Objects.hash(id, email, password, role, firstName, middleName, lastName, city, region, schoolName, isBlocked);
         result = 31 * result + Arrays.hashCode(certificate);
         return result;
     }
@@ -171,7 +156,6 @@ public class Applicant implements Serializable {
                 ", schoolName='" + schoolName + '\'' +
                 ", certificate=" + Arrays.toString(certificate) +
                 ", isBlocked=" + isBlocked +
-                ", applicationList=" + applicationList +
                 '}';
     }
 }

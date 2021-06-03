@@ -226,6 +226,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
                 application.setApplicant(applicant);
                 application.setFaculty(faculty);
                 application.setSumOfGrades(rs.getInt(SQLFields.APPLICATION_SUM_OF_GRADES));
+                application.setAverageGrade(rs.getInt(SQLFields.APPLICATION_AVERAGE_GRADE));
                 application.setApplicationStatus(ApplicationStatus.values()[rs.getInt(SQLFields.STATUS_ID)]);
             } catch (SQLException ex) {
                 logger.error("Couldn't to get and map application from DB: " + ex.getMessage());

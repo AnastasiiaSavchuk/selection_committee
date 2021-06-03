@@ -5,6 +5,7 @@ import dao.impl.ApplicantDaoImpl;
 import domain.Applicant;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
+import util.Helper;
 import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,7 @@ public class SignupCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         } else {
-            //password = Helper.getPasswordHash(password);
+            password = Helper.getPasswordHash(password);
             if (!Objects.isNull(new ApplicantDaoImpl().readByEmail(email))) {
                 errorMessage = "Such applicant with email is already exists!";
                 request.setAttribute("errorMessage", errorMessage);
@@ -47,7 +48,6 @@ public class SignupCommand extends Command {
             }
 
             Applicant applicant = new ApplicantDaoImpl().loginApplicant(email, password);
-
             session.setAttribute("applicant", applicant);
             logger.info("Set the session attribute: applicant --> " + applicant);
 

@@ -136,6 +136,35 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return applicant;
     }
 
+    public byte[] getCertificate(int applicantId) {
+        byte[] certificate = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DBManager.getInstance().getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_CERTIFICATE);
+            ps.setInt(1, applicantId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Blob blob = rs.getBlob(SQLFields.APPLICANT_CERTIFICATE);
+                int blobLength = (int) blob.length();
+                certificate = blob.getBytes(1, blobLength);
+            }
+            logger.info("Received applicant school certificate");
+            return certificate;
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            ex.printStackTrace();
+            logger.error("Failed to get applicant school certificate" + ex.getMessage());
+            return null;
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+    }
+
     @Override
     public Applicant readByEmail(String email) {
         Applicant applicant = null;
@@ -197,7 +226,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public void updateByAdmin(int id, boolean isBlocked) {
+    public boolean updateByAdmin(int id, boolean isBlocked) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
@@ -207,9 +236,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setInt(2, id);
             ps.executeUpdate();
             logger.info("Updated applicant's blocked status");
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update applicant's blocked status: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
@@ -245,13 +276,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         @Override
         public Applicant mapRow(ResultSet rs) {
             Applicant applicant = new Applicant();
-            byte[] certificate = null;
             try {
-                Blob blob = rs.getBlob(SQLFields.APPLICANT_CERTIFICATE);
-                if (blob != null) {
-                    int blobLength = (int) blob.length();
-                    certificate = blob.getBytes(1, blobLength);
-                }
                 applicant.setId(rs.getInt(SQLFields.APPLICANT_ID));
                 applicant.setEmail(rs.getString(SQLFields.APPLICANT_EMAIL));
                 applicant.setPassword(rs.getString(SQLFields.APPLICANT_PASSWORD));
@@ -262,7 +287,6 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 applicant.setCity(rs.getString(SQLFields.APPLICANT_CITY));
                 applicant.setRegion(rs.getString(SQLFields.APPLICANT_REGION));
                 applicant.setSchoolName(rs.getString(SQLFields.APPLICANT_SCHOOL_NAME));
-                applicant.setCertificate(certificate);
                 applicant.setBlocked(rs.getInt(SQLFields.APPLICANT_IS_BLOCKED) != 0);
             } catch (SQLException ex) {
                 logger.error("Failed to get and map applicant from DB: " + ex.getMessage());

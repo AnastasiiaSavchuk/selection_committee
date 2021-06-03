@@ -15,20 +15,18 @@ import javax.servlet.http.HttpSession;
  */
 public class SetLanguageCommand extends Command {
     private static final long serialVersionUID = -5176355668225804896L;
-    private static final Logger log = Logger.getLogger(SetLanguageCommand.class);
+    private static final Logger logger = Logger.getLogger(SetLanguageCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        log.info("LanguageSetCommand starts");
+        logger.info("LanguageSetCommand starts");
+
         HttpSession session = request.getSession();
-
         String locale = request.getParameter("language");
-        log.info("Request parameter: locale --> " + locale);
-
-        String forward = Path.INDEX;
+        logger.info("Request parameter: locale --> " + locale);
         session.setAttribute("elanguage", locale);
 
-        log.info("LanguageSetCommand finished");
-        return forward;
+        logger.info("LanguageSetCommand finished");
+        return Path.INDEX;
     }
 }

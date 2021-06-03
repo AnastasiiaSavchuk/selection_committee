@@ -60,12 +60,6 @@ public class Faculty implements Serializable {
 
     public static Comparator<Faculty> COMPARE_BY_ID = Comparator.comparing(Faculty::getId);
 
-    public static Comparator<Faculty> COMPARE_BY_NAME = Comparator.comparing(faculty -> faculty.getFacultyList().get(0));
-
-    public static Comparator<Faculty> COMPARE_BY_BUDGET_QTY = Comparator.comparing(Faculty::getBudgetQty);
-
-    public static Comparator<Faculty> COMPARE_BY_TOTAL_QTY = Comparator.comparing(Faculty::getTotalQty);
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

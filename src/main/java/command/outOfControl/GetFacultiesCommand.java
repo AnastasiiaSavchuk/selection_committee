@@ -2,7 +2,6 @@ package command.outOfControl;
 
 import command.Command;
 import dao.impl.FacultyDaoImpl;
-import domain.Applicant;
 import domain.Faculty;
 import org.apache.log4j.Logger;
 import util.Helper;
@@ -21,32 +20,22 @@ import java.util.List;
  */
 public class GetFacultiesCommand extends Command {
     private static final long serialVersionUID = -7490635096350714850L;
-    private static final Logger log = Logger.getLogger(GetFacultiesCommand.class);
+    private static final Logger logger = Logger.getLogger(GetFacultiesCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        log.info("GetFacultiesCommand starts");
+        logger.info("GetFacultiesCommand starts");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
         String language = (String) session.getAttribute("elanguage");
 
-        String sortedType = request.getParameter("sortedType");
-        log.info("faculty sorted type -->" + sortedType);
-
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         facultyList.sort(Faculty.COMPARE_BY_ID);
-
-        if (sortedType == null) {
-            Helper.chooseSortedType("nameAsc", facultyList);
-        } else {
-            Helper.chooseSortedType(sortedType, facultyList);
-        }
-
         session.setAttribute("facultyList", facultyList);
-        log.info("FacultyList --> " + facultyList);
+        logger.info("FacultyList --> " + facultyList);
 
-        log.info("GetFacultiesCommand finished");
+        logger.info("GetFacultiesCommand finished");
         return Path.FACULTIES;
     }
 }

@@ -180,33 +180,34 @@ CREATE TABLE IF NOT EXISTS application
     id                   INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id              INT NOT NULL,
     faculty_id           INT NOT NULL,
-    applicationStatus_id INT NOT NULL,
     sum_of_grades        INT,
+    average_grade        INT,
+    applicationStatus_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (faculty_id) REFERENCES faculty (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (applicationStatus_id) REFERENCES application_status (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO application (user_id, faculty_id, applicationStatus_id, sum_of_grades)
-VALUES (2, 1, 1, 0),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
-       (2, 2, 1, 0),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
-       (2, 4, 2, 0),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
-       (3, 2, 2, 0),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
-       (3, 3, 1, 0),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
-       (4, 1, 1, 0),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
-       (4, 3, 2, 0),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
-       (5, 1, 2, 0),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
-       (5, 3, 1, 0),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
-       (5, 4, 1, 0),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
-       (6, 2, 1, 0),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
-       (6, 3, 1, 0),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
-       (7, 1, 2, 0),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
-       (7, 4, 2, 0),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
-       (8, 4, 2, 0),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
-       (9, 2, 2, 0),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
-       (9, 3, 1, 0),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
-       (10, 1, 2, 0),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
-       (10, 3, 1, 0);#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
+INSERT INTO application (user_id, faculty_id, sum_of_grades, average_grade, applicationStatus_id)
+VALUES (2, 1, 0, 0, 1),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
+       (2, 2, 0, 0, 1),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
+       (2, 4, 0, 0, 2),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
+       (3, 2, 0, 0, 2),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
+       (3, 3, 0, 0, 1),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
+       (4, 1, 0, 0, 1),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
+       (4, 3, 0, 0, 2),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
+       (5, 1, 0, 0, 2),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
+       (5, 3, 0, 0, 1),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
+       (5, 4, 0, 0, 1),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
+       (6, 2, 0, 0, 1),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
+       (6, 3, 0, 0, 1),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
+       (7, 1, 0, 0, 2),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
+       (7, 4, 0, 0, 2),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
+       (8, 4, 0, 0, 2),#4 'Faculty of Financial Management and Business' 3 English 4 Ukrainian language 5 History
+       (9, 2, 0, 0, 2),#2 'Faculty of Foreign Languages' 3 English 4 Ukrainian language
+       (9, 3, 0, 0, 1),#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
+       (10, 1, 0, 0, 2),#1 'Faculty of Electronics and computer technologies' 1 Maths 2 Physics 3 English 4 Ukrainian language
+       (10, 3, 0, 0, 1);#3 'Faculty of Applied Mathematics and Informatics' 1 Maths 3 English 4 Ukrainian language
 
 CREATE TABLE IF NOT EXISTS grade
 (
@@ -284,12 +285,23 @@ CREATE TABLE IF NOT EXISTS application_grade
     FOREIGN KEY (grade_id) REFERENCES grade (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TRIGGER application_grade_AFTER_INSERT
+CREATE TRIGGER application_grade_AFTER_INSERT_SUM
     AFTER INSERT
     ON application_grade
     FOR EACH ROW
     UPDATE application
     SET sum_of_grades = (SELECT SUM(g.grade)
+                         FROM grade g
+                                  INNER JOIN application_grade ag ON ag.grade_id = g.id
+                                  INNER JOIN subject s ON s.id = g.subject_id
+                         WHERE ag.application_id = application.id);
+
+CREATE TRIGGER application_grade_AFTER_INSERT_AVR
+    AFTER INSERT
+    ON application_grade
+    FOR EACH ROW
+    UPDATE application
+    SET average_grade = (SELECT AVG(g.grade)
                          FROM grade g
                                   INNER JOIN application_grade ag ON ag.grade_id = g.id
                                   INNER JOIN subject s ON s.id = g.subject_id

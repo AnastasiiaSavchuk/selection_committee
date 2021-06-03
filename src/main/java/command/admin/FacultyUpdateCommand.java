@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Get change parameters of faculty from request and update the faculty in the db
@@ -26,11 +28,12 @@ public class FacultyUpdateCommand extends Command {
         String errorMessage;
 
         HttpSession session = request.getSession();
+        String localeLang = request.getLocale().getLanguage();
+        String language = (String) session.getAttribute("elanguage");
         String facultyIdToUpdate = request.getParameter("facultyIdToUpdate");
 
         if (facultyIdToUpdate != null) {
-            Faculty faculty = new FacultyDaoImpl().readById(Integer.parseInt(facultyIdToUpdate), Arrays.asList(""));
-
+            Faculty faculty = new FacultyDaoImpl().readFacultyToUpdate(Integer.parseInt(facultyIdToUpdate));
             session.setAttribute("faculty", faculty);
             logger.info("Set the session attribute: faculty --> " + faculty);
             return Path.FACULTY_UPDATE;
@@ -50,20 +53,23 @@ public class FacultyUpdateCommand extends Command {
         }
 
         Faculty updated = new Faculty();
-
         updated.setId(Integer.parseInt(id));
         updated.setBudgetQty(Integer.parseInt(budgetQty));
         updated.setTotalQty(Integer.parseInt(totalQty));
         updated.setFacultyList(Arrays.asList(englishName, ukrainianName));
 
         boolean isUpdated = new FacultyDaoImpl().update(updated);
-
         if (!isUpdated) {
             errorMessage = "Cannot update faculty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         }
+
+        List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
+        facultyList.sort(Faculty.COMPARE_BY_ID);
+        session.setAttribute("facultyList", facultyList);
+        logger.info("Set the session attribute: facultyList --> " + facultyList);
 
         logger.info("UpdateFacultyCommand finished");
         return Path.FACULTIES;

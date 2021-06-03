@@ -1,12 +1,13 @@
 const inputs = document.querySelectorAll('.getId');
 const clickHandler = i => {
-    document.getElementById("update").value = i.getAttribute("value");
-    document.getElementById("delete").value = i.getAttribute("value");
+    document.getElementById("facultyUpdate").value = i.getAttribute("value");
+    document.getElementById("facultyDelete").value = i.getAttribute("value")
+    document.getElementById("facultyGetById").value = i.getAttribute("value");
 };
 inputs.forEach(i => i.onclick = () => clickHandler(i));
 
-function updateFaculty() {
-    let facultyToUpdate = document.getElementById('update');
+function facultyUpdate() {
+    let facultyToUpdate = document.getElementById('facultyUpdate');
     if (facultyToUpdate.value === '') {
         // modalAlert();
         return false;
@@ -15,8 +16,8 @@ function updateFaculty() {
     }
 }
 
-function deleteFaculty() {
-    let facultyToUpdate = document.getElementById('delete');
+function facultyDelete() {
+    let facultyToUpdate = document.getElementById('facultyDelete');
     if (facultyToUpdate.value === '') {
         // modalAlert();
         return false;
@@ -25,14 +26,12 @@ function deleteFaculty() {
     }
 }
 
-function facultiesSortDash(linkObj) {
-    if (linkObj.id === 'nameSort') {
-        linkObj.href = '${pageContext.request.contextPath}/controller?command=facultiesPage&sortedType=nameAsc';
-    }
-    if (linkObj.id === 'budgetSort') {
-        linkObj.href = '${pageContext.request.contextPath}/controller?command=facultiesPage&sortedType=budgetAsc';
-    }
-    if (linkObj.id === 'totalSort') {
-        linkObj.href = '${pageContext.request.contextPath}/controller?command=facultiesPage&sortedType=totalAsc';
+function getFacultyById() {
+    let facultyToUpdate = document.getElementById('facultyGetById');
+    if (facultyToUpdate.value === '') {
+        // modalAlert();
+        return false;
+    } else {
+        document.getElementById('getByIdForm').submit();
     }
 }

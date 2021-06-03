@@ -18,6 +18,7 @@ public class Application implements Serializable {
     private Applicant applicant;
     private Faculty faculty;
     private int sumOfGrades;
+    private int averageGrade;
     private ApplicationStatus applicationStatus;
     private List<Grade> gradesList;
 
@@ -53,6 +54,14 @@ public class Application implements Serializable {
         this.sumOfGrades = sumOfGrades;
     }
 
+    public int getAverageGrade() {
+        return averageGrade;
+    }
+
+    public void setAverageGrade(int averageGrade) {
+        this.averageGrade = averageGrade;
+    }
+
     public ApplicationStatus getApplicationStatus() {
         return applicationStatus;
     }
@@ -76,13 +85,12 @@ public class Application implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return id == that.id && sumOfGrades == that.sumOfGrades && Objects.equals(applicant, that.applicant) &&
-                Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus && Objects.equals(gradesList, that.gradesList);
+        return id == that.id && sumOfGrades == that.sumOfGrades && averageGrade == that.averageGrade && Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, applicant, faculty, sumOfGrades, applicationStatus, gradesList);
+        return Objects.hash(id, applicant, faculty, sumOfGrades, averageGrade, applicationStatus);
     }
 
     @Override
@@ -92,6 +100,7 @@ public class Application implements Serializable {
                 ", applicant=" + applicant +
                 ", faculty=" + faculty +
                 ", sumOfGrades=" + sumOfGrades +
+                ", averageGrade=" + averageGrade +
                 ", applicationStatus=" + applicationStatus +
                 ", gradesList=" + gradesList +
                 '}';

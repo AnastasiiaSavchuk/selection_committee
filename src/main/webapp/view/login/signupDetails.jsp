@@ -18,18 +18,18 @@
             <h2><fmt:message key="signup.Signup"/></h2>
             <hr>
             <div class="input-group mb-3"><input class="form-control" name="firstName" type="text"
-                                                 placeholder="<fmt:message key="firstName.FirstName"/>" required/></div>
+                                                 placeholder="<fmt:message key="applicant.FirstName"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="middleName" type="text"
-                                                 placeholder="<fmt:message key="middleName.MiddleName"/>" required/>
+                                                 placeholder="<fmt:message key="applicant.MiddleName"/>" required/>
             </div>
             <div class="input-group mb-3"><input class="form-control" name="lastName" type="text"
-                                                 placeholder="<fmt:message key="lastName.LastName"/>" required/></div>
+                                                 placeholder="<fmt:message key="applicant.LastName"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="city" type="text"
-                                                 placeholder="<fmt:message key="city.City"/>" required/></div>
+                                                 placeholder="<fmt:message key="applicant.City"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="region" type="text"
-                                                 placeholder="<fmt:message key="region.Region"/>" required/></div>
+                                                 placeholder="<fmt:message key="applicant.Region"/>" required/></div>
             <div class="input-group mb-3"><input class="form-control" name="schoolName" type="text"
-                                                 placeholder="<fmt:message key="schoolName.SchoolName"/>" required/>
+                                                 placeholder="<fmt:message key="applicant.SchoolName"/>" required/>
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="signup.Signup"/></button>

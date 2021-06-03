@@ -2,6 +2,7 @@ package command;
 
 import command.admin.*;
 import command.applicant.SignupDetailsCommand;
+import command.common.ApplicantCommand;
 import command.common.LogoutCommand;
 import command.common.NoCommand;
 import command.outOfControl.*;
@@ -21,11 +22,14 @@ public class CommandContainer {
 
     static {
         //admin commands
-        commands.put("adminPage", new AdminPageCommand());
+        commands.put("adminPage", new AdminCommand());
         commands.put("facultyCreateChoice", new FacultyCreateChoiceCommand());
         commands.put("facultyCreate", new FacultyCreateCommand());
         commands.put("facultyUpdate", new FacultyUpdateCommand());
         commands.put("facultyDelete", new FacultyDeleteCommand());
+        commands.put("getApplicantById", new GetApplicantByIdCommand());
+        commands.put("applicantUpdate", new ApplicantUpdateCommand());
+        commands.put("applicantDelete", new ApplicantDeleteCommand());
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());
@@ -33,6 +37,7 @@ public class CommandContainer {
         //common commands
         commands.put("noCommand", new NoCommand());
         commands.put("logout", new LogoutCommand());
+        commands.put("applicantPage", new ApplicantCommand());
 
         //out of control commands
         commands.put("setLanguage", new SetLanguageCommand());
@@ -41,6 +46,7 @@ public class CommandContainer {
         commands.put("signupChoice", new SignupChoiceCommand());
         commands.put("signup", new SignupCommand());
         commands.put("getFaculties", new GetFacultiesCommand());
+        commands.put("getFacultyById", new GetFacultyByIdCommand());
     }
 
     public static Command get(String commandName) {

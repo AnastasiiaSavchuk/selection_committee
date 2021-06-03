@@ -2,9 +2,10 @@
 <%@ include file="/view/jspf/localesSettings.jsp" %>
 <c:set var="role" value="${sessionScope['applicantRole']}"/>
 <c:set var="applicant" value="${sessionScope['applicant']}"/>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" id="bootstrap-css">
 
@@ -25,7 +26,7 @@
                     <c:when test="${role == 'ADMIN'}">
                         <p class="menu-active"><a
                                 href="${pageContext.request.contextPath}/controller?command=adminPage">
-                            <c:out value="${applicant.getFirstName()} ${applicant.getLastName()}"/></a></p>
+                            <fmt:message key="admin.Admin"/></a></p>
                         <p class="menu-active"><a
                                 href="${pageContext.request.contextPath}/controller?command=statementPage">
                             <fmt:message key="statement.Statement"/></a></p>
@@ -34,7 +35,7 @@
                     <c:when test="${role == 'USER'}">
                         <p class="menu-active"><a
                                 href="${pageContext.request.contextPath}/controller?command=applicantPage">
-                            <c:out value="${applicant.getFirstName()} ${applicant.getLastName()}"/></a></p>
+                            <fmt:message key="applicant.Applicant"/></a></p>
                     </c:when>
                 </c:choose>
             </c:if>
@@ -42,7 +43,7 @@
             <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=getFaculties">
                 <fmt:message key="faculty.Faculties"/></a></p>
 
-            <p class="menu-active"><a href="${pageContext.request.contextPath}/view/jsp/contacts.jsp">
+            <p class="menu-active"><a href="${pageContext.request.contextPath}/view/contactUs.jsp">
                 <fmt:message key="contacts.Contacts"/></a></p>
 
             <c:if test="${empty role}">

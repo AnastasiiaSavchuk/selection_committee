@@ -24,29 +24,28 @@
             <div class="input-group mb-3">
                 <input id="ukrainianName" class="form-control" name="ukrainianName" type="text"
                        placeholder="<fmt:message key="faculty.NameInUkrainian"/>" required/></div>
+            <div class="input-group mb-3">
+                <input id="totalQty" class="form-control" name="totalQty" type="number" min="0"
+                       placeholder="<fmt:message key="faculty.TotalPlaces"/>" required/></div>
 
             <div class="input-group mb-3">
                 <input id="budgetQty" class="form-control" name="budgetQty" type="number" min="0"
                        placeholder="<fmt:message key="faculty.BudgetPlaces"/>" required/></div>
-
-            <div class="input-group mb-3">
-                <input id="totalQty" class="form-control" name="totalQty" type="number" min="0"
-                       placeholder="<fmt:message key="faculty.TotalPlaces"/>" required/></div>
 
             <h4><fmt:message key="subject.Subjects"/></h4>
             <hr>
 
             <div class="input-group mb-3">
                 <c:forEach items="${sList}" var="subject">
-                    <label for="subject">${subject.getSubjectList().get(0)}
+                    <label for="subject"><c:out value="${subject.getSubjectList().get(0)}"/>
                         <input type="checkbox" class="checkbox" name="subject" id="subject"
                                value="${subject.getId()}"/></label>
                 </c:forEach>
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-customized"><fmt:message key="create.Create"/></button>
-                <a href="${pageContext.request.contextPath}/view/jsp/facultiesPage.jsp">
+                <button type="submit" class="btn btn-customized"><fmt:message key="save.Save"/></button>
+                <a href="${pageContext.request.contextPath}/controller?command=getFaculties">
                     <button type="button" class="btn btn-customized"><fmt:message key="cancel.Cancel"/></button>
                 </a>
             </div>

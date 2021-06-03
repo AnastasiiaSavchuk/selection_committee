@@ -30,13 +30,15 @@
     margin-top: 100px;
 }
 
+.container .card i, .container .card h4{
+    color: #262626;
+}
+
 .container a, .container address, .container a:hover {
-    color: #151e1e;
+    color: #262626;
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 1px;
-    outline: none;
-    overflow: hidden;
     text-decoration: none;
 }
 

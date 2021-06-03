@@ -17,6 +17,12 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
     Applicant loginApplicant(String email, String password);
 
     /**
+     * Get certificate image from applicant table
+     * @return true if succeed
+     */
+    byte[] getCertificate(int applicantId);
+
+    /**
      * Returns user by login.
      *
      * @param email applicant's login.
@@ -26,9 +32,9 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
 
     /**
      * Update applicant's blocked status in the DB.
-     *
-     * @param id        applicant's id.
+     *  @param id        applicant's id.
      * @param isBlocked blocked status.
+     * @return
      */
-    void updateByAdmin(int id, boolean isBlocked);
+    boolean updateByAdmin(int id, boolean isBlocked);
 }

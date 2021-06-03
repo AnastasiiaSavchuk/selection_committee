@@ -100,3 +100,33 @@ $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function () {
         }
     }
 });
+
+
+$(document).ready(function () {
+    $('#pagination').after('<div id="nav"></div>');
+    let rowsShown = 5;
+    let rowsTotal = $('#pagination tbody tr').length;
+    let numPages = rowsTotal / rowsShown;
+    if (rowsTotal > rowsShown) {
+        for (let i = 0; i < numPages; i++) {
+            let pageNum = i + 1;
+            $('#nav').append('<a href="#" rel="' + i + '">' + pageNum + '</a>');
+        }
+        $('#pagination thead tr').show();
+        $('#pagination tbody tr').hide();
+        $('#pagination tbody tr').slice(0, rowsShown).show();
+        $('#nav a:first').addClass('active');
+        $('#nav a').bind('click', function () {
+            $('#nav a').removeClass('active');
+            $(this).addClass('active');
+            let currPage = $(this).attr('rel');
+            let startItem = currPage * rowsShown;
+            let endItem = startItem + rowsShown;
+            $('#pagination tbody tr').css('opacity', '0.0').hide()
+                .slice(startItem, endItem).css('display', 'table-row').animate({opacity: 1}, 300);
+        });
+    } else {
+        $('#pagination thead tr').show();
+        $('#pagination tbody tr').show();
+    }
+});

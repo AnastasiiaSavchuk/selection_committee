@@ -1,11 +1,19 @@
 package command.outOfControl;
 
 import command.Command;
+import dao.impl.FacultyDaoImpl;
+import dao.impl.SubjectDaoImpl;
+import domain.Faculty;
+import domain.Subject;
 import org.apache.log4j.Logger;
 import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Get faculty from db by faculty id.
@@ -14,26 +22,33 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GetFacultyByIdCommand extends Command {
     private static final long serialVersionUID = -7490635096350714850L;
-    private static final Logger log = Logger.getLogger(GetFacultyByIdCommand.class);
+    private static final Logger logger = Logger.getLogger(GetFacultyByIdCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        log.info("GetFacultiesCommand starts");
-        String forward = Path.FACULTY;
+        logger.info("GetFacultyByIdCommand starts");
 
-//        HttpSession session = request.getSession();
-//        String localeLang = request.getLocale().getLanguage();
-//        String language = (String) session.getAttribute("elanguage");
-//
-//        String sortedType = request.getParameter("sortedType");
-//        log.info("faculty sorted type -->" + sortedType);
-//
-//        Faculty faculty = new FacultyDaoImpl().readById(Arrays.asList(language == null ? localeLang : language));
-//
-//        session.setAttribute("faculty", faculty);
-//        log.info("Faculty by id --> " +  faculty);
+        HttpSession session = request.getSession();
+        String localeLang = request.getLocale().getLanguage();
+        String language = (String) session.getAttribute("elanguage");
+        String facultyId = request.getParameter("facultyId");
 
-        log.info("GetFacultiesCommand finished");
-        return forward;
+        Faculty faculty = new FacultyDaoImpl().readById(Integer.parseInt(facultyId), Collections.singletonList(language == null ? localeLang : language));
+        List<Subject> subjectList = new SubjectDaoImpl().readSubjectsByFacultyId(faculty.getId(), Collections.singletonList(language == null ? localeLang : language));
+        if (subjectList.size() == 0) {
+            String errorMessage = "Cannot find subjects!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.FACULTY;
+        }
+
+        subjectList.sort(Subject.COMPARE_BY_ID);
+        faculty.setSubjectList(subjectList);
+        session.setAttribute("subjectList", subjectList);
+        session.setAttribute("faculty", faculty);
+        logger.info("Set the session attribute:faculty --> " + faculty);
+
+        logger.info("GetFacultyByIdCommand finished");
+        return Path.FACULTY;
     }
 }

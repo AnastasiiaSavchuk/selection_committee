@@ -17,9 +17,9 @@ import java.util.List;
  *
  * @author A.Savchuk
  */
-public class AdminPageCommand extends Command {
+public class AdminCommand extends Command {
     private static final long serialVersionUID = 688942586252025570L;
-    private static final Logger logger = Logger.getLogger(AdminPageCommand.class);
+    private static final Logger logger = Logger.getLogger(AdminCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -31,9 +31,8 @@ public class AdminPageCommand extends Command {
 
         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         applicantList.sort(Applicant.COMPARE_BY_ID);
-
         session.setAttribute("applicantList", applicantList);
-        logger.info("ApplicantList to admin page --> " + applicantList);
+        logger.info("Set the session attribute to admin page: applicantList --> " + applicantList);
 
         logger.debug("AdminPageCommand finished ");
         return Path.ADMIN;

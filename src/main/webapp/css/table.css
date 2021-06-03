@@ -1,31 +1,43 @@
 .container {
     margin-top: 120px !important;
 }
-.container .align-right{
-    text-align: right;
 
-}
-.container .button {
-    margin-bottom: 20px;
+
+.btn-customized {
     width: 150px;
     height: 40px;
-    background-color: #75a3a3;
-    border-color: #75a3a3;
-    border-radius: 7px;
+    background-color: #334d4d;
+    margin-top: 30px;
     outline: none;
-}
-
-.container .button :hover, .container .button :focus, .container .button :active {
     color: #ffffff;
-    border-color: #75a3a3;
-    outline: none;
-}
-
-.container .button a {
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
+    border-color: #334d4d;
     font-size: 12px;
+    border-radius: 5px;
+}
+
+.btn-customized:hover, .btn-customized:focus, .btn-customized:active {
+    color: #ffffff;
+    border-color: #334d4d;
+    outline: none !important;
+}
+
+.container .float-right{
+    text-align: right;
+}
+
+
+.container .align-right {
+    text-align: right;
+}
+
+.container .align-right .inline {
+    display: inline;
+    text-decoration: none;
+}
+
+.panel-table {
+    margin: 50px 0;
+    float: none;
 }
 
 .panel-table .panel-body {
@@ -43,6 +55,7 @@
 
 .panel-table .panel-body .table-bordered > thead > tr > th:first-of-type {
     text-align: center;
+    vertical-align: middle;
     width: 100px;
 }
 
@@ -78,4 +91,58 @@ used to vertically center elements, may need modification if you're not using de
 
 .panel-table .panel-body .table-bordered > tbody > tr > td {
     line-height: 34px;
+    vertical-align: middle;
+}
+
+#pagination tr {
+    display: none;
+}
+
+#nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#nav a {
+    padding: 5px 17px;
+    border-radius: 5px;
+    color: #262626;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+#nav a.active {
+    background-color: #75a3a3;
+}
+
+#nav a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+.form .input-group label {
+    padding: 6px 12px;
+    width: 220px;
+    height: 35px;
+    flex-direction: column;
+    border: 1px solid #75a3a3;
+    border-radius: 5px;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: grey;
+}
+
+input[type="radio"] {
+    position: relative;
+    float: left;
+    border: 1px solid #75a3a3;
+    color: #1e2f2f;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    text-align: center !important;
 }

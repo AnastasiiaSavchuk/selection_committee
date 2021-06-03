@@ -2,7 +2,9 @@ package command.outOfControl;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
+import dao.impl.ApplicationDaoImpl;
 import domain.Applicant;
+import domain.Application;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
 import util.Path;
@@ -62,15 +64,16 @@ public class LoginCommand extends Command {
 
                     if (applicantRole == Role.ADMIN) {
                         forward = Path.ADMIN;
-
                         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
                         applicantList.sort(Applicant.COMPARE_BY_ID);
-
                         session.setAttribute("applicantList", applicantList);
                         logger.info("Set the session attribute for admin page: applicant --> " + applicantList);
                     } else {
                         forward = Path.APPLICANT;
-
+                        List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
+                        applicationList.sort(Application.COMPARE_BY_ID);
+                        session.setAttribute("applicationList", applicationList);
+                        logger.info("Set the session attribute  to applicant page: applicationList --> " + applicationList);
                     }
 
                     Applicant applicant = new ApplicantDaoImpl().readById(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));

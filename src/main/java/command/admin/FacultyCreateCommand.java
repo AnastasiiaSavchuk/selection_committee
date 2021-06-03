@@ -9,8 +9,10 @@ import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +28,10 @@ public class FacultyCreateCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         logger.info("FacultyCreateCommand started");
         String errorMessage;
+
+        HttpSession session = request.getSession();
+        String localeLang = request.getLocale().getLanguage();
+        String language = (String) session.getAttribute("elanguage");
 
         String englishName = request.getParameter("englishName");
         String ukrainianName = request.getParameter("ukrainianName");
@@ -62,10 +68,17 @@ public class FacultyCreateCommand extends Command {
                 logger.error("errorMessage --> " + errorMessage);
                 return Path.ERROR;
             }
+
             request.setAttribute("faculty", newFaculty);
-            logger.info("Faculty --> " + newFaculty);
+            logger.info("Set the request attribute: faculty --> " + newFaculty);
+
+            List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
+            facultyList.sort(Faculty.COMPARE_BY_ID);
+            session.setAttribute("facultyList", facultyList);
+            logger.info("Set the session attribute: facultyList --> " + facultyList);
+
             logger.info("FacultyCreateCommand finished");
-            return Path.FACULTY;
+            return Path.FACULTIES;
         }
     }
 }

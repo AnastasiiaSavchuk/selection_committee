@@ -47,7 +47,6 @@ public class SignupDetailsCommand extends Command {
             return Path.ERROR;
         } else {
             Applicant applicant = new Applicant();
-
             applicant.setId(applicantId);
             applicant.setEmail(email);
             applicant.setFirstName(firstName);
@@ -58,10 +57,8 @@ public class SignupDetailsCommand extends Command {
             applicant.setSchoolName(schoolName);
             applicant.setCertificate(new byte[]{});
             applicant.setBlocked(false);
-            applicant.setApplicationList(new ArrayList<>());
 
             boolean isInsert = new ApplicantDaoImpl().create(applicant);
-
             if (!isInsert) {
                 errorMessage = "Unable to insert the applicant to the system. Please enter the correct data!";
                 request.setAttribute("errorMessage", errorMessage);

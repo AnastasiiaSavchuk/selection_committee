@@ -32,8 +32,6 @@ public class FacultyCreateChoiceCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
 
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-        subjectList.sort(Subject.COMPARE_BY_ID);
-
         if (subjectList.size() == 0) {
             errorMessage = "Cannot find subjects!";
             request.setAttribute("errorMessage", errorMessage);
@@ -41,6 +39,7 @@ public class FacultyCreateChoiceCommand extends Command {
             return Path.FACULTIES;
         }
 
+        subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
         logger.info("Set the session attribute: subjectList --> " + subjectList);
 

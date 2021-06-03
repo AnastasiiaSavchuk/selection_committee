@@ -96,6 +96,7 @@ public class SubjectDaoImpl implements SubjectDao {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_SUBJECTS_BY_FACULTY_ID);
             ps.setInt(1, facultyId);
+            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next()) {
                 subjectList.add(CREATOR.mapRow(rs));
@@ -150,23 +151,7 @@ public class SubjectDaoImpl implements SubjectDao {
             ps.setInt(2, subject.getId());
             ps.executeUpdate();
             logger.info("Updated subject's passing grade");
-            return true;
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to update subject's passing grade: " + ex.getMessage());
-            return false;
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-        }
-    }
 
-    @Override
-    public void updateSubjectTranslation(Subject subject) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_SUBJECT_TRANSLATION);
             for (int i = 0; i < subject.getSubjectList().size(); i++) {
                 switch (i) {
@@ -187,9 +172,11 @@ public class SubjectDaoImpl implements SubjectDao {
             }
             ps.executeUpdate();
             logger.info("Updated subject's translation");
+            return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to update subject's translation: " + ex.getMessage());
+            logger.error("Failed to update subject's passing grade: " + ex.getMessage());
+            return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

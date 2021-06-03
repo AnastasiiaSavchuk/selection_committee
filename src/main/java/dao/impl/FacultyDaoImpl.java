@@ -1,7 +1,9 @@
 package dao.impl;
 
 import dao.FacultyDao;
+import domain.Application;
 import domain.Faculty;
+import domain.Grade;
 import domain.Subject;
 import org.apache.log4j.Logger;
 import sql.DBManager;
@@ -92,6 +94,11 @@ public class FacultyDaoImpl implements FacultyDao {
             while (rs.next()) {
                 facultyList.add(CREATOR.mapRow(rs));
             }
+            if (facultyList.size() > 0) {
+                for (Faculty faculty : facultyList) {
+                    faculty.setSubjectList(new SubjectDaoImpl().readSubjectsByFacultyId(faculty.getId(), locales));
+                }
+            }
             logger.info("Received list of faculties");
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -114,6 +121,7 @@ public class FacultyDaoImpl implements FacultyDao {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_FACULTY_BY_ID);
             ps.setInt(1, id);
+            ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             if (rs.next()) {
                 faculty = CREATOR.mapRow(rs);
@@ -122,6 +130,32 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get faculty by id: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return faculty;
+    }
+
+    @Override
+    public Faculty readFacultyToUpdate(int id) {
+        Faculty faculty = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_FACULTY_TO_UPDATE);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                faculty = CREATOR.mapRow(rs);
+            }
+            logger.info("Received faculty to update by id: " + id);
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get faculty to update by id: " + ex.getMessage());
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

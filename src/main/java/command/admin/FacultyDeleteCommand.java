@@ -19,11 +19,11 @@ import java.util.List;
  */
 public class FacultyDeleteCommand extends Command {
     private static final long serialVersionUID = 461088540440463073L;
-    private static final Logger log = Logger.getLogger(FacultyDeleteCommand.class);
+    private static final Logger logger = Logger.getLogger(FacultyDeleteCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        log.info("FacultyDeleteCommand starts");
+        logger.info("FacultyDeleteCommand starts");
         String errorMessage;
 
         HttpSession session = request.getSession();
@@ -34,24 +34,24 @@ public class FacultyDeleteCommand extends Command {
         if (facultyIdToDelete.isEmpty()) {
             errorMessage = "FacultyId cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
-            log.error("errorMessage --> " + errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         }
-        boolean isDeleted = new FacultyDaoImpl().delete(Integer.parseInt(facultyIdToDelete));
 
+        boolean isDeleted = new FacultyDaoImpl().delete(Integer.parseInt(facultyIdToDelete));
         if (!isDeleted) {
             errorMessage = "Failed to delete faculty!";
             request.setAttribute("errorMessage", errorMessage);
-            log.error("errorMessage --> " + errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         }
 
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         facultyList.sort(Faculty.COMPARE_BY_ID);
         session.setAttribute("facultyList", facultyList);
-        log.info("FacultyList --> " + facultyList);
+        logger.info("Set the session attribute: facultyList --> " + facultyList);
 
-        log.debug("FacultyDeleteCommand finished");
+        logger.debug("FacultyDeleteCommand finished");
         return Path.FACULTIES;
     }
 }

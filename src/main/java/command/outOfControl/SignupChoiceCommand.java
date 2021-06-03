@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SignupChoiceCommand extends Command {
     private static final long serialVersionUID = 1666483864804192503L;
-    private static final Logger log = Logger.getLogger(LoginCommand.class);
+    private static final Logger logger = Logger.getLogger(LoginCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        log.info("RegistrationChoiceCommand finished");
+        logger.info("RegistrationChoiceCommand finished");
         return Path.SIGNUP;
     }
 }
