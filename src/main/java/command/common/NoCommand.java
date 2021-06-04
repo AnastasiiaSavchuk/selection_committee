@@ -22,7 +22,7 @@ public class NoCommand extends Command {
 
         String errorMessage = "No such command";
         request.setAttribute("errorMessage", errorMessage);
-        logger.error("Set the request attribute: errorMessage --> " + errorMessage);
+        logger.error("Set the request attribute:errorMessage --> " + errorMessage);
 
         logger.info("Command finished");
         return Path.ERROR;

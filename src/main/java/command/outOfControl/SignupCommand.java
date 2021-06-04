@@ -34,7 +34,7 @@ public class SignupCommand extends Command {
         String password = request.getParameter("password");
 
         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            errorMessage = "Email and password cannot be empty!";
+            errorMessage = "Something went wrong! Email and password cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -49,11 +49,11 @@ public class SignupCommand extends Command {
 
             Applicant applicant = new ApplicantDaoImpl().loginApplicant(email, password);
             session.setAttribute("applicant", applicant);
-            logger.info("Set the session attribute: applicant --> " + applicant);
+            logger.info("Set the session attribute:applicant --> " + applicant);
 
             Role applicantRole = applicant.getRole();
             session.setAttribute("applicantRole", applicantRole);
-            logger.info("Set the session attribute: applicantRole --> " + applicantRole);
+            logger.info("Set the session attribute:applicantRole --> " + applicantRole);
 
             logger.info("SingUpCommand finished");
             return Path.SIGNUP_DETAILS;

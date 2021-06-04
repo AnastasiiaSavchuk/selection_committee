@@ -23,7 +23,7 @@ public class SetLanguageCommand extends Command {
 
         HttpSession session = request.getSession();
         String locale = request.getParameter("language");
-        logger.info("Request parameter: locale --> " + locale);
+        logger.info("Request parameter:locale --> " + locale);
         session.setAttribute("elanguage", locale);
 
         logger.info("LanguageSetCommand finished");

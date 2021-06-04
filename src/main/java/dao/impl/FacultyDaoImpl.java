@@ -1,9 +1,7 @@
 package dao.impl;
 
 import dao.FacultyDao;
-import domain.Application;
 import domain.Faculty;
-import domain.Grade;
 import domain.Subject;
 import org.apache.log4j.Logger;
 import sql.DBManager;

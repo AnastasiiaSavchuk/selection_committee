@@ -70,8 +70,8 @@ SET u.email       = 'lomova@gmailcom',
     a.city        = 'Lviv',
     a.region      = 'Lviv region',
     a.school_name = 'School №56'
-    WHERE u.id = a.user_id
-        AND a.user_id = 12;
+WHERE u.id = a.user_id
+  AND a.user_id = 12;
 
 # UPDATE_APPLICANT_BY_ADMIN
 UPDATE applicant
@@ -293,6 +293,16 @@ FROM grade g
          INNER JOIN subject_translation st ON st.subject_id = s.id
          INNER JOIN language l ON l.id = st.language_id
 WHERE g.id = 1
+  AND l.lang_code = 'en';
+
+# GET_GRADES_BY_USER_ID
+SELECT g.id as grade_id, st.subject, g.grade
+FROM grade g
+         INNER JOIN user u ON g.user_id = u.id
+         INNER JOIN subject s ON s.id = g.subject_id
+         INNER JOIN subject_translation st ON st.subject_id = s.id
+         INNER JOIN language l ON l.id = st.language_id
+WHERE u.id = 2
   AND l.lang_code = 'en';
 
 # GET_GRADES_BY_APPLICATION_ID

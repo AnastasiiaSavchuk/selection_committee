@@ -1,7 +1,7 @@
 <%@ include file="/view/jspf/directive.jspf" %>
 <%@ include file="/view/jspf/localesSettings.jsp" %>
 <c:set var="role" value="${sessionScope['applicantRole']}"/>
-<c:set var="applicant" value="${sessionScope['applicant']}"/>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -24,12 +24,9 @@
             <c:if test="${not empty role}">
                 <c:choose>
                     <c:when test="${role == 'ADMIN'}">
-                        <p class="menu-active"><a
-                                href="${pageContext.request.contextPath}/controller?command=adminPage">
-                            <fmt:message key="admin.Admin"/></a></p>
-                        <p class="menu-active"><a
-                                href="${pageContext.request.contextPath}/controller?command=statementPage">
-                            <fmt:message key="statement.Statement"/></a></p>
+                        <p class="menu-active">
+                            <a href="${pageContext.request.contextPath}/controller?command=adminPage">
+                                <fmt:message key="admin.Admin"/></a></p>
                     </c:when>
 
                     <c:when test="${role == 'USER'}">
@@ -42,6 +39,15 @@
 
             <p class="menu-active"><a href="${pageContext.request.contextPath}/controller?command=getFaculties">
                 <fmt:message key="faculty.Faculties"/></a></p>
+
+            <c:if test="${role == 'ADMIN'}">
+                <p class="menu-active">
+                    <a href="${pageContext.request.contextPath}/controller?command=getSubjects">
+                        <fmt:message key="subject.Subjects"/></a></p>
+                <p class="menu-active">
+                    <a href="${pageContext.request.contextPath}/controller?command=statementPage">
+                        <fmt:message key="statement.Statement"/></a></p>
+            </c:if>
 
             <p class="menu-active"><a href="${pageContext.request.contextPath}/view/contactUs.jsp">
                 <fmt:message key="contacts.Contacts"/></a></p>

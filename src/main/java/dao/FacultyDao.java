@@ -15,7 +15,7 @@ public interface FacultyDao extends AbstractCRUDOperations<Faculty> {
     void createFacultySubject(Connection connection, Faculty faculty);
 
     /**
-     * Get entity details by id for update with all of translation name from DB.
+     * Get faculty details by id for update with all of translation name from DB.
      *
      * @param id entity details id.
      * @return single entity.

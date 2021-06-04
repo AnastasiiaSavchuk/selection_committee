@@ -10,10 +10,9 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 
 /**
- * SignupDetails command. Get all details from the applicant for second registration.
+ * Signup details command. Get all details from the applicant for second registration.
  *
  * @author A.Savchuk.
  */
@@ -41,7 +40,7 @@ public class SignupDetailsCommand extends Command {
 
         if (firstName.isEmpty() || middleName.isEmpty() || lastName.isEmpty() || city.isEmpty() || region.isEmpty()
                 || schoolName.isEmpty()) {
-            errorMessage = "Required fields cannot be empty!";
+            errorMessage = "Something went wrong! Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -60,14 +59,14 @@ public class SignupDetailsCommand extends Command {
 
             boolean isInsert = new ApplicantDaoImpl().create(applicant);
             if (!isInsert) {
-                errorMessage = "Unable to insert the applicant to the system. Please enter the correct data!";
+                errorMessage = "Something went wrong! Unable to create new applicant!";
                 request.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
                 return Path.ERROR;
             }
 
             session.setAttribute("applicant", applicant);
-            logger.info("Set the session attribute: applicant --> " + applicant);
+            logger.info("Set the session attribute:applicant --> " + applicant);
 
             logger.info("SignupDetailsCommand finished");
             return Path.APPLICANT_INSERT_APPLICATION;

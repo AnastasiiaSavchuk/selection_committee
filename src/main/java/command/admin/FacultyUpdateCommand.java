@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get change parameters of faculty from request and update the faculty in the db
+ * Get change parameters of faculty from request and update the faculty in the db.
  *
  * @author A.Savchuk
  */
@@ -46,7 +46,12 @@ public class FacultyUpdateCommand extends Command {
         String ukrainianName = request.getParameter("ukrainianName");
 
         if (id == null && budgetQty == null && totalQty == null && englishName == null && ukrainianName == null) {
-            errorMessage = "Required fields cannot be empty";
+            errorMessage = "Something went wrong! Required fields cannot be empty";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
+        } else if (Integer.parseInt(budgetQty) >= Integer.parseInt(totalQty)) {
+            errorMessage = "Budget places quantity cannot be more or the same as total places quantity!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -60,7 +65,7 @@ public class FacultyUpdateCommand extends Command {
 
         boolean isUpdated = new FacultyDaoImpl().update(updated);
         if (!isUpdated) {
-            errorMessage = "Cannot update faculty!";
+            errorMessage = "Something went wrong! Unable to update faculty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -69,7 +74,7 @@ public class FacultyUpdateCommand extends Command {
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         facultyList.sort(Faculty.COMPARE_BY_ID);
         session.setAttribute("facultyList", facultyList);
-        logger.info("Set the session attribute: facultyList --> " + facultyList);
+        logger.info("Set the session attribute:facultyList --> " + facultyList);
 
         logger.info("UpdateFacultyCommand finished");
         return Path.FACULTIES;

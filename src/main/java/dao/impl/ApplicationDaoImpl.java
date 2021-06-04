@@ -101,8 +101,10 @@ public class ApplicationDaoImpl implements ApplicationDao {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        if (locales == null || locales.size() == 0)
+        if (locales == null || locales.size() == 0){
             return applicationList;
+        }
+
         try {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.GET_APPLICATIONS_BY_FACULTY_ID);
@@ -111,13 +113,6 @@ public class ApplicationDaoImpl implements ApplicationDao {
             rs = ps.executeQuery();
             while (rs.next()) {
                 applicationList.add(CREATOR.mapRow(rs));
-            }
-
-            if (applicationList.size() > 0) {
-                for (Application application : applicationList) {
-                    application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
-                    application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
-                }
             }
             logger.info("Received list of application by facultyId: " + facultyId);
         } catch (SQLException ex) {

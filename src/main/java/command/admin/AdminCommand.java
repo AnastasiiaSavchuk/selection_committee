@@ -32,7 +32,7 @@ public class AdminCommand extends Command {
         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         applicantList.sort(Applicant.COMPARE_BY_ID);
         session.setAttribute("applicantList", applicantList);
-        logger.info("Set the session attribute to admin page: applicantList --> " + applicantList);
+        logger.info("Set the session attribute to admin page:applicantList --> " + applicantList);
 
         logger.debug("AdminPageCommand finished ");
         return Path.ADMIN;

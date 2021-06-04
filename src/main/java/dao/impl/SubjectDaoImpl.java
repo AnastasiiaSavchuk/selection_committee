@@ -35,7 +35,7 @@ public class SubjectDaoImpl implements SubjectDao {
                     }
                 }
             }
-            logger.info("Inserted subject");
+            logger.info("Inserted subject passing grade");
 
             ps = connection.prepareStatement(SQLConstants.INSERT_SUBJECT_TRANSLATION);
             ps.setString(1, subject.getSubjectList().get(0));
@@ -132,6 +132,32 @@ public class SubjectDaoImpl implements SubjectDao {
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get subject by id: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return subject;
+    }
+
+    @Override
+    public Subject readSubjectToUpdate(int id) {
+        Subject subject = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_SUBJECT_TO_UPDATE);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                subject = CREATOR.mapRow(rs);
+            }
+            logger.info("Received subject to update by id: " + id);
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get subject to update by id: " + ex.getMessage());
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

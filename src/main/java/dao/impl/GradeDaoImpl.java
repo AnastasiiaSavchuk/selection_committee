@@ -106,6 +106,36 @@ public class GradeDaoImpl implements GradleDao {
     }
 
     @Override
+    public List<Grade> readGradesByUserId(int userId, List<String> locales) {
+        List<Grade> gradeList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        if (locales == null || locales.size() == 0)
+            return gradeList;
+
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_GRADES_BY_USER_ID);
+            ps.setInt(1, userId);
+            ps.setString(2, locales.get(0));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                gradeList.add(CREATOR.mapRow(rs));
+            }
+            logger.info("Received list of grades by userId");
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get list of grades by userId: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return gradeList;
+    }
+
+    @Override
     public Grade readById(int id, List<String> locales) {
         Grade grade = null;
         Connection connection = null;

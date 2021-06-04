@@ -26,9 +26,6 @@ public class SQLConstants {
             "WHERE u.id = a.user_id AND a.user_id = ?";
     public static final String UPDATE_APPLICANT_BY_ADMIN = "UPDATE applicant SET is_blocked = ? WHERE user_id = ?";
     public static final String DELETE_APPLICANT = "DELETE FROM user WHERE id = ?";
-    public static final String GET_COUNT_APPLICANTS_BY_FACULTY = "SELECT COUNT(a.user_id) " +
-            "FROM applicant a, user u, application ap " +
-            "WHERE a.user_id = u.id AND ap.user_id = u.id AND ap.faculty_id = ?";
     //subject
     public static final String INSERT_SUBJECT = "INSERT INTO subject (passing_grade) VALUES (?)";
     public static final String INSERT_SUBJECT_TRANSLATION = "INSERT INTO subject_translation (subject_id, language_id, subject) " +
@@ -42,7 +39,12 @@ public class SQLConstants {
     public static final String GET_SUBJECTS_BY_FACULTY_ID = "SELECT s.id, s.passing_grade, st.subject " +
             "FROM faculty f, faculty_subject fs, subject s, subject_translation st, language l " +
             "WHERE f.id = fs.faculty_id AND fs.subject_id = s.id AND s.id = st.subject_id AND st.language_id = l.id AND f.id = ? AND l.lang_code = ?";
-    public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject " +
+    public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, st.subject " +
+            "FROM subject s " +
+            "INNER JOIN subject_translation st ON s.id = st.subject_id " +
+            "INNER JOIN language l ON l.id = st.language_id " +
+            "WHERE s.id = ?  AND l.lang_code = ?";
+    public static final String GET_SUBJECT_TO_UPDATE = "SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject " +
             "FROM subject s " +
             "INNER JOIN subject_translation st ON s.id = st.subject_id " +
             "INNER JOIN language l ON l.id = st.language_id " +
@@ -108,5 +110,12 @@ public class SQLConstants {
             "FROM grade g INNER JOIN application_grade ag ON ag.grade_id = g.id INNER JOIN subject s ON s.id = g.subject_id " +
             "INNER JOIN subject_translation st ON st.subject_id = s.id INNER JOIN language l ON l.id = st.language_id " +
             "WHERE ag.application_id = ? AND l.lang_code = ?";
+    public static final String GET_GRADES_BY_USER_ID = "SELECT g.id, s.id as subj_id, st.subject, s.passing_grade, g.grade " +
+            "FROM grade g " +
+            "INNER JOIN user u ON g.user_id = u.id " +
+            "INNER JOIN subject s ON s.id = g.subject_id " +
+            "INNER JOIN subject_translation st ON st.subject_id = s.id " +
+            "INNER JOIN language l ON l.id = st.language_id " +
+            "WHERE u.id = ? AND l.lang_code = ?";
     public static final String DELETE_GRADE = "DELETE FROM grade WHERE id = ?";
 }

@@ -1,15 +1,8 @@
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css");
-@import url("https://fonts.googleapis.com/css?family=Cairo&display=swap");
-
-body {
-    background-color: #ffffff;
-}
-
 .login-page {
-    width: 500px;
     position: relative;
-    top: 150px;
     margin: auto;
+    top: 150px;
+    width: 500px;
 }
 
 .form {
@@ -24,8 +17,7 @@ body {
     font-weight: normal;
     text-align: center;
     color: #ffffff;
-    margin-top: 25px;
-    margin-bottom: 5px;
+    margin: 25px 0 5px;
 }
 
 .form h4 {
@@ -38,7 +30,7 @@ body {
 
 .form hr {
     margin-top: 15px;
-    margin-bottom: 2.7rem;
+    margin-bottom: 40px;
     width: 250px;
     border-color: #ffffff;
 }
@@ -50,8 +42,8 @@ body {
 
 .form .input-group span {
     background-color: #334d4d;
-    color: #ffffff;
     border-color: #334d4d;
+    color: #ffffff;
 }
 
 .form .input-group input {
@@ -59,42 +51,42 @@ body {
     font-size: 14px;
 }
 
-.form .input-group label {
-    padding: 6px 12px;
-    width: 220px;
-    height: 35px;
-    flex-direction: column;
-    border: 1px solid #75a3a3;
-    border-radius: 5px;
-    background-color: #ffffff;
-    font-size: 14px;
-    color: grey;
-}
-
-input[type="checkbox"] {
-    position: relative;
-    float: left;
-    margin-right: 15px;
-    border: 1px solid #75a3a3;
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-}
-
 .btn-customized {
     width: 150px;
     height: 40px;
     background-color: #334d4d;
+    border-color: #334d4d;
+    color: #ffffff;
+    border-radius: 5px;
     margin-top: 30px;
     outline: none;
-    color: #ffffff;
-    border-color: #334d4d;
-    font-size: 12px;
-    border-radius: 5px;
+    cursor: pointer;
 }
 
 .btn-customized:hover, .btn-customized:focus, .btn-customized:active {
     color: #ffffff;
     border-color: #334d4d;
     outline: none !important;
+}
+
+/* for create form */
+.form .input-group label {
+    padding: 6px 12px;
+    width: 220px;
+    height: 35px;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 1px solid #75a3a3;
+    color: grey;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+input[type="checkbox"] {
+    position: relative;
+    float: left;
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
 }

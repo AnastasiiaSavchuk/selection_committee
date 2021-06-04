@@ -3,8 +3,10 @@ package command.outOfControl;
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
 import dao.impl.ApplicationDaoImpl;
+import dao.impl.GradeDaoImpl;
 import domain.Applicant;
 import domain.Application;
+import domain.Grade;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
 import util.Path;
@@ -40,7 +42,7 @@ public class LoginCommand extends Command {
         String password = request.getParameter("password");
 
         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            errorMessage = "Email and password cannot be empty!";
+            errorMessage = "Something went wrong! Email and password cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return forward;
@@ -67,21 +69,26 @@ public class LoginCommand extends Command {
                         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
                         applicantList.sort(Applicant.COMPARE_BY_ID);
                         session.setAttribute("applicantList", applicantList);
-                        logger.info("Set the session attribute for admin page: applicant --> " + applicantList);
+                        logger.info("Set the session attribute for admin page:applicant --> " + applicantList);
                     } else {
                         forward = Path.APPLICANT;
+                        List<Grade> gradeList = new GradeDaoImpl().readGradesByUserId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
+                        gradeList.sort(Grade.COMPARE_BY_ID);
+                        session.setAttribute("gradeList", gradeList);
+                        logger.info("Set the session attribute to applicant page:gradeList --> " + gradeList);
+
                         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
                         applicationList.sort(Application.COMPARE_BY_ID);
                         session.setAttribute("applicationList", applicationList);
-                        logger.info("Set the session attribute  to applicant page: applicationList --> " + applicationList);
+                        logger.info("Set the session attribute  to applicant page:applicationList --> " + applicationList);
                     }
 
                     Applicant applicant = new ApplicantDaoImpl().readById(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
                     session.setAttribute("applicant", applicant);
-                    logger.info("Set the session attribute: applicant --> " + applicant);
+                    logger.info("Set the session attribute:applicant --> " + applicant);
 
                     session.setAttribute("applicantRole", applicantRole);
-                    logger.info("Set the session attribute: applicantRole --> " + applicantRole);
+                    logger.info("Set the session attribute:applicantRole --> " + applicantRole);
                 }
             }
         }

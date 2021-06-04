@@ -3,8 +3,10 @@ package command.common;
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
 import dao.impl.ApplicationDaoImpl;
+import dao.impl.GradeDaoImpl;
 import domain.Applicant;
 import domain.Application;
+import domain.Grade;
 import org.apache.log4j.Logger;
 import util.Path;
 
@@ -15,6 +17,11 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Retrieve list of application from db and show applicant page.
+ *
+ * @author A.Savchuk
+ */
 public class ApplicantCommand extends Command {
     private static final long serialVersionUID = 4596874123547896542L;
     private static final Logger logger = Logger.getLogger(ApplicantCommand.class);
@@ -28,6 +35,11 @@ public class ApplicantCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
         Applicant applicant = (Applicant) session.getAttribute("applicant");
 
+        List<Grade> gradeList = new GradeDaoImpl().readGradesByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
+        gradeList.sort(Grade.COMPARE_BY_ID);
+        session.setAttribute("gradeList", gradeList);
+        logger.info("Set the session attribute to applicant page:gradeList --> " + gradeList);
+
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
         applicationList.sort(Application.COMPARE_BY_ID);
 
@@ -36,13 +48,14 @@ public class ApplicantCommand extends Command {
         }
 
         session.setAttribute("applicationList", applicationList);
-        logger.info("Set the session attribute  to applicant page: applicationList --> " + applicationList);
+        logger.info("Set the session attribute to applicant page:applicationList --> " + applicationList);
 
         byte[] getCertificate = new ApplicantDaoImpl().getCertificate(applicant.getId());
         if (getCertificate.length > 0) {
             String certificate = Base64.getEncoder().encodeToString(getCertificate);
-            session.setAttribute("Set the session attribute : certificate -->", certificate);
+            session.setAttribute("Set the session attribute:certificate -->", certificate);
         }
+
         logger.info("ApplicantCommand finished");
         return Path.APPLICANT;
     }

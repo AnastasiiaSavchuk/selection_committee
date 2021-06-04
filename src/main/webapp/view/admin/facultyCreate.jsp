@@ -15,31 +15,26 @@
     <div class="form">
         <form class="signup-form" action="controller" method="post">
             <input type="hidden" name="command" value="facultyCreate"/>
-            <h2><fmt:message key="createNew.CreateNew"/> <fmt:message key="faculty.Faculty"/></h2>
+            <h2><fmt:message key="faculty.CreateNewFaculty"/></h2>
             <hr>
-            <div class="input-group mb-3">
-                <input id="englishName" class="form-control" name="englishName" type="text"
-                       placeholder="<fmt:message key="faculty.NameInEnglish"/>" required/></div>
-
-            <div class="input-group mb-3">
-                <input id="ukrainianName" class="form-control" name="ukrainianName" type="text"
-                       placeholder="<fmt:message key="faculty.NameInUkrainian"/>" required/></div>
-            <div class="input-group mb-3">
-                <input id="totalQty" class="form-control" name="totalQty" type="number" min="0"
-                       placeholder="<fmt:message key="faculty.TotalPlaces"/>" required/></div>
-
-            <div class="input-group mb-3">
-                <input id="budgetQty" class="form-control" name="budgetQty" type="number" min="0"
-                       placeholder="<fmt:message key="faculty.BudgetPlaces"/>" required/></div>
-
+            <div class="input-group mb-3"><input class="form-control" name="englishName" type="text"
+                                                 placeholder="<fmt:message key="faculty.NameInEnglish"/>" required/>
+            </div>
+            <div class="input-group mb-3"><input class="form-control" name="ukrainianName" type="text"
+                                                 placeholder="<fmt:message key="faculty.NameInUkrainian"/>" required/>
+            </div>
+            <div class="input-group mb-3"><input class="form-control" name="totalQty" type="number" min="0"
+                                                 placeholder="<fmt:message key="faculty.TotalPlaces"/>" required/></div>
+            <div class="input-group mb-3"><input class="form-control" name="budgetQty" type="number" min="0"
+                                                 placeholder="<fmt:message key="faculty.BudgetPlaces"/>" required/>
+            </div>
             <h4><fmt:message key="subject.Subjects"/></h4>
             <hr>
-
             <div class="input-group mb-3">
-                <c:forEach items="${sList}" var="subject">
-                    <label for="subject"><c:out value="${subject.getSubjectList().get(0)}"/>
+                <c:forEach items="${sList}" var="faculty">
+                    <label for="subject"><c:out value="${faculty.getSubjectList().get(0)}"/>
                         <input type="checkbox" class="checkbox" name="subject" id="subject"
-                               value="${subject.getId()}"/></label>
+                               value="${faculty.getId()}"/></label>
                 </c:forEach>
             </div>
 

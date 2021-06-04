@@ -13,36 +13,28 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get list of subject entities from the db and forward to faculties page page and forward to create faculty page.
+ * Retrieve list of subjects from db
  *
- * @author A.Savchuk
+ * @author A.Savchuk.
  */
-public class FacultyCreateChoiceCommand extends Command {
-    private static final long serialVersionUID = 8654712323232145896L;
-    private static final Logger logger = Logger.getLogger(FacultyCreateChoiceCommand.class);
+public class GetSubjectsCommand extends Command {
+    private static final long serialVersionUID = -7490635096350714850L;
+    private static final Logger logger = Logger.getLogger(GetSubjectsCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("FacultyCreateChoiceCommand started");
-        String errorMessage;
+        logger.info("GetSubjectsCommand starts");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
         String language = (String) session.getAttribute("elanguage");
 
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-        if (subjectList.size() == 0) {
-            errorMessage = "Something went wrong! Unable to find subjects!";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Path.FACULTIES;
-        }
-
         subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
         logger.info("Set the session attribute:subjectList --> " + subjectList);
 
-        logger.info("FacultyCreateChoiceCommand finished");
-        return Path.FACULTY_CREATE;
+        logger.info("GetSubjectsCommand finished");
+        return Path.SUBJECTS;
     }
 }

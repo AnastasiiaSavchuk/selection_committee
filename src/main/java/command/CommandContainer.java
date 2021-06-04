@@ -27,9 +27,16 @@ public class CommandContainer {
         commands.put("facultyCreate", new FacultyCreateCommand());
         commands.put("facultyUpdate", new FacultyUpdateCommand());
         commands.put("facultyDelete", new FacultyDeleteCommand());
-        commands.put("getApplicantById", new GetApplicantByIdCommand());
+        commands.put("getSubjects", new GetSubjectsCommand());
+        commands.put("subjectCreateChoice", new SubjectCreateChoiceCommand());
+        commands.put("subjectCreate", new SubjectCreateCommand());
+        commands.put("subjectUpdate", new SubjectUpdateCommand());
+        commands.put("subjectDelete", new SubjectDeleteCommand());
+        commands.put("getApplicantById", new ApplicantGetByIdCommand());
         commands.put("applicantUpdate", new ApplicantUpdateCommand());
         commands.put("applicantDelete", new ApplicantDeleteCommand());
+        commands.put("applicationsGetByFacultyId", new ApplicationsGetByFacultyIdCommand());
+        commands.put("applicationDelete", new ApplicationDeleteCommand());
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());

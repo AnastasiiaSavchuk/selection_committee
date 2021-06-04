@@ -10,15 +10,12 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Get fields to create a new faculty from facultyCreate page and insert into db.
  *
- * @author A.Savchuk.
+ * @author A.Savchuk
  */
 public class FacultyCreateCommand extends Command {
     private static final long serialVersionUID = 5874123654789123523L;
@@ -40,45 +37,54 @@ public class FacultyCreateCommand extends Command {
         String[] subjectIdList = request.getParameterValues("subject");
 
         if (englishName.isEmpty() || ukrainianName.isEmpty() || budgetQty.isEmpty()
-                || totalQty.isEmpty() || subjectIdList.length == 0) {
-            errorMessage = "Required fields cannot be empty!";
+                || totalQty.isEmpty()) {
+            errorMessage = "Something went wrong! Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
-        } else {
-            List<Subject> subjectList = new ArrayList<>();
-
-            for (String id : subjectIdList) {
-                Subject subject = new Subject();
-                subject.setId(Integer.parseInt(id));
-                subjectList.add(subject);
-            }
-
-            Faculty newFaculty = new Faculty();
-
-            newFaculty.setFacultyList(Arrays.asList(englishName, ukrainianName));
-            newFaculty.setBudgetQty(Integer.parseInt(budgetQty));
-            newFaculty.setTotalQty(Integer.parseInt(totalQty));
-            newFaculty.setSubjectList(subjectList);
-
-            boolean isInsert = new FacultyDaoImpl().create(newFaculty);
-            if (!isInsert) {
-                errorMessage = "Required fields cannot be empty!";
-                request.setAttribute("errorMessage", errorMessage);
-                logger.error("errorMessage --> " + errorMessage);
-                return Path.ERROR;
-            }
-
-            request.setAttribute("faculty", newFaculty);
-            logger.info("Set the request attribute: faculty --> " + newFaculty);
-
-            List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-            facultyList.sort(Faculty.COMPARE_BY_ID);
-            session.setAttribute("facultyList", facultyList);
-            logger.info("Set the session attribute: facultyList --> " + facultyList);
-
-            logger.info("FacultyCreateCommand finished");
-            return Path.FACULTIES;
+        } else if (Integer.parseInt(budgetQty) >= Integer.parseInt(totalQty)) {
+            errorMessage = "Budget places quantity cannot be more or the same as total places quantity!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
+        } else if (Objects.isNull(subjectIdList)) {
+            errorMessage = "Something went wrong! Please choose subjects to faculty!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
         }
+        List<Subject> subjectList = new ArrayList<>();
+
+        for (String id : subjectIdList) {
+            Subject subject = new Subject();
+            subject.setId(Integer.parseInt(id));
+            subjectList.add(subject);
+        }
+
+        Faculty newFaculty = new Faculty();
+
+        newFaculty.setFacultyList(Arrays.asList(englishName, ukrainianName));
+        newFaculty.setBudgetQty(Integer.parseInt(budgetQty));
+        newFaculty.setTotalQty(Integer.parseInt(totalQty));
+        newFaculty.setSubjectList(subjectList);
+
+        boolean isInsert = new FacultyDaoImpl().create(newFaculty);
+        if (!isInsert) {
+            errorMessage = "Something went wrong! Unable to create new faculty!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
+        }
+
+        request.setAttribute("faculty", newFaculty);
+        logger.info("Set the request attribute:faculty --> " + newFaculty);
+
+        List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
+        facultyList.sort(Faculty.COMPARE_BY_ID);
+        session.setAttribute("facultyList", facultyList);
+        logger.info("Set the session attribute:facultyList --> " + facultyList);
+
+        logger.info("FacultyCreateCommand finished");
+        return Path.FACULTIES;
     }
 }

@@ -4,7 +4,6 @@ import command.Command;
 import dao.impl.FacultyDaoImpl;
 import domain.Faculty;
 import org.apache.log4j.Logger;
-import util.Helper;
 import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Retrieve list of faculties from db and sort it according to demand params
+ * Retrieve list of faculties from db.
  *
- * @author A.Savchuk.
+ * @author A.Savchuk
  */
 public class GetFacultiesCommand extends Command {
     private static final long serialVersionUID = -7490635096350714850L;
@@ -33,7 +32,7 @@ public class GetFacultiesCommand extends Command {
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         facultyList.sort(Faculty.COMPARE_BY_ID);
         session.setAttribute("facultyList", facultyList);
-        logger.info("FacultyList --> " + facultyList);
+        logger.info("Set the session attribute:facultyList --> " + facultyList);
 
         logger.info("GetFacultiesCommand finished");
         return Path.FACULTIES;

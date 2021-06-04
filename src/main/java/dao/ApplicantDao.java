@@ -18,6 +18,7 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
 
     /**
      * Get certificate image from applicant table
+     *
      * @return true if succeed
      */
     byte[] getCertificate(int applicantId);
@@ -32,7 +33,8 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
 
     /**
      * Update applicant's blocked status in the DB.
-     *  @param id        applicant's id.
+     *
+     * @param id        applicant's id.
      * @param isBlocked blocked status.
      * @return
      */

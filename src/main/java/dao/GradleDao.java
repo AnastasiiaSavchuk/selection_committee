@@ -14,5 +14,7 @@ public interface GradleDao extends AbstractCRUDOperations<Grade> {
      */
     void createApplicationGrade(int applicationId, Grade grade);
 
+    List<Grade> readGradesByUserId(int userId, List<String> locales);
+
     List<Grade> readGradesByApplicationId(int applicationId, List<String> locales);
 }

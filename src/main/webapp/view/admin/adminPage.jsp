@@ -13,23 +13,6 @@
 <%@ include file="/view/jspf/header.jspf" %>
 
 <div class="container">
-    <div class="align-right">
-        <form class="inline" id="deleteForm" method="post" action="${pageContext.request.contextPath}/controller">
-            <input type="hidden" name="command" value="applicantDelete"/>
-            <input type="hidden" name="applicantIdToDelete" id="applicantDelete" value="">
-            <a class="btn btn-danger" onclick="applicantDelete();"
-               style=" background-color: #ff4d4d">
-                <em class="fa fa-trash"></em></a>
-        </form>
-        <form class="inline" id="getByIdForm" method="get" action="${pageContext.request.contextPath}/controller">
-            <input type="hidden" name="command" value="getApplicantById"/>
-            <input type="hidden" name="applicantId" id="getApplicantById" value="">
-            <a class="btn btn-danger" onclick="applicantGetById();"
-               style=" background-color: #75a3a3; border-color: #75a3a3">
-                <em class="fa fa-eye"></em></a>
-        </form>
-    </div>
-
     <div class=" panel-table">
         <div class="panel-heading">
             <div class="panel-body">
@@ -37,41 +20,44 @@
                     <thead>
                     <tr>
                         <th class="hidden-xs">№</th>
-                        <th><fmt:message key="applicant.FirstName"/></th>
-                        <th><fmt:message key="applicant.MiddleName"/></th>
-                        <th><fmt:message key="applicant.LastName"/></th>
+                        <th><fmt:message key="applicant.FullName"/></th>
                         <th><fmt:message key="applicant.City"/></th>
                         <th><fmt:message key="applicant.Status"/></th>
-                        <th><em class="fa fa-check-square-o"></em></th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${aList}" var="applicant" varStatus="loop">
                         <tr>
                             <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
-                            <td class="td-to-align"><c:out value="${applicant.getFirstName()}"/></td>
-                            <td class="td-to-align"><c:out value="${applicant.getMiddleName()}"/></td>
-                            <td class="td-to-align"><c:out value="${applicant.getLastName()}"/></td>
+                            <td class="td-to-align">
+                                <form method="post" action="controller">
+                                    <input type="hidden" name="command" value="getApplicantById"/>
+                                    <input type="hidden" name="applicantId"
+                                           value="<c:out value="${applicant.getId()}"/>">
+                                    <button class="tdButton"
+                                            style="text-align: left !important; border: none !important; width: 100% !important;">
+                                        <c:out value="${applicant.getFirstName()}"/> <c:out
+                                            value="${applicant.getMiddleName()}"/> <c:out
+                                            value="${applicant.getLastName()}"/>
+                                    </button>
+                                </form>
                             <td class="td-to-align"><c:out value="${applicant.getCity()}"/></td>
                             <c:if test="${not empty applicant.isBlocked()}">
                                 <c:choose>
                                     <c:when test="${applicant.isBlocked() == true}">
                                         <td align="center">
-                                            <button disabled type="button" class="btn btn-danger">
+                                            <button disabled class="btn btn-danger">
                                                 <fmt:message key="applicant.Blocked"/></button>
                                         </td>
                                     </c:when>
                                     <c:when test="${applicant.isBlocked() == false}">
                                         <td align="center">
-                                            <button disabled type="button" class="btn btn-success">
+                                            <button disabled class="btn btn-success">
                                                 <fmt:message key="applicant.Active"/></button>
                                         </td>
                                     </c:when>
                                 </c:choose>
                             </c:if>
-                            <td align="center">
-                                <input type="radio" class="getId" name="getId" value="${applicant.getId()}"/>
-                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -80,8 +66,5 @@
         </div>
     </div>
 </div>
-<script>
-    <%@include file="../../js/applicant.js"%>
-</script>
 </body>
 </html>

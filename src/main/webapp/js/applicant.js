@@ -1,15 +1,18 @@
-const inputs = document.querySelectorAll('.getId');
-const clickHandler = i => {
-    document.getElementById("applicantDelete").value = i.getAttribute("value");
-    document.getElementById("getApplicantById").value = i.getAttribute("value");
-};
-inputs.forEach(i => i.onclick = () => clickHandler(i));
-
 const status = document.querySelectorAll('.getStatus');
 const updateHandler = i => {
     document.getElementById("applicantUpdate").value = i.getAttribute("value");
 };
 status.forEach(i => i.onclick = () => updateHandler(i));
+
+function applicantUpdate() {
+    let applicantToUpdate = document.getElementById('applicantUpdate');
+    if (applicantToUpdate.value === '') {
+        // modalAlert();
+        return false;
+    } else {
+        document.getElementById('updateForm').submit();
+    }
+}
 
 function getCertificate(buttonCertificate) {
     let div = document.getElementById('certificate');
@@ -22,32 +25,13 @@ function getCertificate(buttonCertificate) {
     }
 }
 
-function applicantUpdate() {
-    let applicantToUpdate = document.getElementById('applicantUpdate');
-    if (applicantToUpdate.value === '') {
-        // modalAlert();
-        return false;
+function getApplications(buttonApplications) {
+    let div = document.getElementById('application');
+    if (div.style.display !== 'block') {
+        div.style.display = 'block';
+        buttonApplications.innerHTML = '<fmt:message key="faculty.HideApplication"/>';
     } else {
-        document.getElementById('updateForm').submit();
-    }
-}
-
-function applicantDelete() {
-    let facultyToUpdate = document.getElementById('applicantDelete');
-    if (facultyToUpdate.value === '') {
-        // modalAlert();
-        return false;
-    } else {
-        document.getElementById('deleteForm').submit();
-    }
-}
-
-function applicantGetById() {
-    let facultyToUpdate = document.getElementById('getApplicantById');
-    if (facultyToUpdate.value === '') {
-        // modalAlert();
-        return false;
-    } else {
-        document.getElementById('getByIdForm').submit();
+        div.style.display = 'none';
+        buttonApplications.innerHTML = '<fmt:message key="faculty.DisplayApplication"/>';
     }
 }

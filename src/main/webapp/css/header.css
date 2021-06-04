@@ -24,6 +24,7 @@
 .nav-menu p {
     position: relative;
     float: left;
+    color: #262626;
 }
 
 .nav-menu a {
@@ -111,7 +112,7 @@ body.mobile-nav-active #mobile-nav {
 #mobile-nav .nav-menu p a {
     width: 100%;
     position: relative;
-    padding: 10px 25px;
+    padding: 10px 35px;
     display: block;
     outline: none;
     overflow: hidden;
@@ -140,4 +141,36 @@ body.mobile-nav-active #mobile-nav {
     #mobile-nav-toggle {
         display: inline;
     }
+}
+
+/* for pagination */
+
+#pagination tr {
+    display: none;
+}
+
+#nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#nav a {
+    padding: 5px 17px;
+    border-radius: 5px;
+    color: #262626;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+#nav a.active {
+    background-color: #75a3a3;
+}
+
+#nav a:hover:not(.active) {
+    background-color: #ddd;
 }

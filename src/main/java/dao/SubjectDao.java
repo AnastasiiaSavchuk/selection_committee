@@ -14,4 +14,11 @@ public interface SubjectDao extends AbstractCRUDOperations<Subject> {
      */
     List<Subject> readSubjectsByFacultyId(int facultyId, List<String> locales);
 
+    /**
+     * Get subject details by id for update with all of translation name from DB.
+     *
+     * @param id entity details id.
+     * @return single entity.
+     */
+    Subject readSubjectToUpdate(int id);
 }
