@@ -38,8 +38,13 @@ public class SignupCommand extends Command {
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
+        } else if (password.length() < 8) {
+            errorMessage = "The password must be at least 8 characters long!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
         } else {
-            password = Helper.getPasswordHash(password);
+            //password = Helper.getPasswordHash(password);
             if (!Objects.isNull(new ApplicantDaoImpl().readByEmail(email))) {
                 errorMessage = "Such applicant with email is already exists!";
                 request.setAttribute("errorMessage", errorMessage);

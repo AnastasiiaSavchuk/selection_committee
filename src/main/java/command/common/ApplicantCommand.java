@@ -35,20 +35,11 @@ public class ApplicantCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
         Applicant applicant = (Applicant) session.getAttribute("applicant");
 
-        List<Grade> gradeList = new GradeDaoImpl().readGradesByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
-        gradeList.sort(Grade.COMPARE_BY_ID);
-        session.setAttribute("gradeList", gradeList);
-        logger.info("Set the session attribute to applicant page:gradeList --> " + gradeList);
-
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
         applicationList.sort(Application.COMPARE_BY_ID);
 
-        if (applicationList.isEmpty()) {
-            return Path.APPLICANT_INSERT_APPLICATION;
-        }
-
         session.setAttribute("applicationList", applicationList);
-        logger.info("Set the session attribute to applicant page:applicationList --> " + applicationList);
+        logger.info("Set the session attribute:applicationList --> " + applicationList);
 
         byte[] getCertificate = new ApplicantDaoImpl().getCertificate(applicant.getId());
         if (getCertificate.length > 0) {

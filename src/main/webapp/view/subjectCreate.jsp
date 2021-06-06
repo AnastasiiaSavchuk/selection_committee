@@ -4,7 +4,7 @@
 <head>
     <title>Subject Create</title>
     <style>
-        <%@ include file="../../css/login.css" %>
+        <%@ include file="../css/login.css" %>
     </style>
 </head>
 <body>
@@ -24,7 +24,7 @@
                 <input class="form-control" name="ukrainianName" type="text"
                        placeholder="<fmt:message key="subject.NameInUkrainian"/>" required/></div>
             <div class="input-group mb-3">
-                <input class="form-control" name="passingGrade" type="number" min="0"
+                <input class="form-control" name="passingGrade" type="number" min="0" max="200"
                        placeholder="<fmt:message key="subject.PassingGrade"/>" required/></div>
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="save.Save"/></button>

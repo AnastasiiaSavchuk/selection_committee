@@ -14,7 +14,7 @@ import util.EntityCreator;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,7 +80,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
             if (applicationList.size() > 0) {
                 for (Application application : applicationList) {
                     application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
-                    application.setGradesList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
+                    application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
                 }
             }
             logger.info("Received list of application by userId: " + userId);
@@ -101,7 +101,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        if (locales == null || locales.size() == 0){
+        if (locales == null || locales.size() == 0) {
             return applicationList;
         }
 
@@ -145,7 +145,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
             Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales);
             application.setFaculty(faculty);
             List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales);
-            application.setGradesList(gradeList);
+            application.setGradeList(gradeList);
             logger.info("Received application by id: " + id);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -215,7 +215,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
 
                 Faculty faculty = new Faculty();
                 faculty.setId(rs.getInt(SQLFields.FACULTY_ID));
-                faculty.setFacultyList(Arrays.asList(rs.getString(SQLFields.FACULTY)));
+                faculty.setFacultyList(Collections.singletonList(rs.getString(SQLFields.FACULTY)));
 
                 application.setId(rs.getInt(SQLFields.APPLICATION_ID));
                 application.setApplicant(applicant);

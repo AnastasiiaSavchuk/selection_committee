@@ -6,7 +6,7 @@
 <head>
     <title>Admin Page</title>
     <style>
-        <%@ include file="../../css/table.css" %>
+        <%@ include file="../css/table.css" %>
     </style>
 </head>
 <body>
@@ -34,9 +34,7 @@
                                     <input type="hidden" name="command" value="getApplicantById"/>
                                     <input type="hidden" name="applicantId"
                                            value="<c:out value="${applicant.getId()}"/>">
-                                    <button class="tdButton"
-                                            style="text-align: left !important; border: none !important; width: 100% !important;">
-                                        <c:out value="${applicant.getFirstName()}"/> <c:out
+                                    <button class="buttonChose"><c:out value="${applicant.getFirstName()}"/> <c:out
                                             value="${applicant.getMiddleName()}"/> <c:out
                                             value="${applicant.getLastName()}"/>
                                     </button>

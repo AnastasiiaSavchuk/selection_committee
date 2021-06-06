@@ -5,7 +5,7 @@
 <head>
     <title>Faculty update</title>
     <style>
-        <%@ include file="../../css/login.css" %>
+        <%@ include file="../css/login.css" %>
     </style>
 </head>
 <body>

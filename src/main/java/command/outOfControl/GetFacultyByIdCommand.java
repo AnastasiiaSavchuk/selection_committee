@@ -40,7 +40,7 @@ public class GetFacultyByIdCommand extends Command {
             String errorMessage = "Something went wrong! Unable to find subjects!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return Path.FACULTY;
+            return Path.FACULTY_BY_id;
         }
 
         subjectList.sort(Subject.COMPARE_BY_ID);
@@ -55,6 +55,6 @@ public class GetFacultyByIdCommand extends Command {
         logger.info("Set the session attribute:applicationList --> " + applicationList);
 
         logger.info("GetFacultyByIdCommand finished");
-        return Path.FACULTY;
+        return Path.FACULTY_BY_id;
     }
 }

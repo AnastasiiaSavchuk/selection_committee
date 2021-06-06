@@ -1,20 +1,39 @@
 package dao;
 
+import domain.Application;
 import domain.Grade;
-import util.AbstractCRUDOperations;
 
 import java.util.List;
 
-public interface GradleDao extends AbstractCRUDOperations<Grade> {
+public interface GradleDao {
+    /**
+     * Insert grades into DB.
+     *
+     * @param grade to insert.
+     * @return single entity
+     */
+    Grade createGrade(Grade grade);
+
     /**
      * Insert grades to the application into DB.
      *
-     * @param applicationId entity details to insert.
-     * @param grade         entity to insert.
+     * @param application entity to insert.
      */
-    void createApplicationGrade(int applicationId, Grade grade);
+    boolean createApplicationGrade(Application application);
 
-    List<Grade> readGradesByUserId(int userId, List<String> locales);
-
+    /**
+     * Get list of all grades details by user id from DB.
+     *
+     * @param applicationId entity details id.
+     * @param locales       locales data.
+     * @return list of grades.
+     */
     List<Grade> readGradesByApplicationId(int applicationId, List<String> locales);
+
+    /**
+     * Delete grade based id from DB.
+     *
+     * @param id entity details id.
+     */
+    boolean delete(int id);
 }

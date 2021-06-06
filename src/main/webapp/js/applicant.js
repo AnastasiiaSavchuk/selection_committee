@@ -35,3 +35,14 @@ function getApplications(buttonApplications) {
         buttonApplications.innerHTML = '<fmt:message key="faculty.DisplayApplication"/>';
     }
 }
+
+function getGrades(buttonGrades) {
+    let div = document.getElementById('grade');
+    if (div.style.display !== 'block') {
+        div.style.display = 'block';
+        buttonGrades.innerHTML = '<fmt:message key="grade.HideGrade"/>';
+    } else {
+        div.style.display = 'none';
+        buttonGrades.innerHTML = '<fmt:message key="grade.DisplayGrade"/>';
+    }
+}

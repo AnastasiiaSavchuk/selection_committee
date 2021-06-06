@@ -5,7 +5,7 @@
 <head>
     <title>Faculty Create</title>
     <style>
-        <%@ include file="../../css/login.css" %>
+        <%@ include file="../css/login.css" %>
     </style>
 </head>
 <body>
@@ -23,18 +23,18 @@
             <div class="input-group mb-3"><input class="form-control" name="ukrainianName" type="text"
                                                  placeholder="<fmt:message key="faculty.NameInUkrainian"/>" required/>
             </div>
-            <div class="input-group mb-3"><input class="form-control" name="totalQty" type="number" min="0"
+            <div class="input-group mb-3"><input class="form-control" name="totalQty" type="number" min="0" max="35"
                                                  placeholder="<fmt:message key="faculty.TotalPlaces"/>" required/></div>
-            <div class="input-group mb-3"><input class="form-control" name="budgetQty" type="number" min="0"
+            <div class="input-group mb-3"><input class="form-control" name="budgetQty" type="number" min="0" max="20"
                                                  placeholder="<fmt:message key="faculty.BudgetPlaces"/>" required/>
             </div>
             <h4><fmt:message key="subject.Subjects"/></h4>
             <hr>
             <div class="input-group mb-3">
-                <c:forEach items="${sList}" var="faculty">
-                    <label for="subject"><c:out value="${faculty.getSubjectList().get(0)}"/>
+                <c:forEach items="${sList}" var="subject">
+                    <label for="subject"><c:out value="${subject.getSubjectList().get(0)}"/>
                         <input type="checkbox" class="checkbox" name="subject" id="subject"
-                               value="${faculty.getId()}"/></label>
+                               value="${subject.getId()}"/></label>
                 </c:forEach>
             </div>
 
@@ -47,9 +47,5 @@
         </form>
     </div>
 </div>
-
-<script>
-    <%@include file="../../js/faculty.js"%>
-</script>
 </body>
 </html>

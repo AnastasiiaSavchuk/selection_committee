@@ -9,6 +9,7 @@ import domain.Application;
 import domain.Grade;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
+import util.Helper;
 import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,10 +73,6 @@ public class LoginCommand extends Command {
                         logger.info("Set the session attribute for admin page:applicant --> " + applicantList);
                     } else {
                         forward = Path.APPLICANT;
-                        List<Grade> gradeList = new GradeDaoImpl().readGradesByUserId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
-                        gradeList.sort(Grade.COMPARE_BY_ID);
-                        session.setAttribute("gradeList", gradeList);
-                        logger.info("Set the session attribute to applicant page:gradeList --> " + gradeList);
 
                         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
                         applicationList.sort(Application.COMPARE_BY_ID);

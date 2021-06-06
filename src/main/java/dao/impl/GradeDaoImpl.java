@@ -1,6 +1,7 @@
 package dao.impl;
 
 import dao.GradleDao;
+import domain.Application;
 import domain.Grade;
 import domain.Subject;
 import org.apache.log4j.Logger;
@@ -22,14 +23,15 @@ public class GradeDaoImpl implements GradleDao {
     private static final GradeCreator CREATOR = new GradeCreator();
 
     @Override
-    public boolean create(Grade grade) {
+    public Grade createGrade(Grade grade) {
         Connection connection = null;
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_GRADE, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, grade.getSubject().getId());
-            ps.setInt(2, grade.getGrade());
+            ps.setInt(1, grade.getApplicant().getId());
+            ps.setInt(2, grade.getSubject().getId());
+            ps.setInt(3, grade.getGrade());
             if (ps.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -38,41 +40,39 @@ public class GradeDaoImpl implements GradleDao {
                 }
             }
             logger.info("Inserted grade");
+            return grade;
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to insert grade: " + ex.getMessage());
+            return null;
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+        }
+    }
+
+    @Override
+    public boolean createApplicationGrade(Application application) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            for (Grade grade : application.getGradeList()) {
+                ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION_GRADE);
+                ps.setInt(1, application.getId());
+                ps.setInt(2, grade.getId());
+                ps.executeUpdate();
+            }
+            logger.info("Inserted grades to application");
             return true;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to insert applicant's details: " + ex.getMessage());
+            logger.error("Failed to insert grades to application: " + ex.getMessage());
             return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
         }
-    }
-
-    @Override
-    public void createApplicationGrade(int applicationId, Grade grade) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        try {
-            connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION_GRADE);
-            ps.setInt(1, applicationId);
-            ps.setInt(2, grade.getId());
-            ps.executeUpdate();
-
-            logger.info("Inserted grades to application");
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to insert grades to application: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-        }
-    }
-
-    @Override
-    public List<Grade> readAll(List<String> locales) {
-        return null;
     }
 
     @Override
@@ -103,68 +103,6 @@ public class GradeDaoImpl implements GradleDao {
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
         return gradeList;
-    }
-
-    @Override
-    public List<Grade> readGradesByUserId(int userId, List<String> locales) {
-        List<Grade> gradeList = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        if (locales == null || locales.size() == 0)
-            return gradeList;
-
-        try {
-            connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.GET_GRADES_BY_USER_ID);
-            ps.setInt(1, userId);
-            ps.setString(2, locales.get(0));
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                gradeList.add(CREATOR.mapRow(rs));
-            }
-            logger.info("Received list of grades by userId");
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to get list of grades by userId: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-            DB_MANAGER.close(Objects.requireNonNull(rs));
-        }
-        return gradeList;
-    }
-
-    @Override
-    public Grade readById(int id, List<String> locales) {
-        Grade grade = null;
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.GET_GRADE_BY_ID);
-            ps.setInt(1, id);
-            ps.setString(2, locales.get(0));
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                grade = CREATOR.mapRow(rs);
-            }
-            logger.info("Received grade by id: " + id);
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to get grade by id: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-            DB_MANAGER.close(Objects.requireNonNull(rs));
-        }
-        return grade;
-    }
-
-    @Override
-    public boolean update(Grade grade) {
-        return false;
     }
 
     @Override

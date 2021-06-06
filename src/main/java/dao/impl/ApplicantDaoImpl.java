@@ -85,6 +85,27 @@ public class ApplicantDaoImpl implements ApplicantDao {
         }
     }
 
+    public boolean createCertificate(Applicant applicant, byte[] certificate) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.INSERT_CERTIFICATE);
+            ps.setBytes(1, applicant.getCertificate());
+            ps.setInt(2, applicant.getId());
+            ps.executeUpdate();
+            logger.info("Inserted applicant's certificate");
+            return true;
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to insert applicant's certificate: " + ex.getMessage());
+            return false;
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+        }
+    }
+
     @Override
     public List<Applicant> readAll(List<String> locales) {
         List<Applicant> applicantList = new ArrayList<>();
@@ -210,7 +231,6 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setString(6, applicant.getCity());
             ps.setString(7, applicant.getRegion());
             ps.setString(8, applicant.getSchoolName());
-            ps.setBytes(9, applicant.getCertificate());
             ps.setInt(10, applicant.getId());
             ps.executeUpdate();
             logger.info("Updated applicant's details");

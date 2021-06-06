@@ -70,7 +70,7 @@
 }
 
 /* for create form */
-.form .input-group label {
+.form .input-group label, .form .input-group .applyLabel {
     padding: 6px 12px;
     width: 220px;
     height: 35px;
@@ -80,6 +80,7 @@
     color: grey;
     border-radius: 5px;
     font-size: 14px;
+    outline: none !important;
 }
 
 input[type="checkbox"] {

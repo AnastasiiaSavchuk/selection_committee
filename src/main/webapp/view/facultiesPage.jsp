@@ -15,8 +15,7 @@
     <div class="align-right">
         <c:if test="${role == 'ADMIN'}">
             <a href="${pageContext.request.contextPath}/controller?command=facultyCreateChoice">
-                <button class="tdButton" type="submit" style="width: 270px !important;">
-                    <fmt:message key="faculty.CreateNewFaculty"/></button>
+                <button class="button" type="submit"><fmt:message key="faculty.CreateNewFaculty"/></button>
             </a>
         </c:if>
     </div>
@@ -44,9 +43,7 @@
                                 <input type="hidden" name="command" value="getFacultyById"/>
                                 <input type="hidden" name="facultyId"
                                        value="<c:out value="${faculty.getId()}"/>">
-                                <button class="tdButton"
-                                        style="text-align: left !important; border: none !important; width: 100% !important;">
-                                    <c:out value="${faculty.getFacultyList().get(0)}"/></button>
+                                <button class="buttonChose"><c:out value="${faculty.getFacultyList().get(0)}"/></button>
                             </form>
                         </td>
                         <td class="td-to-align"><c:out value="${faculty.getTotalQty()}"/></td>

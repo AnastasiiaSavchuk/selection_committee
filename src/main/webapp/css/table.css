@@ -26,8 +26,13 @@
     text-align: right;
 }
 
-.container .tdButton, .formInline button {
-    width: 150px;
+.container .align-right a {
+    text-decoration: none;
+}
+
+.container .button {
+    margin-top: 15px;
+    width: 250px;
     height: 40px;
     border-color: #334d4d;
     color: #262626;
@@ -36,7 +41,27 @@
     cursor: pointer;
 }
 
-.container .tdButton:hover, .formInline button:hover {
+.container .buttonChose {
+    text-align: left !important;
+    border: none !important;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.container .tdButton {
+    width: 100px;
+    height: 40px;
+    border-color: #334d4d;
+    color: #262626;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.container .tdButton:hover, .container .button:hover, .container .buttonChose:hover {
     background-color: #334d4d;
     border-color: #334d4d;
     color: white;

@@ -12,6 +12,7 @@ import java.util.Objects;
 public class Grade implements Serializable {
     private static final long serialVersionUID = 6478965852012365048L;
     private int id;
+    private Applicant applicant;
     private Subject subject;
     private int grade;
 
@@ -21,6 +22,14 @@ public class Grade implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Applicant getApplicant() {
+        return applicant;
+    }
+
+    public void setApplicant(Applicant applicant) {
+        this.applicant = applicant;
     }
 
     public Subject getSubject() {
@@ -46,18 +55,19 @@ public class Grade implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Grade grade1 = (Grade) o;
-        return id == grade1.id && grade == grade1.grade && Objects.equals(subject, grade1.subject);
+        return id == grade1.id && grade == grade1.grade && Objects.equals(applicant, grade1.applicant) && Objects.equals(subject, grade1.subject);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, subject, grade);
+        return Objects.hash(id, applicant, subject, grade);
     }
 
     @Override
     public String toString() {
         return "Grade{" +
                 "id=" + id +
+                ", applicant=" + applicant +
                 ", subject=" + subject +
                 ", grade=" + grade +
                 '}';

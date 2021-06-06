@@ -136,6 +136,35 @@ public class FacultyDaoImpl implements FacultyDao {
         return faculty;
     }
 
+    public Faculty readByIdForApply(int id, List<String> locales) {
+        Faculty faculty = null;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_FACULTY_BY_ID);
+            ps.setInt(1, id);
+            ps.setString(2, locales.get(0));
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                faculty = CREATOR.mapRow(rs);
+            }
+            assert faculty != null;
+            List<Subject> subjectList = new SubjectDaoImpl().readSubjectsByFacultyId(faculty.getId(), locales);
+            faculty.setSubjectList(subjectList);
+            logger.info("Received faculty by id: " + id);
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get faculty by id: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return faculty;
+    }
+
     @Override
     public Faculty readFacultyToUpdate(int id) {
         Faculty faculty = null;

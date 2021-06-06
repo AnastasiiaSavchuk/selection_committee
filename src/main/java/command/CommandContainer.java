@@ -1,6 +1,8 @@
 package command;
 
 import command.admin.*;
+import command.applicant.ApplyToTheFacultyChoiceCommand;
+import command.applicant.ApplyToTheFacultyCommand;
 import command.applicant.SignupDetailsCommand;
 import command.common.ApplicantCommand;
 import command.common.LogoutCommand;
@@ -35,8 +37,6 @@ public class CommandContainer {
         commands.put("getApplicantById", new ApplicantGetByIdCommand());
         commands.put("applicantUpdate", new ApplicantUpdateCommand());
         commands.put("applicantDelete", new ApplicantDeleteCommand());
-        commands.put("applicationsGetByFacultyId", new ApplicationsGetByFacultyIdCommand());
-        commands.put("applicationDelete", new ApplicationDeleteCommand());
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());
@@ -45,6 +45,8 @@ public class CommandContainer {
         commands.put("noCommand", new NoCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("applicantPage", new ApplicantCommand());
+        commands.put("applyToTheFacultyCreateChoice", new ApplyToTheFacultyChoiceCommand());
+        commands.put("applyToTheFaculty", new ApplyToTheFacultyCommand());
 
         //out of control commands
         commands.put("setLanguage", new SetLanguageCommand());

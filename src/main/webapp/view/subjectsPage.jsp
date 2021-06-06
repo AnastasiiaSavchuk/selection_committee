@@ -5,7 +5,7 @@
 <head>
     <title>Subjects</title>
     <style>
-        <%@ include file="../../css/table.css" %>
+        <%@ include file="../css/table.css" %>
     </style>
 </head>
 <body>
@@ -15,8 +15,7 @@
     <div class="align-right">
         <c:if test="${role == 'ADMIN'}">
             <a href="${pageContext.request.contextPath}/controller?command=subjectCreateChoice">
-                <button class="tdButton" type="submit" style="width: 270px !important;">
-                    <fmt:message key="subject.CreateNewSubject"/></button>
+                <button class="button" type="submit"><fmt:message key="subject.CreateNewSubject"/></button>
             </a>
         </c:if>
     </div>

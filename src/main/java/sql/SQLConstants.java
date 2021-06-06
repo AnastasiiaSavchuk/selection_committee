@@ -6,6 +6,7 @@ public class SQLConstants {
             "SELECT ?, ?, id FROM role WHERE role = 'USER'";
     public static final String INSERT_APPLICANT_FULL_FIELDS = "INSERT INTO applicant(user_id, first_name, middle_name, " +
             "last_name, city, region, school_name, certificate, is_blocked) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String INSERT_CERTIFICATE = "UPDATE applicant SET certificate = ? WHERE user_id = ?";
     public static final String GET_ALL_APPLICANT = "SELECT a.user_id, u.email, u.password, u.role_id, r.role, a.first_name, " +
             "a.middle_name, a.last_name, a.city, a.region, a.school_name, a.is_blocked " +
             "FROM applicant a,  user u, role r " +
@@ -99,13 +100,8 @@ public class SQLConstants {
             "(SELECT id FROM application_status WHERE status = ?) WHERE id = ?";
     public static final String DELETE_APPLICATION = "DELETE FROM application WHERE id = ?";
     //grade
-    public static final String INSERT_GRADE = "INSERT INTO grade(subject_id, grade) VALUES(?, ?)";
+    public static final String INSERT_GRADE = "INSERT INTO grade(user_id, subject_id, grade) VALUES(?, ?, ?)";
     public static final String INSERT_APPLICATION_GRADE = "INSERT INTO application_grade(application_id, grade_id) VALUES (?, ?)";
-    public static final String GET_GRADE_BY_ID = "SELECT g.id, s.id, st.subject, s.passing_grade, g.grade " +
-            "FROM grade g INNER JOIN subject s ON s.id = g.subject_id " +
-            "INNER JOIN subject_translation st ON st.subject_id = s.id " +
-            "INNER JOIN language la ON la.id = st.language_id " +
-            "WHERE g.id = ? AND la.lang_code = ?";
     public static final String GET_GRADES_BY_APPLICATION_ID = "SELECT g.id, s.id as subj_id, st.subject, s.passing_grade, g.grade " +
             "FROM grade g INNER JOIN application_grade ag ON ag.grade_id = g.id INNER JOIN subject s ON s.id = g.subject_id " +
             "INNER JOIN subject_translation st ON st.subject_id = s.id INNER JOIN language l ON l.id = st.language_id " +

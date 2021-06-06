@@ -20,7 +20,7 @@ public class Application implements Serializable {
     private int sumOfGrades;
     private int averageGrade;
     private ApplicationStatus applicationStatus;
-    private List<Grade> gradesList;
+    private List<Grade> gradeList;
 
     public int getId() {
         return id;
@@ -70,12 +70,12 @@ public class Application implements Serializable {
         this.applicationStatus = applicationStatus;
     }
 
-    public List<Grade> getGradesList() {
-        return gradesList;
+    public List<Grade> getGradeList() {
+        return gradeList;
     }
 
-    public void setGradesList(List<Grade> gradesList) {
-        this.gradesList = gradesList;
+    public void setGradeList(List<Grade> gradesList) {
+        this.gradeList = gradesList;
     }
 
     public static Comparator<Application> COMPARE_BY_ID = Comparator.comparing(Application::getId);
@@ -85,7 +85,9 @@ public class Application implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return id == that.id && sumOfGrades == that.sumOfGrades && averageGrade == that.averageGrade && Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus;
+        return id == that.id && sumOfGrades == that.sumOfGrades && averageGrade == that.averageGrade &&
+                Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) &&
+                applicationStatus == that.applicationStatus;
     }
 
     @Override
@@ -102,7 +104,7 @@ public class Application implements Serializable {
                 ", sumOfGrades=" + sumOfGrades +
                 ", averageGrade=" + averageGrade +
                 ", applicationStatus=" + applicationStatus +
-                ", gradesList=" + gradesList +
+                ", gradeList=" + gradeList +
                 '}';
     }
 }

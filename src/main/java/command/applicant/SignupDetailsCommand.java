@@ -2,21 +2,23 @@ package command.applicant;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
+import dao.impl.FacultyDaoImpl;
 import domain.Applicant;
+import domain.Faculty;
 import org.apache.log4j.Logger;
 import util.Path;
 
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Signup details command. Get all details from the applicant for second registration.
  *
  * @author A.Savchuk.
  */
-@MultipartConfig(maxFileSize = 1024 * 1024 * 3)
 public class SignupDetailsCommand extends Command {
     private static final long serialVersionUID = 8456909257031636786L;
     private static final Logger logger = Logger.getLogger(SignupDetailsCommand.class);
@@ -27,6 +29,9 @@ public class SignupDetailsCommand extends Command {
         String errorMessage;
 
         HttpSession session = request.getSession();
+        String localeLang = request.getLocale().getLanguage();
+        String language = (String) session.getAttribute("elanguage");
+        
         Applicant sessionApplicant = (Applicant) session.getAttribute("applicant");
         int applicantId = sessionApplicant.getId();
         String email = sessionApplicant.getEmail();
@@ -68,8 +73,13 @@ public class SignupDetailsCommand extends Command {
             session.setAttribute("applicant", applicant);
             logger.info("Set the session attribute:applicant --> " + applicant);
 
+            List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
+            facultyList.sort(Faculty.COMPARE_BY_ID);
+            session.setAttribute("facultyList", facultyList);
+            logger.info("Set the session attribute:facultyList --> " + facultyList);
+
             logger.info("SignupDetailsCommand finished");
-            return Path.APPLICANT_INSERT_APPLICATION;
+            return Path.FACULTIES;
         }
     }
 }

@@ -9,6 +9,10 @@ WHERE role = 'USER';
 INSERT INTO applicant(user_id, first_name, middle_name, last_name, city, region, school_name, certificate, is_blocked)
 VALUES (12, 'Olena', 'Volodymyrivna', 'Lomova', 'Lvivdfsdfo', 'Lviv region', 'School №34', '', 0);
 
+UPDATE applicant
+SET certificate = 1
+WHERE user_id = 1;
+
 # GET_ALL_APPLICANT
 SELECT a.user_id,
        u.email,
@@ -218,12 +222,11 @@ FROM application ap,
          INNER JOIN language l ON l.id = ft.language_id
 WHERE a.user_id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
-  AND ap.id = 2
+  AND ap.id = 22
   AND l.lang_code = 'uk';
 
 # GET_APPLICATIONS_BY_USER_ID
 SELECT ap.id,
-       ap.user_id,
        a.first_name,
        a.last_name,
        ap.faculty_id,
@@ -256,7 +259,7 @@ FROM application ap,
          INNER JOIN language l ON l.id = ft.language_id
 WHERE a.user_id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
-  AND ap.faculty_id = 4
+  AND ap.faculty_id = 2
   AND l.lang_code = 'uk';
 
 # UPDATE_APPLICATION 
@@ -271,12 +274,12 @@ WHERE id = 5;
 
 # grade
 # INSERT_GRADE
-INSERT INTO grade(subject_id, grade)
-VALUES (5, 156);
-INSERT INTO grade(subject_id, grade)
-VALUES (4, 167);
-INSERT INTO grade(subject_id, grade)
-VALUES (3, 196);
+INSERT INTO grade(user_id, subject_id, grade)
+VALUES (12, 5, 156);
+INSERT INTO grade(user_id, subject_id, grade)
+VALUES (12, 4, 167);
+INSERT INTO grade(user_id, subject_id, grade)
+VALUES (12, 3, 196);
 
 # INSERT_APPLICATION_GRADE
 INSERT INTO application_grade(application_id, grade_id)
@@ -285,25 +288,6 @@ INSERT INTO application_grade(application_id, grade_id)
 VALUES (18, 60);
 INSERT INTO application_grade(application_id, grade_id)
 VALUES (19, 61);
-
-# GET_GRADE_BY_ID
-SELECT g.id, s.id as subject_id, st.subject, s.passing_grade, g.grade
-FROM grade g
-         INNER JOIN subject s ON s.id = g.subject_id
-         INNER JOIN subject_translation st ON st.subject_id = s.id
-         INNER JOIN language l ON l.id = st.language_id
-WHERE g.id = 1
-  AND l.lang_code = 'en';
-
-# GET_GRADES_BY_USER_ID
-SELECT g.id as grade_id, st.subject, g.grade
-FROM grade g
-         INNER JOIN user u ON g.user_id = u.id
-         INNER JOIN subject s ON s.id = g.subject_id
-         INNER JOIN subject_translation st ON st.subject_id = s.id
-         INNER JOIN language l ON l.id = st.language_id
-WHERE u.id = 2
-  AND l.lang_code = 'en';
 
 # GET_GRADES_BY_APPLICATION_ID
 SELECT g.id as grade_id, s.id as subject_id, st.subject, s.passing_grade, g.grade
