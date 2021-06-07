@@ -71,7 +71,7 @@
         <init-param>
             <param-name>ADMIN</param-name>
             <param-value>adminPage facultyCreateChoice facultyCreate facultyUpdate facultyDelete getSubjects
-                subjectCreateChoice subjectCreate subjectUpdate subjectDelete getApplicantById applicantUpdate
+                subjectCreateChoice subjectCreate subjectUpdate subjectDelete getApplicantById applicantUpdateByAdmin
                 applicantDelete
             </param-value>
         </init-param>
@@ -81,7 +81,7 @@
         </init-param>
         <init-param>
             <param-name>COMMON</param-name>
-            <param-value>logout noCommand applicantPage</param-value>
+            <param-value>logout noCommand applicantPage applicantUpdate</param-value>
         </init-param>
         <init-param>
             <param-name>OUT-OF-CONTROL</param-name>

@@ -18,7 +18,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class GetFacultiesCommand extends Command {
-    private static final long serialVersionUID = -7490635096350714850L;
+    private static final long serialVersionUID = 5401213543218796456L;
     private static final Logger logger = Logger.getLogger(GetFacultiesCommand.class);
 
     @Override

@@ -15,6 +15,7 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ import java.util.Objects;
  * @author A.Savchuk
  */
 public class LoginCommand extends Command {
-    private static final long serialVersionUID = 802733277637426263L;
+    private static final long serialVersionUID = 7845122698854785412L;
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
 
     @Override

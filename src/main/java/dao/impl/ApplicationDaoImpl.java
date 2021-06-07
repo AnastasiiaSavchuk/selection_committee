@@ -79,7 +79,6 @@ public class ApplicationDaoImpl implements ApplicationDao {
 
             if (applicationList.size() > 0) {
                 for (Application application : applicationList) {
-                    application.setFaculty(new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales));
                     application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
                 }
             }
@@ -114,6 +113,12 @@ public class ApplicationDaoImpl implements ApplicationDao {
             while (rs.next()) {
                 applicationList.add(CREATOR.mapRow(rs));
             }
+
+            if (applicationList.size() > 0) {
+                for (Application application : applicationList) {
+                    application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
+                }
+            }
             logger.info("Received list of application by facultyId: " + facultyId);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -142,10 +147,6 @@ public class ApplicationDaoImpl implements ApplicationDao {
                 application = CREATOR.mapRow(rs);
             }
 
-            Faculty faculty = new FacultyDaoImpl().readById(Objects.requireNonNull(application).getFaculty().getId(), locales);
-            application.setFaculty(faculty);
-            List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales);
-            application.setGradeList(gradeList);
             logger.info("Received application by id: " + id);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);

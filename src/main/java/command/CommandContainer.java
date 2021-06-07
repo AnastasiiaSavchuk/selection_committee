@@ -1,6 +1,7 @@
 package command;
 
 import command.admin.*;
+import command.applicant.ApplicantUpdateCommand;
 import command.applicant.ApplyToTheFacultyChoiceCommand;
 import command.applicant.ApplyToTheFacultyCommand;
 import command.applicant.SignupDetailsCommand;
@@ -35,11 +36,12 @@ public class CommandContainer {
         commands.put("subjectUpdate", new SubjectUpdateCommand());
         commands.put("subjectDelete", new SubjectDeleteCommand());
         commands.put("getApplicantById", new ApplicantGetByIdCommand());
-        commands.put("applicantUpdate", new ApplicantUpdateCommand());
+        commands.put("applicantUpdateByAdmin", new ApplicantUpdateByAdminCommand());
         commands.put("applicantDelete", new ApplicantDeleteCommand());
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());
+        commands.put("applicantUpdate", new ApplicantUpdateCommand());
 
         //common commands
         commands.put("noCommand", new NoCommand());

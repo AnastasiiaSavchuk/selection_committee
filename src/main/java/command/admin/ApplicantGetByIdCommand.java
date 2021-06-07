@@ -13,6 +13,7 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class ApplicantGetByIdCommand extends Command {
-    private static final long serialVersionUID = 1785415963214785469L;
+    private static final long serialVersionUID = 1254789652534569874L;
     private static final Logger logger = Logger.getLogger(ApplicantGetByIdCommand.class);
 
     @Override

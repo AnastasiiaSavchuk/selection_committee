@@ -18,7 +18,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class FacultyDeleteCommand extends Command {
-    private static final long serialVersionUID = 461088540440463073L;
+    private static final long serialVersionUID = 569854785412365897L;
     private static final Logger logger = Logger.getLogger(FacultyDeleteCommand.class);
 
     @Override

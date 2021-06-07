@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ApplyToTheFacultyCommand extends Command {
-    private static final long serialVersionUID = 7854123658942158741L;
+    private static final long serialVersionUID = 6532589541252014556L;
     private static final Logger logger = Logger.getLogger(ApplyToTheFacultyCommand.class);
 
     @Override
@@ -58,13 +58,13 @@ public class ApplyToTheFacultyCommand extends Command {
                 gradeList.add(new GradeDaoImpl().createGrade(newGrade));
             }
 
-            Application application = new Application();
-            application.setApplicant(applicant);
-            application.setFaculty(faculty);
-            application.setApplicationStatus(ApplicationStatus.IN_PROCESSING);
-            application.setGradeList(gradeList);
+            Application newApplication = new Application();
+            newApplication.setApplicant(applicant);
+            newApplication.setFaculty(faculty);
+            newApplication.setApplicationStatus(ApplicationStatus.IN_PROCESSING);
+            newApplication.setGradeList(gradeList);
 
-            boolean isInsert = new ApplicationDaoImpl().create(application);
+            boolean isInsert = new ApplicationDaoImpl().create(newApplication);
             if (!isInsert) {
                 errorMessage = "Something went wrong! Unable to create new application!";
                 request.setAttribute("errorMessage", errorMessage);
@@ -72,7 +72,7 @@ public class ApplyToTheFacultyCommand extends Command {
                 return Path.ERROR;
             }
 
-            boolean isInsertApplicationGrade = new GradeDaoImpl().createApplicationGrade(application);
+            boolean isInsertApplicationGrade = new GradeDaoImpl().createApplicationGrade(newApplication);
             if (!isInsertApplicationGrade) {
                 errorMessage = "Something went wrong! Unable to create grades to application!";
                 request.setAttribute("errorMessage", errorMessage);

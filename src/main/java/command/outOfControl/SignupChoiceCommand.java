@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author A.Savchuk.
  */
 public class SignupChoiceCommand extends Command {
-    private static final long serialVersionUID = 1666483864804192503L;
+    private static final long serialVersionUID = 1635895441254785521L;
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
 
     @Override

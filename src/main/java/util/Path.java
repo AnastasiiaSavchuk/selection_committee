@@ -16,6 +16,7 @@ public final class Path {
     public static final String SUBJECT_UPDATE = "/view/subjectUpdate.jsp";
     public static final String ADMIN = "/view/adminPage.jsp";
     public static final String APPLICANT = "/view/applicantPage.jsp";
+    public static final String APPLICANT_UPDATE = "/view/applicantUpdatePage.jsp";
     public static final String APPLY_TO_THE_FACULTY = "/view/applyToTheFacultyPage.jsp";
     public static final String STATEMENTS = "/view/statementsPage.jsp";
 }

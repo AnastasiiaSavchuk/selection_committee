@@ -18,7 +18,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class FacultyCreateChoiceCommand extends Command {
-    private static final long serialVersionUID = 8654712323232145896L;
+    private static final long serialVersionUID = 1254789652365658541L;
     private static final Logger logger = Logger.getLogger(FacultyCreateChoiceCommand.class);
 
     @Override

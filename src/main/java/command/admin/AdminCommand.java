@@ -18,7 +18,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class AdminCommand extends Command {
-    private static final long serialVersionUID = 688942586252025570L;
+    private static final long serialVersionUID = 4512365478965414141L;
     private static final Logger logger = Logger.getLogger(AdminCommand.class);
 
     @Override

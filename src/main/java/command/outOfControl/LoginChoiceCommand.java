@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author A.Savchuk
  */
 public class LoginChoiceCommand extends Command {
-    private static final long serialVersionUID = -2883918115553516296L;
+    private static final long serialVersionUID = 987454120115899654L;
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
 
     @Override

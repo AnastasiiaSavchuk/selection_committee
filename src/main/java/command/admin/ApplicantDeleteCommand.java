@@ -18,7 +18,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class ApplicantDeleteCommand extends Command {
-    private static final long serialVersionUID = 461088540440463073L;
+    private static final long serialVersionUID = 6325632541258745896L;
     private static final Logger logger = Logger.getLogger(ApplicantDeleteCommand.class);
 
     @Override

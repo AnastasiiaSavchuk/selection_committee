@@ -18,9 +18,9 @@ import java.util.Objects;
  *
  * @author A.Savchuk
  */
-public class ApplicantUpdateCommand extends Command {
-    private static final long serialVersionUID = 5478963254157895416L;
-    private static final Logger logger = Logger.getLogger(ApplicantUpdateCommand.class);
+public class ApplicantUpdateByAdminCommand extends Command {
+    private static final long serialVersionUID = 1236563212545478965L;
+    private static final Logger logger = Logger.getLogger(ApplicantUpdateByAdminCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -33,13 +33,6 @@ public class ApplicantUpdateCommand extends Command {
 
         Applicant applicant = (Applicant) session.getAttribute("applicant");
         String blocked = request.getParameter("blocked");
-        boolean status;
-
-        if (Integer.parseInt(blocked) == 1) {
-            status = true;
-        } else {
-            status = false;
-        }
 
         if (Objects.isNull(applicant) && blocked.isEmpty()) {
             errorMessage = "Something went wrong! Unable to find current applicant or blocked status is empty!";
@@ -48,7 +41,7 @@ public class ApplicantUpdateCommand extends Command {
             return Path.ERROR;
         }
 
-        boolean isUpdated = new ApplicantDaoImpl().updateByAdmin(applicant.getId(), status);
+        boolean isUpdated = new ApplicantDaoImpl().updateByAdmin(applicant.getId(), Integer.parseInt(blocked) == 1);
         if (!isUpdated) {
             errorMessage = "Something went wrong! Unable to update applicant blocked status!";
             request.setAttribute("errorMessage", errorMessage);

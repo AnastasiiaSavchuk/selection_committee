@@ -92,11 +92,6 @@ public class FacultyDaoImpl implements FacultyDao {
             while (rs.next()) {
                 facultyList.add(CREATOR.mapRow(rs));
             }
-            if (facultyList.size() > 0) {
-                for (Faculty faculty : facultyList) {
-                    faculty.setSubjectList(new SubjectDaoImpl().readSubjectsByFacultyId(faculty.getId(), locales));
-                }
-            }
             logger.info("Received list of faculties");
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -150,8 +145,7 @@ public class FacultyDaoImpl implements FacultyDao {
             if (rs.next()) {
                 faculty = CREATOR.mapRow(rs);
             }
-            assert faculty != null;
-            List<Subject> subjectList = new SubjectDaoImpl().readSubjectsByFacultyId(faculty.getId(), locales);
+            List<Subject> subjectList = new SubjectDaoImpl().readSubjectsByFacultyId(Objects.requireNonNull(faculty).getId(), locales);
             faculty.setSubjectList(subjectList);
             logger.info("Received faculty by id: " + id);
         } catch (SQLException ex) {

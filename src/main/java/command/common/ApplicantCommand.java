@@ -13,6 +13,7 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class ApplicantCommand extends Command {
-    private static final long serialVersionUID = 4596874123547896542L;
+    private static final long serialVersionUID = 1654654054515346846L;
     private static final Logger logger = Logger.getLogger(ApplicantCommand.class);
 
     @Override
@@ -37,7 +38,6 @@ public class ApplicantCommand extends Command {
 
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
         applicationList.sort(Application.COMPARE_BY_ID);
-
         session.setAttribute("applicationList", applicationList);
         logger.info("Set the session attribute:applicationList --> " + applicationList);
 

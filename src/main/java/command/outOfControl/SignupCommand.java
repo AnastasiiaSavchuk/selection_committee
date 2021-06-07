@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author A.Savchuk
  */
 public class SignupCommand extends Command {
-    private static final long serialVersionUID = -171209257031636786L;
+    private static final long serialVersionUID = 1236589741254785411L;
     private static final Logger logger = Logger.getLogger(SignupCommand.class);
 
     @Override

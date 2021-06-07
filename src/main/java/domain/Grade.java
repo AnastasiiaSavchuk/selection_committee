@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author A.Savchuk.
  */
 public class Grade implements Serializable {
-    private static final long serialVersionUID = 6478965852012365048L;
+    private static final long serialVersionUID = 3021456952147512580L;
     private int id;
     private Applicant applicant;
     private Subject subject;

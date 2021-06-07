@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author A.Savchuk.
  */
 public class Applicant implements Serializable {
-    private static final long serialVersionUID = 1569874589654123658L;
+    private static final long serialVersionUID = 1265894512212365214L;
     private int id;
     private String email;
     private String password;

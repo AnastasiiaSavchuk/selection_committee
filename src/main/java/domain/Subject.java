@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author A.Savchuk
  */
 public class Subject implements Serializable {
-    private static final long serialVersionUID = 5489632147895423687L;
+    private static final long serialVersionUID = 1235478541296523520L;
     private int id;
     private int passingGrade;
     private List<String> subjectList;

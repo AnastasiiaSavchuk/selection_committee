@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  * @author A.Savchuk
  */
 public class SetLanguageCommand extends Command {
-    private static final long serialVersionUID = -5176355668225804896L;
+    private static final long serialVersionUID = 1874599665125478541L;
     private static final Logger logger = Logger.getLogger(SetLanguageCommand.class);
 
     @Override

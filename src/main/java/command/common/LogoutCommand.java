@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author A.Savchuk
  */
 public class LogoutCommand extends Command {
-    private static final long serialVersionUID = 1478955557139756496L;
+    private static final long serialVersionUID = 6548605435104684648L;
     private static final Logger logger = Logger.getLogger(LogoutCommand.class);
 
     @Override

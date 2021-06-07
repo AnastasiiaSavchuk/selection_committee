@@ -20,7 +20,7 @@ import java.util.List;
  * @author A.Savchuk.
  */
 public class SignupDetailsCommand extends Command {
-    private static final long serialVersionUID = 8456909257031636786L;
+    private static final long serialVersionUID = 2541032598652301457L;
     private static final Logger logger = Logger.getLogger(SignupDetailsCommand.class);
 
     @Override
@@ -31,7 +31,7 @@ public class SignupDetailsCommand extends Command {
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
         String language = (String) session.getAttribute("elanguage");
-        
+
         Applicant sessionApplicant = (Applicant) session.getAttribute("applicant");
         int applicantId = sessionApplicant.getId();
         String email = sessionApplicant.getEmail();

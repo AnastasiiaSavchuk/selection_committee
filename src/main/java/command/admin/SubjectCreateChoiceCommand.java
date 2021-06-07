@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author A.Savchuk
  */
 public class SubjectCreateChoiceCommand extends Command {
-    private static final long serialVersionUID = 5741258963123654562L;
+    private static final long serialVersionUID = 7451214589633232512L;
     private static final Logger logger = Logger.getLogger(SubjectCreateChoiceCommand.class);
 
     @Override

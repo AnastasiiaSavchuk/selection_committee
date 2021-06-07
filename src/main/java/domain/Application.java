@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author A.Savchuk.
  */
 public class Application implements Serializable {
-    private static final long serialVersionUID = 5874569853248012540L;
+    private static final long serialVersionUID = 2365841213412352526L;
     private int id;
     private Applicant applicant;
     private Faculty faculty;

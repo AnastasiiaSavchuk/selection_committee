@@ -50,23 +50,35 @@
 
         <button class="button" type="button" onclick="getGrades(this)"><fmt:message key="grade.DisplayGrade"/></button>
 
-        <c:if test="${role == 'ADMIN'}">
-            <h5><fmt:message key="applicant.ChangStatus"/></h5>
-            <div>
-                <label class="form-check-label" for="unBlocked">
-                    <fmt:message key="applicant.UnBlockedApplicant"/>
-                    <input id="unBlocked" class="getStatus" type="radio" name="unBlocked" value="0"/></label>
-                <label class="form-check-label" for="isBlocked">
-                    <fmt:message key="applicant.BlockedApplicant"/>
-                    <input id="isBlocked" class="getStatus" type="radio" name="isBlocked" value="1"/></label>
-            </div>
-            <form id="updateForm" method="post" action="controller">
-                <input type="hidden" name="command" value="applicantUpdate"/>
-                <input type="hidden" name="blocked" id="applicantUpdate" value="">
-                <a onclick="applicantUpdate();">
-                    <button class="button"><fmt:message key="save.Save"/></button>
-                </a>
-            </form>
+        <c:if test="${not empty role}">
+            <c:choose>
+                <c:when test="${role == 'ADMIN'}">
+                    <h5><fmt:message key="applicant.ChangStatus"/></h5>
+                    <div>
+                        <label class="form-check-label" for="unBlocked">
+                            <fmt:message key="applicant.UnBlockedApplicant"/>
+                            <input id="unBlocked" class="getStatus" type="radio" name="unBlocked" value="0"/></label>
+                        <label class="form-check-label" for="isBlocked">
+                            <fmt:message key="applicant.BlockedApplicant"/>
+                            <input id="isBlocked" class="getStatus" type="radio" name="isBlocked" value="1"/></label>
+                    </div>
+                    <form id="updateForm" method="post" action="controller">
+                        <input type="hidden" name="command" value="applicantUpdateByAdmin"/>
+                        <input type="hidden" name="blocked" id="applicantUpdate" value="">
+                        <a onclick="applicantUpdate();">
+                            <button class="button"><fmt:message key="save.Save"/></button>
+                        </a>
+                    </form>
+                </c:when>
+                <c:when test="${role == 'USER'}">
+                    <form method="post" action="controller">
+                        <input type="hidden" name="command" value="applicantUpdate"/>
+                        <input type="hidden" name="applicantIdToUpdate"
+                               value="<c:out value="${applicant.getId()}"/>">
+                        <button class="button"><fmt:message key="update.Update"/></button>
+                    </form>
+                </c:when>
+            </c:choose>
         </c:if>
     </div>
 
@@ -85,28 +97,28 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${aList}" var="subjects" varStatus="loop">
+                    <c:forEach items="${aList}" var="application" varStatus="loop">
                         <tr>
                             <td class="td-to-align">${loop.index + 1}</td>
-                            <td class="td-to-align">${subjects.getFaculty().getFacultyList().get(0)}</td>
-                            <td class="td-to-align">${subjects.getSumOfGrades()}</td>
-                            <td class="td-to-align">${subjects.getAverageGrade()}</td>
+                            <td class="td-to-align">${application.getFaculty().getFacultyList().get(0)}</td>
+                            <td class="td-to-align">${application.getSumOfGrades()}</td>
+                            <td class="td-to-align">${application.getAverageGrade()}</td>
                             <td align="center">
-                                <c:if test="${not empty subjects.getApplicationStatus()}">
+                                <c:if test="${not empty application.getApplicationStatus()}">
                                     <c:choose>
-                                        <c:when test="${subjects.getApplicationStatus() == 'IN_PROCESSING'}">
+                                        <c:when test="${application.getApplicationStatus() == 'IN_PROCESSING'}">
                                             <button disabled class="btn btn-warning">
                                                 <fmt:message key="application.IN_PROCESSING"/></button>
                                         </c:when>
-                                        <c:when test="${subjects.getApplicationStatus() == 'REJECTED'}">
+                                        <c:when test="${application.getApplicationStatus() == 'REJECTED'}">
                                             <button disabled class="btn btn-danger">
                                                 <fmt:message key="application.REJECTED"/></button>
                                         </c:when>
-                                        <c:when test="${subjects.getApplicationStatus() == 'BUDGET_APPROVED'}">
+                                        <c:when test="${application.getApplicationStatus() == 'BUDGET_APPROVED'}">
                                             <button disabled class="btn btn-success">
                                                 <fmt:message key="application.BUDGET_APPROVED"/></button>
                                         </c:when>
-                                        <c:when test="${subjects.getApplicationStatus() == 'CONTRACT_APPROVED'}">
+                                        <c:when test="${application.getApplicationStatus() == 'CONTRACT_APPROVED'}">
                                             <button disabled class="btn btn-success">
                                                 <fmt:message key="application.CONTRACT_APPROVED"/></button>
                                         </c:when>
@@ -135,11 +147,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach items="${aList}" var="subjects" varStatus="loop">
+                        <c:forEach items="${aList}" var="application" varStatus="loop">
                             <tr>
                                 <td class="td-to-align">${loop.index + 1}</td>
-                                <td class="td-to-align">${subjects.getFaculty().getFacultyList().get(0)}</td>
-                                <c:forEach items="${subjects.getGradeList()}" var="grade">
+                                <td class="td-to-align">${application.getFaculty().getFacultyList().get(0)}</td>
+                                <c:forEach items="${application.getGradeList()}" var="grade">
                                     <td class="td-to-align">${grade.getSubject().getSubjectList().get(0)}
                                         : ${grade.getGrade()}</td>
                                 </c:forEach>

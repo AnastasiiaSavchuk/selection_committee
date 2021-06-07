@@ -22,7 +22,7 @@ import java.util.List;
  * @author A.Savchuk
  */
 public class GetFacultyByIdCommand extends Command {
-    private static final long serialVersionUID = -7490635096350714850L;
+    private static final long serialVersionUID = 5648648604663405645L;
     private static final Logger logger = Logger.getLogger(GetFacultyByIdCommand.class);
 
     @Override

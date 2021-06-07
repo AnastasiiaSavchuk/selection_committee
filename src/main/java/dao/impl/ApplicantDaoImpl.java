@@ -26,7 +26,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_USER_FIELDS, Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement(SQLConstants.INSERT_APPLICANT_LOGIN_FIELDS, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, email);
             ps.setString(2, password);
             if (ps.executeUpdate() > 0) {
@@ -90,7 +90,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         PreparedStatement ps = null;
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.INSERT_CERTIFICATE);
+            ps = connection.prepareStatement(SQLConstants.UPDATE_CERTIFICATE);
             ps.setBytes(1, applicant.getCertificate());
             ps.setInt(2, applicant.getId());
             ps.executeUpdate();
@@ -231,7 +231,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             ps.setString(6, applicant.getCity());
             ps.setString(7, applicant.getRegion());
             ps.setString(8, applicant.getSchoolName());
-            ps.setInt(10, applicant.getId());
+            ps.setInt(9, applicant.getId());
             ps.executeUpdate();
             logger.info("Updated applicant's details");
             return true;
