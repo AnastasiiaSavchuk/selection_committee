@@ -1,5 +1,4 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <c:set var="sList" value="${sessionScope['subjectList']}"/>
 <html>
 <head>
@@ -9,20 +8,24 @@
     </style>
 </head>
 <body>
-<%@ include file="/view/jspf/header.jspf" %>
+<%@ include file="includes/header.jsp" %>
 
 <div class="container">
-    <div class="align-right">
-        <c:if test="${role == 'ADMIN'}">
-            <a href="${pageContext.request.contextPath}/controller?command=subjectCreateChoice">
-                <button class="button" type="submit"><fmt:message key="subject.CreateNewSubject"/></button>
-            </a>
-        </c:if>
-    </div>
     <div class=" panel-table">
         <div class="panel-heading">
             <div class="panel-body">
-                <table class="table table-striped table-bordered table-list sortable">
+                <h2 style="text-align: center"><fmt:message key="subject.Subjects"/></h2>
+                <div class="align-right">
+                    <c:if test="${role == 'ADMIN'}">
+                        <div class="inRow">
+                            <a href="${pageContext.request.contextPath}/controller?command=subjectCreateChoice">
+                                <button class="button" type="submit"><fmt:message
+                                        key="subject.CreateNewSubject"/></button>
+                            </a>
+                        </div>
+                    </c:if>
+                </div>
+                <table id="pagination" class="table table-striped table-bordered table-list sortable">
                     <thead>
                     <tr>
                         <th class="hidden-xs">№</th>
@@ -37,7 +40,7 @@
                             <td>${loop.index + 1}</td>
                             <td><c:out value="${subject.getSubjectList().get(0)}"/></td>
                             <td class="td-to-align"><c:out value="${subject.getPassingGrade()}"/></td>
-                            <td align="center">
+                            <td align="center" class="tdWidth">
                                 <form method="post" action="controller">
                                     <input type="hidden" name="command" value="subjectUpdate"/>
                                     <input type="hidden" name="subjectIdToUpdate"
@@ -45,7 +48,7 @@
                                     <button class="tdButton"><fmt:message key="update.Update"/></button>
                                 </form>
                             </td>
-                            <td align="center">
+                            <td align="center" class="tdWidth">
                                 <form method="post" action="controller">
                                     <input type="hidden" name="command" value="subjectDelete"/>
                                     <input type="hidden" name="subjectIdToDelete"

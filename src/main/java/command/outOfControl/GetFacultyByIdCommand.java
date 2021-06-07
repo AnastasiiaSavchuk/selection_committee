@@ -3,7 +3,9 @@ package command.outOfControl;
 import command.Command;
 import dao.impl.ApplicationDaoImpl;
 import dao.impl.FacultyDaoImpl;
+import dao.impl.StatementDaoImpl;
 import dao.impl.SubjectDaoImpl;
+import domain.Applicant;
 import domain.Application;
 import domain.Faculty;
 import domain.Subject;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Retrieve faculty from db by faculty id.
@@ -32,6 +35,7 @@ public class GetFacultyByIdCommand extends Command {
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
         String language = (String) session.getAttribute("elanguage");
+        Applicant applicant = (Applicant) session.getAttribute("applicant");
         String facultyId = request.getParameter("facultyId");
 
         Faculty faculty = new FacultyDaoImpl().readById(Integer.parseInt(facultyId), Collections.singletonList(language == null ? localeLang : language));
@@ -40,7 +44,7 @@ public class GetFacultyByIdCommand extends Command {
             String errorMessage = "Something went wrong! Unable to find subjects!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return Path.FACULTY_BY_id;
+            return Path.ERROR;
         }
 
         subjectList.sort(Subject.COMPARE_BY_ID);
@@ -53,6 +57,17 @@ public class GetFacultyByIdCommand extends Command {
         applicationList.sort(Application.COMPARE_BY_ID);
         session.setAttribute("applicationList", applicationList);
         logger.info("Set the session attribute:applicationList --> " + applicationList);
+
+        if (Objects.nonNull(applicant)) {
+            boolean applicantExist = new ApplicationDaoImpl().isExist(applicant, faculty);
+            session.setAttribute("applicantExist", applicantExist);
+            logger.info("Set the session attribute:isExist --> " + applicantExist);
+        }
+
+        boolean statementExisted = new StatementDaoImpl().isExist(applicationList);
+        session.setAttribute("statementExisted", statementExisted);
+        logger.info("Set the session attribute:isExist --> " + statementExisted);
+
 
         logger.info("GetFacultyByIdCommand finished");
         return Path.FACULTY_BY_id;

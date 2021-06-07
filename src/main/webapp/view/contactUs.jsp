@@ -1,5 +1,4 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <head>
     <title>Contact Us</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -11,10 +10,10 @@
     </style>
 </head>
 <body>
-<%@ include file="/view/jspf/header.jspf" %>
+<%@ include file="includes/header.jsp" %>
 <section id="contact">
     <div class="container">
-        <h3 class="text-center text-uppercase"><fmt:message key="contacts.Contacts"/></h3>
+        <h2 class="text-center"><fmt:message key="contacts.Contacts"/></h2>
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-3 my-5">
                 <div class="card border-0">
@@ -57,16 +56,5 @@
         </div>
     </div>
 </section>
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
-        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
-        crossorigin="anonymous"></script>
 </body>
 </html>

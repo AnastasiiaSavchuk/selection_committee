@@ -68,12 +68,12 @@ WHERE u.role_id = r.id
 UPDATE user u, applicant a
 SET u.email       = 'lomova@gmailcom',
     u.password    = '654123',
-    a.first_name  = 'Olena',
-    a.middle_name = 'Volodymyrivna',
-    a.last_name   = 'Lomova',
-    a.city        = 'Lviv',
-    a.region      = 'Lviv region',
-    a.school_name = 'School №56'
+    a.first_name  = 'Олена',
+    a.middle_name = 'Володимирівна',
+    a.last_name   = 'Ломова',
+    a.city        = 'Львів',
+    a.region      = 'Львівська область',
+    a.school_name = 'Школа №56'
 WHERE u.id = a.user_id
   AND a.user_id = 12;
 
@@ -159,7 +159,7 @@ INSERT INTO faculty_subject(faculty_id, subject_id)
 VALUES (5, 5);
 
 # GET_FACULTY_BY_ID
-SELECT f.id, f.budget_qty, f.total_qty, ft.faculty
+SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, ft.faculty
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
@@ -167,7 +167,7 @@ WHERE f.id = 1
   AND l.lang_code = 'uk';
 
 # GET_FACULTY_TO_UPDATE
-SELECT f.id, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty
+SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
@@ -175,7 +175,7 @@ WHERE f.id = 1
 GROUP BY f.id;
 
 # GET_ALL_FACULTIES
-SELECT f.id, f.budget_qty, f.total_qty, ft.faculty
+SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, ft.faculty
 FROM faculty f,
      faculty_translation ft
          INNER JOIN language l ON ft.language_id = l.id
@@ -225,6 +225,27 @@ WHERE a.user_id = ap.user_id
   AND ap.id = 22
   AND l.lang_code = 'uk';
 
+# GET_ALL_APPLICATIONS
+SELECT ap.id,
+       a.first_name,
+       a.last_name,
+       ap.faculty_id,
+       f.passing_grade,
+       ft.faculty,
+       ap.sum_of_grades,
+       ap.average_grade,
+       ap.applicationStatus_id
+FROM application ap,
+     applicant a,
+     faculty f,
+     faculty_translation ft
+         INNER JOIN language l ON l.id = ft.language_id
+WHERE a.user_id = ap.user_id
+  AND ft.faculty_id = ap.faculty_id
+  AND f.id = ap.faculty_id
+  AND l.lang_code = 'uk'
+ORDER BY ft.faculty_id ASC;
+
 # GET_APPLICATIONS_BY_USER_ID
 SELECT ap.id,
        a.first_name,
@@ -272,6 +293,12 @@ DELETE
 FROM application
 WHERE id = 5;
 
+#IS_EXIST
+SELECT *
+FROM application
+WHERE user_id = 3
+  AND faculty_id = 2;
+
 # grade
 # INSERT_GRADE
 INSERT INTO grade(user_id, subject_id, grade)
@@ -303,3 +330,8 @@ WHERE ag.application_id = 15
 DELETE
 FROM grade
 WHERE id = 60;
+
+SELECT AVG(s.passing_grade)
+FROM subject s
+         INNER JOIN faculty_subject fs ON fs.subject_id = s.id
+         INNER JOIN faculty f on fs.faculty_id = f.id

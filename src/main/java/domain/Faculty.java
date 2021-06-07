@@ -15,6 +15,7 @@ public class Faculty implements Serializable {
     private int id;
     private int budgetQty;
     private int totalQty;
+    private int averagePassingGrade;
     private List<String> facultyList;
     private List<Subject> subjectList;
 
@@ -42,6 +43,14 @@ public class Faculty implements Serializable {
         this.totalQty = totalQty;
     }
 
+    public int getAveragePassingGrade() {
+        return averagePassingGrade;
+    }
+
+    public void setAveragePassingGrade(int averagePassingGrade) {
+        this.averagePassingGrade = averagePassingGrade;
+    }
+
     public List<String> getFacultyList() {
         return facultyList;
     }
@@ -65,13 +74,12 @@ public class Faculty implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Faculty faculty = (Faculty) o;
-        return id == faculty.id && budgetQty == faculty.budgetQty && totalQty == faculty.totalQty &&
-                Objects.equals(facultyList, faculty.facultyList) && Objects.equals(subjectList, faculty.subjectList);
+        return id == faculty.id && budgetQty == faculty.budgetQty && totalQty == faculty.totalQty && averagePassingGrade == faculty.averagePassingGrade && Objects.equals(facultyList, faculty.facultyList) && Objects.equals(subjectList, faculty.subjectList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, budgetQty, totalQty, facultyList, subjectList);
+        return Objects.hash(id, budgetQty, totalQty, averagePassingGrade, facultyList, subjectList);
     }
 
     @Override
@@ -80,6 +88,7 @@ public class Faculty implements Serializable {
                 "id=" + id +
                 ", budgetQty=" + budgetQty +
                 ", totalQty=" + totalQty +
+                ", averagePassingGrade=" + averagePassingGrade +
                 ", facultyList=" + facultyList +
                 ", subjectList=" + subjectList +
                 '}';

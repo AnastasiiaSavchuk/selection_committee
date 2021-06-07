@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS applicant
 
 INSERT INTO applicant(user_id, first_name, middle_name, last_name, city, region, school_name, certificate,
                       is_blocked)
-
 VALUES (1, 'Анастасія', 'Андріївна', 'Савчук', 'Львів', 'Львівська область', 'Школа №25', '', 0),
        (2, 'Перро', 'Анатолійович', 'Расянський', 'Львів', 'Львівська область', 'Школа №25', '', 0),
        (3, 'Роман', 'Дмитрович', 'Кульбабин', 'Одеса', 'Одеська область', 'Гімназія №25', '', 0),
@@ -111,74 +110,73 @@ VALUES (1, 1, 'Maths'),
 CREATE TABLE IF NOT EXISTS grade
 (
     id         INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    user_id    INT NOT NULL,
     subject_id INT NOT NULL,
     grade      INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO grade(user_id, subject_id, grade)
-VALUES (2, 1, 147),
-       (2, 2, 169),
-       (2, 3, 139),
-       (2, 4, 154),
-       (2, 5, 165),
+INSERT INTO grade(subject_id, grade)
+VALUES (1, 140),
+       (2, 130),
+       (3, 128),
+       (4, 154),
+       (5, 137),
 
-       (3, 1, 148),
-       (3, 3, 149),
-       (3, 4, 134),
+       (1, 148),
+       (3, 149),
+       (4, 134),
 
-       (4, 1, 149),
-       (4, 2, 163),
-       (4, 3, 186),
-       (4, 4, 158),
+       (1, 149),
+       (2, 163),
+       (3, 186),
+       (4, 158),
 
-       (5, 1, 169),
-       (5, 2, 174),
-       (5, 3, 169),
-       (5, 4, 148),
-       (5, 5, 155),
+       (1, 169),
+       (2, 174),
+       (3, 169),
+       (4, 148),
+       (5, 155),
 
-       (6, 1, 196),
-       (6, 3, 179),
-       (6, 4, 169),
+       (1, 196),
+       (3, 179),
+       (4, 169),
 
-       (7, 1, 147),
-       (7, 2, 154),
-       (7, 3, 169),
-       (7, 4, 167),
-       (7, 5, 136),
+       (1, 147),
+       (2, 154),
+       (3, 169),
+       (4, 167),
+       (5, 136),
 
-       (8, 3, 163),
-       (8, 4, 184),
-       (8, 5, 196),
+       (3, 163),
+       (4, 184),
+       (5, 196),
 
-       (9, 1, 198),
-       (9, 3, 179),
-       (9, 4, 160),
+       (1, 198),
+       (3, 179),
+       (4, 160),
 
-       (10, 1, 185),
-       (10, 2, 140),
-       (10, 3, 159),
-       (10, 4, 136),
+       (1, 138),
+       (2, 140),
+       (3, 159),
+       (4, 136),
 
-       (11, 2, 163),
-       (11, 4, 149),
-       (11, 5, 170);
+       (2, 163),
+       (4, 149),
+       (5, 170);
 
 CREATE TABLE IF NOT EXISTS faculty
 (
-    id         INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    total_qty  INT NOT NULL,
-    budget_qty INT NOT NULL
+    id                    INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    total_qty             INT NOT NULL,
+    budget_qty            INT NOT NULL,
+    average_passing_grade INT
 );
 
-INSERT INTO faculty(total_qty, budget_qty)
-VALUES (10, 5),
-       (11, 6),
-       (9, 4),
-       (8, 3);
+INSERT INTO faculty(total_qty, budget_qty, average_passing_grade)
+VALUES (7, 3, 0),
+       (8, 4, 0),
+       (5, 2, 0),
+       (4, 1, 0);
 
 CREATE TABLE IF NOT EXISTS faculty_translation
 (
@@ -207,6 +205,17 @@ CREATE TABLE IF NOT EXISTS faculty_subject
     FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TRIGGER faculty_subject_AFTER_INSERT_AVR
+    AFTER INSERT
+    ON faculty_subject
+    FOR EACH ROW
+    UPDATE faculty
+    SET average_passing_grade = (SELECT AVG(s.passing_grade)
+                                 FROM subject s,
+                                      faculty_subject fs
+                                 WHERE fs.subject_id = s.id
+                                   AND fs.faculty_id = faculty.id);
+
 INSERT INTO faculty_subject (faculty_id, subject_id)
 VALUES (1, 1),
        (1, 2),
@@ -227,11 +236,11 @@ CREATE TABLE IF NOT EXISTS application_status
     status VARCHAR(20) NOT NULL
 );
 
-INSERT INTO application_status(id,status)
-VALUES (0,'IN_PROCESSING'),
-       (1,'REJECTED'),
-       (2,'BUDGET_APPROVED'),
-       (3,'CONTRACT_APPROVED');
+INSERT INTO application_status(id, status)
+VALUES (0, 'IN_PROCESSING'),
+       (1, 'REJECTED'),
+       (2, 'BUDGET_APPROVED'),
+       (3, 'CONTRACT_APPROVED');
 
 CREATE TABLE IF NOT EXISTS application
 (

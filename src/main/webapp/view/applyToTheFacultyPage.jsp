@@ -1,7 +1,5 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <c:set var="faculty" value="${sessionScope['faculty']}"/>
-
 <html>
 <head>
     <title>Apply to the faculty</title>
@@ -10,7 +8,7 @@
     </style>
 </head>
 <body>
-<%@ include file="/view/jspf/header.jspf" %>
+<%@ include file="includes/header.jsp" %>
 
 <div class="login-page">
     <div class="form">

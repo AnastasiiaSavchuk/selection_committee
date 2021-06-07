@@ -1,5 +1,4 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <%@ page isErrorPage="true" %>
 <%@ page import="java.io.PrintWriter" %>
 

@@ -72,7 +72,7 @@
             <param-name>ADMIN</param-name>
             <param-value>adminPage facultyCreateChoice facultyCreate facultyUpdate facultyDelete getSubjects
                 subjectCreateChoice subjectCreate subjectUpdate subjectDelete getApplicantById applicantUpdateByAdmin
-                applicantDelete
+                generateStatement rollbackStatement sendStatement
             </param-value>
         </init-param>
         <init-param>

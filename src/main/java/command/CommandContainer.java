@@ -37,7 +37,9 @@ public class CommandContainer {
         commands.put("subjectDelete", new SubjectDeleteCommand());
         commands.put("getApplicantById", new ApplicantGetByIdCommand());
         commands.put("applicantUpdateByAdmin", new ApplicantUpdateByAdminCommand());
-        commands.put("applicantDelete", new ApplicantDeleteCommand());
+        commands.put("generateStatement", new StatementGenerateCommand());
+        commands.put("rollbackStatement", new StatementRollBackCommand());
+        commands.put("sendStatement", new StatementRollBackCommand());
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());

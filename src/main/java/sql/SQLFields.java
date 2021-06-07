@@ -25,6 +25,7 @@ public class SQLFields {
     public static final String FACULTY = "faculty";
     public static final String FACULTY_BUDGET_QTY = "budget_qty";
     public static final String FACULTY_TOTAL_QTY = "total_qty";
+    public static final String FACULTY_AVERAGE_PASSING_GRADE = "average_passing_grade";
     //application
     public static final String APPLICATION_ID = "id";
     public static final String APPLICATION_SUM_OF_GRADES = "sum_of_grades";

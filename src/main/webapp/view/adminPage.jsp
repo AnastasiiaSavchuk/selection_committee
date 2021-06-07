@@ -1,7 +1,5 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <c:set var="aList" value="${sessionScope['applicantList']}"/>
-
 <html>
 <head>
     <title>Admin Page</title>
@@ -10,12 +8,13 @@
     </style>
 </head>
 <body>
-<%@ include file="/view/jspf/header.jspf" %>
+<%@ include file="/view/includes/header.jsp" %>
 
 <div class="container">
     <div class=" panel-table">
         <div class="panel-heading">
             <div class="panel-body">
+                <h2 style="text-align: center"><fmt:message key="applicant.Applicants"/></h2>
                 <table id="pagination" class="table table-striped table-bordered table-list">
                     <thead>
                     <tr>
@@ -34,9 +33,9 @@
                                     <input type="hidden" name="command" value="getApplicantById"/>
                                     <input type="hidden" name="applicantId"
                                            value="<c:out value="${applicant.getId()}"/>">
-                                    <button class="buttonChose"><c:out value="${applicant.getFirstName()}"/> <c:out
-                                            value="${applicant.getMiddleName()}"/> <c:out
-                                            value="${applicant.getLastName()}"/>
+                                    <button class="buttonChose"><c:out value="${applicant.getLastName()}"/> <c:out
+                                            value="${applicant.getFirstName()}"/> <c:out
+                                            value="${applicant.getMiddleName()}"/>
                                     </button>
                                 </form>
                             <td class="td-to-align"><c:out value="${applicant.getCity()}"/></td>

@@ -3,17 +3,14 @@ package command.admin;
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
 import dao.impl.ApplicationDaoImpl;
-import dao.impl.GradeDaoImpl;
 import domain.Applicant;
 import domain.Application;
-import domain.Grade;
 import org.apache.log4j.Logger;
 import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

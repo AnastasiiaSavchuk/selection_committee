@@ -1,5 +1,4 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +8,7 @@
     </style>
 </head>
 <body>
-<%@ include file="/view/jspf/header.jspf" %>
+<%@ include file="view/includes/header.jsp" %>
 
 <div class="slideshow">
     <div class="start-photo">

@@ -60,20 +60,21 @@ public class SQLConstants {
             "VALUES ((SELECT MAX(id) FROM faculty), (SELECT id FROM language WHERE lang_code = 'en'), ?), " +
             "((SELECT MAX(id) FROM faculty), (SELECT id FROM language WHERE lang_code = 'uk'), ?)";
     public static final String INSERT_FACULTY_SUBJECT = "INSERT INTO faculty_subject(faculty_id, subject_id) VALUES (?, ?)";
-    public static final String GET_ALL_FACULTIES = "SELECT f.id, f.budget_qty, f.total_qty, ft.faculty " +
-            "FROM faculty f, faculty_translation ft " +
-            "INNER JOIN language l ON ft.language_id = l.id " +
-            "WHERE f.id = ft.faculty_id AND l.lang_code = ?";
-    public static final String GET_FACULTY_BY_ID = "SELECT f.id, f.budget_qty, f.total_qty, ft.faculty " +
+    public static final String GET_FACULTY_BY_ID = "SELECT f.id, ft.faculty, f.budget_qty, f.total_qty, f.average_passing_grade " +
             "FROM faculty f " +
             "INNER JOIN faculty_translation ft ON f.id = ft.faculty_id " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE f.id = ? AND l.lang_code = ?";
-    public static final String GET_FACULTY_TO_UPDATE = "SELECT f.id, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty " +
+    public static final String GET_FACULTY_TO_UPDATE = "SELECT f.id, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty, " +
+            "f.budget_qty, f.total_qty, f.average_passing_grade, " +
             "FROM faculty f " +
             "INNER JOIN faculty_translation ft ON f.id = ft.faculty_id " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE f.id = ?  GROUP BY f.id";
+    public static final String GET_ALL_FACULTIES = "SELECT f.id, ft.faculty, f.budget_qty, f.total_qty, f.average_passing_grade " +
+            "FROM faculty f, faculty_translation ft " +
+            "INNER JOIN language l ON ft.language_id = l.id " +
+            "WHERE f.id = ft.faculty_id AND l.lang_code = ?";
     public static final String UPDATE_FACULTY = "UPDATE faculty SET  budget_qty = ?, total_qty = ? WHERE id = ?";
     public static final String UPDATE_FACULTY_TRANSLATION = "UPDATE faculty_translation SET faculty = ? " +
             "WHERE faculty_id = ? AND language_id = ?";
@@ -86,6 +87,11 @@ public class SQLConstants {
             "FROM application ap, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.id = ? AND l.lang_code = ?";
+    public static final String GET_ALL_APPLICATIONS = "SELECT ap.id, ap.user_id, a.first_name, a.last_name, " +
+            "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.average_grade, ap.applicationStatus_id " +
+            "FROM application ap, applicant a, faculty f, faculty_translation ft " +
+            "INNER JOIN language l ON l.id = ft.language_id " +
+            "WHERE a.user_id = ap.user_id AND ft.faculty_id = ap.faculty_id AND l.lang_code = ? ORDER BY ft.faculty_id ASC";
     public static final String GET_APPLICATIONS_BY_USER_ID = "SELECT ap.id, ap.user_id, a.first_name, a.last_name, " +
             "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.average_grade, ap.applicationStatus_id " +
             "FROM application ap, applicant a, faculty_translation ft " +
@@ -99,6 +105,7 @@ public class SQLConstants {
     public static final String UPDATE_APPLICATION = "UPDATE application SET applicationStatus_id = " +
             "(SELECT id FROM application_status WHERE status = ?) WHERE id = ?";
     public static final String DELETE_APPLICATION = "DELETE FROM application WHERE id = ?";
+    public static final String IS_EXIST = "SELECT * FROM application WHERE user_id = ? AND faculty_id = ?";
     //grade
     public static final String INSERT_GRADE = "INSERT INTO grade(user_id, subject_id, grade) VALUES(?, ?, ?)";
     public static final String INSERT_APPLICATION_GRADE = "INSERT INTO application_grade(application_id, grade_id) VALUES (?, ?)";

@@ -1,5 +1,4 @@
-<%@ include file="/view/jspf/directive.jspf" %>
-<%@ include file="/view/jspf/localesSettings.jsp" %>
+<%@ include file="/view/includes/init.jsp" %>
 <c:set var="faculty" value="${sessionScope['faculty']}"/>
 <html>
 <head>
@@ -9,7 +8,7 @@
     </style>
 </head>
 <body>
-<%@ include file="/view/jspf/header.jspf" %>
+<%@ include file="includes/header.jsp" %>
 
 <div class="login-page">
     <div class="form">
@@ -22,22 +21,18 @@
                 <input class="form-control" name="englishName" type="text"
                        placeholder="<fmt:message key="faculty.NameInEnglish"/>"
                        value="<c:out value="${faculty.getFacultyList().get(0)}"/>" required/></div>
-
             <div class="input-group mb-3">
                 <input class="form-control" name="ukrainianName" type="text"
                        placeholder="<fmt:message key="faculty.NameInUkrainian"/>"
                        value="<c:out value="${faculty.getFacultyList().get(1)}"/>" required/></div>
-
             <div class="input-group mb-3">
                 <input class="form-control" name="budgetQty" type="number" min="0"
                        placeholder="<fmt:message key="faculty.BudgetPlaces"/>"
                        value="<c:out value="${faculty.getBudgetQty()}"/>" required/></div>
-
             <div class="input-group mb-3">
                 <input class="form-control" name="totalQty" type="number" min="0"
                        placeholder="<fmt:message key="faculty.TotalPlaces"/>"
                        value="<c:out value="${faculty.getTotalQty()}"/>" required/></div>
-
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="save.Save"/></button>
                 <a href="${pageContext.request.contextPath}/controller?command=getFaculties">

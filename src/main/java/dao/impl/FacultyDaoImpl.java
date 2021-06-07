@@ -256,9 +256,10 @@ public class FacultyDaoImpl implements FacultyDao {
             Faculty faculty = new Faculty();
             try {
                 faculty.setId(rs.getInt(SQLFields.FACULTY_ID));
+                faculty.setFacultyList(Arrays.asList(rs.getString(SQLFields.FACULTY).split("/")));
                 faculty.setBudgetQty(rs.getInt(SQLFields.FACULTY_BUDGET_QTY));
                 faculty.setTotalQty(rs.getInt(SQLFields.FACULTY_TOTAL_QTY));
-                faculty.setFacultyList(Arrays.asList(rs.getString(SQLFields.FACULTY).split("/")));
+                faculty.setAveragePassingGrade(rs.getInt(SQLFields.FACULTY_AVERAGE_PASSING_GRADE));
             } catch (SQLException ex) {
                 logger.error("Couldn't read and map the faculty from DB: " + ex.getMessage());
             }

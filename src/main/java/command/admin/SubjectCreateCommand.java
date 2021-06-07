@@ -45,8 +45,8 @@ public class SubjectCreateCommand extends Command {
             newSubject.setPassingGrade(Integer.parseInt(passingGrade));
             newSubject.setSubjectList(Arrays.asList(englishName, ukrainianName));
 
-            boolean isInsert = new SubjectDaoImpl().create(newSubject);
-            if (!isInsert) {
+            boolean isInserted = new SubjectDaoImpl().create(newSubject);
+            if (!isInserted) {
                 errorMessage = "Something went wrong! Required fields cannot be empty!";
                 request.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);

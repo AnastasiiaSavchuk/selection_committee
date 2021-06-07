@@ -7,7 +7,6 @@ status.forEach(i => i.onclick = () => updateHandler(i));
 function applicantUpdate() {
     let applicantToUpdate = document.getElementById('applicantUpdate');
     if (applicantToUpdate.value === '') {
-        // modalAlert();
         return false;
     } else {
         document.getElementById('updateForm').submit();
@@ -25,17 +24,6 @@ function getCertificate(buttonCertificate) {
     }
 }
 
-function getApplications(buttonApplications) {
-    let div = document.getElementById('application');
-    if (div.style.display !== 'block') {
-        div.style.display = 'block';
-        buttonApplications.innerHTML = '<fmt:message key="faculty.HideApplication"/>';
-    } else {
-        div.style.display = 'none';
-        buttonApplications.innerHTML = '<fmt:message key="faculty.DisplayApplication"/>';
-    }
-}
-
 function getGrades(buttonGrades) {
     let div = document.getElementById('grade');
     if (div.style.display !== 'block') {
@@ -44,5 +32,16 @@ function getGrades(buttonGrades) {
     } else {
         div.style.display = 'none';
         buttonGrades.innerHTML = '<fmt:message key="grade.DisplayGrade"/>';
+    }
+}
+
+function getApplications(buttonApplications) {
+    let div = document.getElementById('application');
+    if (div.style.display !== 'block') {
+        div.style.display = 'block';
+        buttonApplications.innerHTML = '<fmt:message key="faculty.HideApplication"/>';
+    } else {
+        div.style.display = 'none';
+        buttonApplications.innerHTML = '<fmt:message key="faculty.DisplayApplication"/>';
     }
 }

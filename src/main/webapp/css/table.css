@@ -1,28 +1,23 @@
 .container {
-    margin-top: 100px !important;
+    margin-top: 120px !important;
 }
 
 .entityData {
-    width: 800px !important;
+    width: 700px !important;
     float: left;
 }
 
-.container h3 {
-    margin: 15px 0;
+.container h2 {
     color: #262626;
-    text-transform: uppercase;
 }
 
 .container h5 {
-    margin: 15px 0;
+    margin-top: 15px;
     color: #262626;
 }
 
-.formInline {
-    display: inline;
-}
-
-.container .align-right {
+.container .align-right .inRow, #application .inRow {
+    flex-direction: row !important;
     text-align: right;
 }
 
@@ -31,7 +26,7 @@
 }
 
 .container .button {
-    margin-top: 15px;
+    margin: 5px 0;
     width: 250px;
     height: 40px;
     border-color: #334d4d;
@@ -45,10 +40,15 @@
     text-align: left !important;
     border: none !important;
     width: 100%;
-    height: 100%;
     border-radius: 5px;
     outline: none;
+    vertical-align: middle;
     cursor: pointer;
+}
+
+.container .tdWidth {
+    width: 130px;
+    height: 80px;
 }
 
 .container .tdButton {
@@ -71,7 +71,7 @@
 }
 
 .panel-table {
-    margin: 50px 0;
+    margin: 15px 0;
     clear: both;
 }
 
@@ -120,11 +120,11 @@
 used to vertically center elements, may need modification if you're not using default sizes.
 */
 .panel-table .panel-footer .col {
-    line-height: 34px;
-    height: 34px;
+    line-height: 30px;
+    height: 30px;
 }
 
 .panel-table .panel-body .table-bordered > tbody > tr > td {
-    line-height: 34px;
+    line-height: 30px;
     vertical-align: middle;
 }

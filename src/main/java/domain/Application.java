@@ -80,6 +80,10 @@ public class Application implements Serializable {
 
     public static Comparator<Application> COMPARE_BY_ID = Comparator.comparing(Application::getId);
 
+    public static Comparator<Application> COMPARE_BY_AVERAGE_GRADE = Comparator.comparing(Application::getAverageGrade);
+
+    public static Comparator<Application> COMPARE_BY_FACULTY_ID = Comparator.comparingInt(a -> a.getFaculty().getId());
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

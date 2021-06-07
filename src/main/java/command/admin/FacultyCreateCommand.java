@@ -68,8 +68,8 @@ public class FacultyCreateCommand extends Command {
         newFaculty.setTotalQty(Integer.parseInt(totalQty));
         newFaculty.setSubjectList(subjectList);
 
-        boolean isInsert = new FacultyDaoImpl().create(newFaculty);
-        if (!isInsert) {
+        boolean isInserted = new FacultyDaoImpl().create(newFaculty);
+        if (!isInserted) {
             errorMessage = "Something went wrong! Unable to create new faculty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);

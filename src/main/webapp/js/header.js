@@ -101,16 +101,16 @@ $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function () {
     }
 });
 
-
+//pagination
 $(document).ready(function () {
     $('#pagination').after('<div id="nav"></div>');
-    let rowsShown = 5;
+    let rowsShown = 10;
     let rowsTotal = $('#pagination tbody tr').length;
     let numPages = rowsTotal / rowsShown;
     if (rowsTotal > rowsShown) {
         for (let i = 0; i < numPages; i++) {
             let pageNum = i + 1;
-            $('#nav').append('<a href="#" rel="' + i + '">' + pageNum + '</a>');
+            $('#nav').append('<a href="#" rel="'  + i + '">' + pageNum + '</a>');
         }
         $('#pagination thead tr').show();
         $('#pagination tbody tr').hide();

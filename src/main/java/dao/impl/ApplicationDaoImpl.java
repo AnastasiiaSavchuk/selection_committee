@@ -4,7 +4,6 @@ import dao.ApplicationDao;
 import domain.Applicant;
 import domain.Application;
 import domain.Faculty;
-import domain.Grade;
 import domain.enums.ApplicationStatus;
 import org.apache.log4j.Logger;
 import sql.DBManager;
@@ -55,7 +54,37 @@ public class ApplicationDaoImpl implements ApplicationDao {
 
     @Override
     public List<Application> readAll(List<String> locales) {
-        return null;
+        List<Application> applicationList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        if (locales == null || locales.size() == 0)
+            return applicationList;
+
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_ALL_APPLICATIONS);
+            ps.setString(1, locales.get(0));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                applicationList.add(CREATOR.mapRow(rs));
+            }
+
+            if (applicationList.size() > 0) {
+                for (Application application : applicationList) {
+                    application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
+                }
+            }
+            logger.info("Received list of application");
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get list of application: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return applicationList;
     }
 
     @Override
@@ -163,7 +192,6 @@ public class ApplicationDaoImpl implements ApplicationDao {
     public boolean update(Application application) {
         Connection connection = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.UPDATE_APPLICATION);
@@ -180,6 +208,32 @@ public class ApplicationDaoImpl implements ApplicationDao {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
         }
+    }
+
+    public boolean isExist(Applicant applicant, Faculty faculty) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.IS_EXIST);
+            ps.setInt(1, applicant.getId());
+            ps.setInt(2, faculty.getId());
+            ps.execute();
+
+            rs = ps.getResultSet();
+            if (!rs.next()) {
+                logger.info("Current application is exist");
+                return false;
+            }
+        } catch (SQLException ex) {
+            logger.error("Current application is not created: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return true;
     }
 
     @Override

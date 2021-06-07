@@ -1,6 +1,9 @@
 package util;
 
 
+import domain.Applicant;
+import domain.Faculty;
+
 import java.util.List;
 
 /**
