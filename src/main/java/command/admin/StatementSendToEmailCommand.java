@@ -14,14 +14,13 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
-public class StatementGenerateCommand extends Command {
-    private static final long serialVersionUID = 2145874596521354789L;
-    private static final Logger logger = Logger.getLogger(StatementGenerateCommand.class);
+public class StatementSendToEmailCommand extends Command {
+    private static final long serialVersionUID = 6985321478451263535L;
+    private static final Logger logger = Logger.getLogger(StatementSendToEmailCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("StatementGenerateCommand started");
-        String errorMessage;
+        logger.info("StatementCloseCommand started");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
@@ -31,23 +30,15 @@ public class StatementGenerateCommand extends Command {
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationByFacultyId(faculty.getId(),
                 Collections.singletonList(language == null ? localeLang : language));
 
-        new StatementDaoImpl().changeApplicationStatus(applicationList, faculty);
+        new StatementDaoImpl().sendToEmail(applicationList);
 
-        boolean isCompleted = new StatementDaoImpl().updateApplicationStatusByQTY(applicationList);
-        if (!isCompleted) {
-            errorMessage = "Something went wrong! Unable to generate applications!";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Path.ERROR;
-        }
-
-        boolean statementExisted = new StatementDaoImpl().isExist(applicationList);
+        boolean sentStatement = new StatementDaoImpl().isSentStatement(applicationList);
         session.setAttribute("faculty", faculty);
         session.setAttribute("applicationList", applicationList);
-        session.setAttribute("statementExisted", statementExisted);
-        logger.info("Set the session attribute:isExist --> " + statementExisted);
+        session.setAttribute("sentStatement", sentStatement);
+        logger.info("Set the session attribute:isSentStatement --> " + sentStatement);
 
-        logger.info("StatementGenerateCommand finished");
+        logger.info("StatementCloseCommand finished");
         return Path.FACULTY_BY_id;
     }
 }

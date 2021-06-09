@@ -41,13 +41,9 @@ public class StatementRollBackCommand extends Command {
             return Path.ERROR;
         }
 
-        session.setAttribute("faculty", faculty);
-        logger.info("Set the session attribute:faculty  --> " + faculty);
-
-        session.setAttribute("applicationList", applicationList);
-        logger.info("Set the session attribute:applicationList  --> " + applicationList);
-
         boolean statementExisted = new StatementDaoImpl().isExist(applicationList);
+        session.setAttribute("faculty", faculty);
+        session.setAttribute("applicationList", applicationList);
         session.setAttribute("statementExisted", statementExisted);
         logger.info("Set the session attribute:isExist --> " + statementExisted);
 

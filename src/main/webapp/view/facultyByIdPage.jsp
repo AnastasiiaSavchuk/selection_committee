@@ -4,6 +4,7 @@
 <c:set var="aList" value="${sessionScope['applicationList']}"/>
 <c:set var="isExistApplication" value="${sessionScope['applicantExist']}"/>
 <c:set var="isExistStatement" value="${sessionScope['statementExisted']}"/>
+<c:set var="isSentStatement" value="${sessionScope['sentStatement']}"/>
 <html>
 <head>
     <title>Faculty by id</title>
@@ -29,14 +30,52 @@
                 <button class="button" type="button"><fmt:message key="return.Return"/></button>
             </a>
         </div>
+        <div class="inRow">
+            <button class="button" type="button" onclick="getSubjects(this)">
+                <fmt:message key="faculty.DisplaySubjects"/></button>
+        </div>
         <c:if test="${not empty role}">
+
             <c:choose>
                 <c:when test="${role == 'ADMIN'}">
-                    <div class="inRow">
-                        <button class="button" type="button" onclick="getApplications(this)">
-                            <fmt:message key="faculty.DisplayApplication"/></button>
-                    </div>
+                    <c:choose>
+                        <c:when test="${isExistStatement}">
+                            <div class="inRow">
+                                <h5 style="color: #992600"><fmt:message key="application.AlreadyGenerate"/></h5>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="inRow">
+                                <a href="${pageContext.request.contextPath}/controller?command=generateStatement">
+                                    <button class="button" type="button">
+                                        <fmt:message key="statement.GenerateStatement"/></button>
+                                </a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${isSentStatement}">
+                            <div class="inRow">
+                                <h5 style="color: #992600"><fmt:message key="application.AlreadySent"/></h5>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="inRow">
+                                <a href="${pageContext.request.contextPath}/controller?command=rollbackStatement">
+                                    <button class="button" type="button">
+                                        <fmt:message key="statement.RollBackStatement"/></button>
+                                </a>
+                            </div>
+                            <div class="inRow">
+                                <a href="${pageContext.request.contextPath}/controller?command=sendStatement">
+                                    <button class="button" type="button">
+                                        <fmt:message key="statement.SendStatement"/></button>
+                                </a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </c:when>
+
                 <c:when test="${role == 'USER'}">
                     <c:choose>
                         <c:when test="${isExistApplication}">
@@ -59,39 +98,38 @@
         </c:if>
     </div>
 
-    <div id="application" style="display:none">
+    <div id="subjects" style="display:none">
+        <div class="panel-table">
+            <div class="panel-heading">
+                <div class="panel-body">
+                    <h2 style="text-align: center"><fmt:message key="subject.Subjects"/></h2>
+                    <table class="table table-striped table-bordered table-list sortable">
+                        <thead>
+                        <tr>
+                            <th class="hidden-xs">№</th>
+                            <th><fmt:message key="subject.Subject"/></th>
+                            <th><fmt:message key="subject.PassingGrade"/></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${sList}" var="subject" varStatus="loop">
+                            <tr>
+                                <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
+                                <td class="td-to-align"><c:out value="${subject.getSubjectList().get(0)}"/></td>
+                                <td class="td-to-align"><c:out value="${subject.getPassingGrade()}"/></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <c:if test="${role == 'ADMIN'}">
         <div class=" panel-table">
             <div class="panel-heading">
                 <div class="panel-body">
-                    <div class="align-right">
-                        <c:choose>
-                            <c:when test="${isExistStatement}">
-                                <div class="inRow">
-                                    <h5 style="color: #992600"><fmt:message key="application.AlreadyGenerate"/></h5>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="inRow">
-                                    <a href="${pageContext.request.contextPath}/controller?command=generateStatement">
-                                        <button class="button" type="button">
-                                            <fmt:message key="statement.GenerateStatement"/></button>
-                                    </a>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                        <div class="inRow">
-                            <a href="${pageContext.request.contextPath}/controller?command=rollbackStatement">
-                                <button class="button" type="button">
-                                    <fmt:message key="statement.RollBackStatement"/></button>
-                            </a>
-                        </div>
-                        <div class="inRow">
-                            <a href="${pageContext.request.contextPath}/controller?command=sendStatement">
-                                <button class="button" type="button"><fmt:message
-                                        key="statement.SendStatement"/></button>
-                            </a>
-                        </div>
-                    </div>
                     <h2 style="text-align: center"><fmt:message key="application.Applications"/></h2>
                     <table id="pagination" class="table table-striped table-bordered table-list sortable">
                         <thead>
@@ -104,32 +142,32 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach items="${aList}" var="subjects" varStatus="loop">
+                        <c:forEach items="${aList}" var="application" varStatus="loop">
                             <tr>
                                 <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
                                 <td class="td-to-align"><c:out
-                                        value="${subjects.getApplicant().getFirstName()}"/><c:out
-                                        value="${subjects.getApplicant().getMiddleName()}"/> <c:out
-                                        value="${subjects.getApplicant().getLastName()}"/>
+                                        value="${application.getApplicant().getFirstName()}"/><c:out
+                                        value="${application.getApplicant().getMiddleName()}"/> <c:out
+                                        value="${application.getApplicant().getLastName()}"/>
                                 </td>
-                                <td class="td-to-align"><c:out value="${subjects.getSumOfGrades()}"/></td>
-                                <td class="td-to-align"><c:out value="${subjects.getAverageGrade()}"/></td>
+                                <td class="td-to-align"><c:out value="${application.getSumOfGrades()}"/></td>
+                                <td class="td-to-align"><c:out value="${application.getAverageGrade()}"/></td>
                                 <td align="center">
-                                    <c:if test="${not empty subjects.getApplicationStatus()}">
+                                    <c:if test="${not empty application.getApplicationStatus()}">
                                         <c:choose>
-                                            <c:when test="${subjects.getApplicationStatus() == 'IN_PROCESSING'}">
+                                            <c:when test="${application.getApplicationStatus() == 'IN_PROCESSING'}">
                                                 <button disabled class="btn btn-info">
                                                     <fmt:message key="application.IN_PROCESSING"/></button>
                                             </c:when>
-                                            <c:when test="${subjects.getApplicationStatus() == 'REJECTED'}">
+                                            <c:when test="${application.getApplicationStatus() == 'REJECTED'}">
                                                 <button disabled class="btn btn-danger">
                                                     <fmt:message key="application.REJECTED"/></button>
                                             </c:when>
-                                            <c:when test="${subjects.getApplicationStatus() == 'BUDGET_APPROVED'}">
+                                            <c:when test="${application.getApplicationStatus() == 'BUDGET_APPROVED'}">
                                                 <button disabled class="btn btn-success">
                                                     <fmt:message key="application.BUDGET_APPROVED"/></button>
                                             </c:when>
-                                            <c:when test="${subjects.getApplicationStatus() == 'CONTRACT_APPROVED'}">
+                                            <c:when test="${application.getApplicationStatus() == 'CONTRACT_APPROVED'}">
                                                 <button disabled class="btn btn-warning">
                                                     <fmt:message key="application.CONTRACT_APPROVED"/></button>
                                             </c:when>
@@ -143,32 +181,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="panel-table">
-        <div class="panel-heading">
-            <div class="panel-body">
-                <table class="table table-striped table-bordered table-list sortable">
-                    <thead>
-                    <tr>
-                        <th class="hidden-xs">№</th>
-                        <th><fmt:message key="subject.Subject"/></th>
-                        <th><fmt:message key="subject.PassingGrade"/></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${sList}" var="subject" varStatus="loop">
-                        <tr>
-                            <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
-                            <td class="td-to-align"><c:out value="${subject.getSubjectList().get(0)}"/></td>
-                            <td class="td-to-align"><c:out value="${subject.getPassingGrade()}"/></td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    </c:if>
 </div>
 <script>
     <%@include file="../js/applicant.js"%>

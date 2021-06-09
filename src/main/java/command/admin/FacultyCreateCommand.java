@@ -82,7 +82,6 @@ public class FacultyCreateCommand extends Command {
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         facultyList.sort(Faculty.COMPARE_BY_ID);
         session.setAttribute("facultyList", facultyList);
-        logger.info("Set the session attribute:facultyList --> " + facultyList);
 
         logger.info("FacultyCreateCommand finished");
         return Path.FACULTIES;

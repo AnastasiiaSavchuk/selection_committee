@@ -68,6 +68,10 @@ public class GetFacultyByIdCommand extends Command {
         session.setAttribute("statementExisted", statementExisted);
         logger.info("Set the session attribute:isExist --> " + statementExisted);
 
+        boolean sentStatement = new StatementDaoImpl().isSentStatement(applicationList);
+        session.setAttribute("sentStatement", sentStatement);
+        logger.info("Set the session attribute:isSentStatement --> " + sentStatement);
+
 
         logger.info("GetFacultyByIdCommand finished");
         return Path.FACULTY_BY_id;

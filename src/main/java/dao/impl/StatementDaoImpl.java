@@ -4,17 +4,19 @@ import dao.StatementDao;
 import domain.Application;
 import domain.Faculty;
 import domain.enums.ApplicationStatus;
+import org.apache.log4j.Logger;
+import util.mail.MessageCreator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+
 public class StatementDaoImpl implements StatementDao {
+    private static final Logger logger = Logger.getLogger(StatementDaoImpl.class);
 
     @Override
     public void changeApplicationStatus(List<Application> applicationList, Faculty faculty) {
         int places = 1;
-        applicationList.sort(Collections.reverseOrder(Application.COMPARE_BY_AVERAGE_GRADE));
 
         for (Application application : applicationList) {
             if (places <= faculty.getBudgetQty() &&
@@ -37,7 +39,6 @@ public class StatementDaoImpl implements StatementDao {
                 application.setApplicationStatus(ApplicationStatus.REJECTED);
             }
         }
-
     }
 
     @Override
@@ -61,7 +62,7 @@ public class StatementDaoImpl implements StatementDao {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("Cannot close thread: " + e.getMessage());
                 return false;
             }
         }
@@ -77,4 +78,30 @@ public class StatementDaoImpl implements StatementDao {
         }
         return true;
     }
+
+    @Override
+    public void sendToEmail(List<Application> applicationsList) {
+        for (Application application : applicationsList) {
+            if (application.getApplicationStatus() == ApplicationStatus.BUDGET_APPROVED ||
+                    application.getApplicationStatus() == ApplicationStatus.CONTRACT_APPROVED) {
+                MessageCreator.writeSuccessfulEnrollment(application.getApplicant().getEmail(),
+                        application.getApplicant().getFirstName(), application.getApplicant().getLastName(),
+                        application.getApplicant().getMiddleName(), application.getApplicationStatus(),
+                        application.getFaculty().getFacultyList().get(0));
+            } else {
+                MessageCreator.writeUnSuccessfullyEnrollment(application.getApplicant().getEmail(),
+                        application.getApplicant().getFirstName(), application.getApplicant().getLastName(),
+                        application.getApplicant().getMiddleName(), application.getFaculty().getFacultyList().get(0));
+            }
+        }
+    }
+
+    @Override
+    public boolean isSentStatement(List<Application> applicationsList) {
+        if (!isExist(applicationsList)) {
+            return false;
+        }
+        return true;
+    }
 }
+

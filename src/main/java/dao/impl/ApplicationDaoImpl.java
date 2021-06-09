@@ -54,37 +54,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
 
     @Override
     public List<Application> readAll(List<String> locales) {
-        List<Application> applicationList = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        if (locales == null || locales.size() == 0)
-            return applicationList;
-
-        try {
-            connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.GET_ALL_APPLICATIONS);
-            ps.setString(1, locales.get(0));
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                applicationList.add(CREATOR.mapRow(rs));
-            }
-
-            if (applicationList.size() > 0) {
-                for (Application application : applicationList) {
-                    application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
-                }
-            }
-            logger.info("Received list of application");
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to get list of application: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-            DB_MANAGER.close(Objects.requireNonNull(rs));
-        }
-        return applicationList;
+        return null;
     }
 
     @Override
@@ -175,7 +145,6 @@ public class ApplicationDaoImpl implements ApplicationDao {
             if (rs.next()) {
                 application = CREATOR.mapRow(rs);
             }
-
             logger.info("Received application by id: " + id);
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
@@ -265,8 +234,10 @@ public class ApplicationDaoImpl implements ApplicationDao {
             try {
                 Applicant applicant = new Applicant();
                 applicant.setId(rs.getInt(SQLFields.APPLICANT_ID));
-                applicant.setFirstName(rs.getString(SQLFields.APPLICANT_FIRST_NAME));
+                applicant.setEmail(rs.getString(SQLFields.APPLICANT_EMAIL));
                 applicant.setLastName(rs.getString(SQLFields.APPLICANT_LAST_NAME));
+                applicant.setFirstName(rs.getString(SQLFields.APPLICANT_FIRST_NAME));
+                applicant.setMiddleName(rs.getString(SQLFields.APPLICANT_MIDDLE_NAME));
 
                 Faculty faculty = new Faculty();
                 faculty.setId(rs.getInt(SQLFields.FACULTY_ID));

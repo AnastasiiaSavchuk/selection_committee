@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS user
 );
 
 INSERT INTO user(email, password, role_id)
-VALUES ('savchuknesty@gmail.com', 'qwerty', 1),
+VALUES ('admin@gmail.com', 'qwerty', 1),
+       ('savchuknesty@gmail.com', 'ytrewq', 2),
        ('rasyansky@gmail.com', 'ytrewq', 2),
        ('kulbabyn@gmail.com', 'asdfgh', 2),
        ('gevorga@gmail.com', 'hgfdsa', 2),
@@ -42,8 +43,7 @@ VALUES ('savchuknesty@gmail.com', 'qwerty', 1),
        ('kolyabin@gmail.com', 'poiuyt', 2),
        ('mamonov@gmail.com', 'tyuiop', 2),
        ('salamin@gmail.com', 'lkjhgf', 2),
-       ('kuznetsova@gmail.com', 'fghjkl', 2),
-       ('rosinkova@gmail.com', 'mnbvcx', 2);
+       ('kuznetsova@gmail.com', 'fghjkl', 2);
 
 CREATE TABLE IF NOT EXISTS applicant
 (
@@ -61,17 +61,16 @@ CREATE TABLE IF NOT EXISTS applicant
 
 INSERT INTO applicant(user_id, first_name, middle_name, last_name, city, region, school_name, certificate,
                       is_blocked)
-VALUES (1, 'Анастасія', 'Андріївна', 'Савчук', 'Львів', 'Львівська область', 'Школа №25', '', 0),
-       (2, 'Перро', 'Анатолійович', 'Расянський', 'Львів', 'Львівська область', 'Школа №25', '', 0),
-       (3, 'Роман', 'Дмитрович', 'Кульбабин', 'Одеса', 'Одеська область', 'Гімназія №25', '', 0),
-       (4, 'Олександра', 'Семенівна', 'Геворга', 'Полтава', 'Полтавська область', 'Ліцей №15', '', 0),
-       (5, 'Ольга', 'Миронівна', 'Коростильова', 'Вінниця', 'Вінницька область', 'Гімназія №18', '', 0),
-       (6, 'Дмитро', 'Степанович', 'Смішанов', 'Київ', 'Київська область', 'Школа №147', '', 0),
-       (7, 'Ігор', 'Олександрович', 'Колябін', 'Миколаїв', 'Миколаївська область', 'Ліцей №6', '', 0),
-       (8, 'Михайло', 'Олегович', 'Мамонов', 'Міжгірне', 'Закарпатська область', 'Гімназія №95', '', 0),
-       (9, 'Степан', 'Володимирович', 'Салямін', 'Хмельницький', 'Хмельницька область', 'Школа №34', '', 0),
-       (10, 'Катерина', 'Сергіївна', 'Зелена', 'Суми', 'Сумська область', 'Ліцей №65', '', 0),
-       (11, 'Інна', 'Миколаївна', 'Сонячна', 'Дніпропетровськ', 'Дніпропетровська область', 'Школа №92', '', 0);
+VALUES (2, 'Анастасія', 'Андріївна', 'Савчук', 'Львів', 'Львівська область', 'Школа №25', '', 0),
+       (3, 'Перро', 'Анатолійович', 'Расянський', 'Львів', 'Львівська область', 'Школа №25', '', 0),
+       (4, 'Роман', 'Дмитрович', 'Кульбабин', 'Одеса', 'Одеська область', 'Гімназія №25', '', 0),
+       (5, 'Олександра', 'Семенівна', 'Геворга', 'Полтава', 'Полтавська область', 'Ліцей №15', '', 0),
+       (6, 'Ольга', 'Миронівна', 'Коростильова', 'Вінниця', 'Вінницька область', 'Гімназія №18', '', 0),
+       (7, 'Дмитро', 'Степанович', 'Смішанов', 'Київ', 'Київська область', 'Школа №147', '', 0),
+       (8, 'Ігор', 'Олександрович', 'Колябін', 'Миколаїв', 'Миколаївська область', 'Ліцей №6', '', 0),
+       (9, 'Михайло', 'Олегович', 'Мамонов', 'Міжгірне', 'Закарпатська область', 'Гімназія №95', '', 0),
+       (10, 'Степан', 'Володимирович', 'Салямін', 'Хмельницький', 'Хмельницька область', 'Школа №34', '', 0),
+       (11, 'Катерина', 'Сергіївна', 'Зелена', 'Суми', 'Сумська область', 'Ліцей №65', '', 0);
 
 CREATE TABLE IF NOT EXISTS subject
 (
@@ -80,10 +79,10 @@ CREATE TABLE IF NOT EXISTS subject
 );
 
 INSERT INTO subject(passing_grade)
-VALUES (140),
+VALUES (155),
        (135),
        (145),
-       (140),
+       (142),
        (135);
 
 CREATE TABLE IF NOT EXISTS subject_translation
@@ -244,18 +243,18 @@ VALUES (0, 'IN_PROCESSING'),
 
 CREATE TABLE IF NOT EXISTS application
 (
-    id                   INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    user_id              INT NOT NULL,
-    faculty_id           INT NOT NULL,
-    sum_of_grades        INT,
-    average_grade        INT,
-    applicationStatus_id INT NOT NULL,
+    id                    INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id               INT NOT NULL,
+    faculty_id            INT NOT NULL,
+    sum_of_grades         INT,
+    average_grade         INT,
+    application_status_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (faculty_id) REFERENCES faculty (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (applicationStatus_id) REFERENCES application_status (id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (application_status_id) REFERENCES application_status (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO application (user_id, faculty_id, sum_of_grades, average_grade, applicationStatus_id)
+INSERT INTO application (user_id, faculty_id, sum_of_grades, average_grade, application_status_id)
 VALUES (2, 1, 0, 0, 0),#2 1 'Faculty of Electronics and computer technologies' 1 Maths (1) 2 Physics (2) 3 English (3) 4 Ukrainian language (4)
        (2, 2, 0, 0, 0),#2 2 'Faculty of Foreign Languages' 3 English (3) 4 Ukrainian language (4)
        (2, 4, 0, 0, 0),#2 4 'Faculty of Financial Management and Business' 3 English (3) 4 Ukrainian language (4) 5 History(5)

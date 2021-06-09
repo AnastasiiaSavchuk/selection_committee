@@ -39,7 +39,7 @@ public class CommandContainer {
         commands.put("applicantUpdateByAdmin", new ApplicantUpdateByAdminCommand());
         commands.put("generateStatement", new StatementGenerateCommand());
         commands.put("rollbackStatement", new StatementRollBackCommand());
-        commands.put("sendStatement", new StatementRollBackCommand());
+        commands.put("sendStatement", new StatementSendToEmailCommand());
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());

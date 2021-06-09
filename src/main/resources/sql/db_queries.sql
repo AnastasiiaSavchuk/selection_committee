@@ -167,7 +167,11 @@ WHERE f.id = 1
   AND l.lang_code = 'uk';
 
 # GET_FACULTY_TO_UPDATE
-SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty
+SELECT f.id,
+       f.average_passing_grade,
+       f.budget_qty,
+       f.total_qty,
+       GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
@@ -201,65 +205,53 @@ WHERE id = 5;
 
 # application
 # INSERT_APPLICATION 
-INSERT INTO application (user_id, faculty_id, applicationStatus_id)
+INSERT INTO application (user_id, faculty_id, application_status_id)
 SELECT 1, 0, id
 FROM application_status
 WHERE id = 1;
 
-# GET_APPLICATION_BY_ID 
+# GET_APPLICATION_BY_ID
 SELECT ap.id,
        ap.user_id,
-       a.first_name,
+       u.email,
        a.last_name,
+       a.first_name,
+       a.middle_name,
        ap.faculty_id,
        ft.faculty,
        ap.sum_of_grades,
        ap.average_grade,
-       ap.applicationStatus_id
+       ap.application_status_id
 FROM application ap,
+     user u,
      applicant a,
      faculty_translation ft
          INNER JOIN language l ON l.id = ft.language_id
 WHERE a.user_id = ap.user_id
+  AND u.id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
-  AND ap.id = 22
+  AND ap.id = 2
   AND l.lang_code = 'uk';
-
-# GET_ALL_APPLICATIONS
-SELECT ap.id,
-       a.first_name,
-       a.last_name,
-       ap.faculty_id,
-       f.passing_grade,
-       ft.faculty,
-       ap.sum_of_grades,
-       ap.average_grade,
-       ap.applicationStatus_id
-FROM application ap,
-     applicant a,
-     faculty f,
-     faculty_translation ft
-         INNER JOIN language l ON l.id = ft.language_id
-WHERE a.user_id = ap.user_id
-  AND ft.faculty_id = ap.faculty_id
-  AND f.id = ap.faculty_id
-  AND l.lang_code = 'uk'
-ORDER BY ft.faculty_id ASC;
 
 # GET_APPLICATIONS_BY_USER_ID
 SELECT ap.id,
-       a.first_name,
+       ap.user_id,
+       u.email,
        a.last_name,
+       a.first_name,
+       a.middle_name,
        ap.faculty_id,
        ft.faculty,
        ap.sum_of_grades,
        ap.average_grade,
-       ap.applicationStatus_id
+       ap.application_status_id
 FROM application ap,
+     user u,
      applicant a,
      faculty_translation ft
          INNER JOIN language l ON l.id = ft.language_id
 WHERE a.user_id = ap.user_id
+  AND u.id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
   AND ap.user_id = 2
   AND l.lang_code = 'uk';
@@ -267,31 +259,36 @@ WHERE a.user_id = ap.user_id
 # GET_APPLICATIONS_BY_FACULTY_ID 
 SELECT ap.id,
        ap.user_id,
-       a.first_name,
+       u.email,
        a.last_name,
+       a.first_name,
+       a.middle_name,
        ap.faculty_id,
        ft.faculty,
        ap.sum_of_grades,
        ap.average_grade,
-       ap.applicationStatus_id
+       ap.application_status_id
 FROM application ap,
+     user u,
      applicant a,
      faculty_translation ft
          INNER JOIN language l ON l.id = ft.language_id
 WHERE a.user_id = ap.user_id
+  AND u.id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
   AND ap.faculty_id = 2
-  AND l.lang_code = 'uk';
+  AND l.lang_code = 'uk'
+  ORDER BY ap.average_grade DESC;
 
 # UPDATE_APPLICATION 
 UPDATE application
-SET applicationStatus_id = (SELECT id FROM application_status WHERE status = 'BLOCKED')
+SET application_status_id = (SELECT id FROM application_status WHERE status = 'BLOCKED')
 WHERE id = 5;
 
 # DELETE_APPLICATION
 DELETE
 FROM application
-WHERE id = 5;
+WHERE application_status_id = 3;
 
 #IS_EXIST
 SELECT *
@@ -301,12 +298,12 @@ WHERE user_id = 3
 
 # grade
 # INSERT_GRADE
-INSERT INTO grade(user_id, subject_id, grade)
-VALUES (12, 5, 156);
-INSERT INTO grade(user_id, subject_id, grade)
-VALUES (12, 4, 167);
-INSERT INTO grade(user_id, subject_id, grade)
-VALUES (12, 3, 196);
+INSERT INTO grade(subject_id, grade)
+VALUES (5, 156);
+INSERT INTO grade(subject_id, grade)
+VALUES (4, 167);
+INSERT INTO grade(subject_id, grade)
+VALUES (3, 196);
 
 # INSERT_APPLICATION_GRADE
 INSERT INTO application_grade(application_id, grade_id)

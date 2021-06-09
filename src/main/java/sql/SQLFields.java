@@ -30,7 +30,7 @@ public class SQLFields {
     public static final String APPLICATION_ID = "id";
     public static final String APPLICATION_SUM_OF_GRADES = "sum_of_grades";
     public static final String APPLICATION_AVERAGE_GRADE = "average_grade";
-    public static final String STATUS_ID = "applicationStatus_id";
+    public static final String STATUS_ID = "application_status_id";
     //grade
     public static final String GRADE_ID = "id";
     public static final String GRADE = "grade";
