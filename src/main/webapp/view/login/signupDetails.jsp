@@ -30,10 +30,9 @@
             <div class="input-group mb-3"><input class="form-control" name="schoolName" type="text"
                                                  placeholder="<fmt:message key="applicant.SchoolName"/>" required/>
             </div>
-            <h4><fmt:message key="applicant.InsertCertificate"/></h4>
-            <div class="input-group mb-3">
-                <input type="file" class="form-control" required/>
-            </div>
+<%--            <h4><fmt:message key="applicant.InsertCertificate"/></h4>--%>
+<%--            <div class="input-group mb-3"><input class="form-control" name="photo" type="file" required/>--%>
+<%--            </div>--%>
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="signup.Signup"/></button>
             </div>

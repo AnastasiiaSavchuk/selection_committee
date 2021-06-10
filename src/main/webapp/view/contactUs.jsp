@@ -1,4 +1,5 @@
 <%@ include file="/view/includes/init.jsp" %>
+<%@taglib prefix="tag" tagdir="/WEB-INF/tags" %>
 <head>
     <title>Contact Us</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -20,9 +21,8 @@
                     <div class="card-body text-center">
                         <i class="fa fa-phone fa-5x mb-3" aria-hidden="true"></i>
                         <h4 class="text-uppercase mb-5"><fmt:message key="contacts.GeneralOffice"/></h4>
-                        <p><a href="tel:+380322394111">+38 (032) 239-41-11</a></p>
-                        <p><a href="tel:+380322394325">+38 (032) 239-43-25</a></p>
-
+                        <a href="tel:+380322394111"><tag:customTag contact="+38 (032) 239-41-11"/></a>
+                        <a href="tel:+380322394325"><tag:customTag contact="+38 (032) 239-43-25"/></a>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     <div class="card-body text-center">
                         <i class="fa fa-phone fa-5x mb-3" aria-hidden="true"></i>
                         <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Admissions"/></h4>
-                        <p><a href="tel: +380322553965"> +38 (032) 255-39-65</a></p>
+                        <a href="tel: +380322553965"><tag:customTag contact="+38 (032) 255-39-65"/></a>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                     <div class="card-body text-center">
                         <i class="fa fa-globe fa-5x mb-3" aria-hidden="true"></i>
                         <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Email"/></h4>
-                        <a href="mailto:zag_kan@lnu.edu.ua">zag_kan@lnu.edu.ua</a>
+                        <a href="mailto:zag_kan@lnu.edu.ua"><tag:customTag contact="zag_kan@lnu.edu.ua"/></a>
                     </div>
                 </div>
             </div>

@@ -18,5 +18,4 @@ public final class Path {
     public static final String APPLICANT = "/view/applicantPage.jsp";
     public static final String APPLICANT_UPDATE = "/view/applicantUpdatePage.jsp";
     public static final String APPLY_TO_THE_FACULTY = "/view/applyToTheFacultyPage.jsp";
-    public static final String STATEMENT = "/view/statementPage.jsp";
 }

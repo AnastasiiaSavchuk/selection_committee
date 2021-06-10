@@ -2,6 +2,7 @@ package domain;
 
 import domain.enums.Role;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -92,6 +93,14 @@ public class Applicant implements Serializable {
         this.city = city;
     }
 
+    public byte[] getCertificate() {
+        return certificate;
+    }
+
+    public void setCertificate(byte[] certificate) {
+        this.certificate = certificate;
+    }
+
     public String getRegion() {
         return region;
     }
@@ -108,24 +117,6 @@ public class Applicant implements Serializable {
         this.schoolName = schoolName;
     }
 
-    public byte[] getCertificate() {
-        return certificate;
-    }
-
-    public void setCertificate(byte[] certificate) {
-        this.certificate = certificate;
-    }
-
-    public boolean isBlocked() {
-        return isBlocked;
-    }
-
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
-    }
-
-    public static Comparator<Applicant> COMPARE_BY_ID = Comparator.comparing(Applicant::getId);
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,6 +131,16 @@ public class Applicant implements Serializable {
         result = 31 * result + Arrays.hashCode(certificate);
         return result;
     }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public static Comparator<Applicant> COMPARE_BY_ID = Comparator.comparing(Applicant::getId);
 
     @Override
     public String toString() {

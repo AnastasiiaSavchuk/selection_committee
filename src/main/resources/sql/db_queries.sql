@@ -168,10 +168,10 @@ WHERE f.id = 1
 
 # GET_FACULTY_TO_UPDATE
 SELECT f.id,
-       f.average_passing_grade,
+       GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty,
        f.budget_qty,
        f.total_qty,
-       GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty
+       f.average_passing_grade
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
@@ -278,7 +278,7 @@ WHERE a.user_id = ap.user_id
   AND ft.faculty_id = ap.faculty_id
   AND ap.faculty_id = 2
   AND l.lang_code = 'uk'
-  ORDER BY ap.average_grade DESC;
+ORDER BY ap.average_grade DESC;
 
 # UPDATE_APPLICATION 
 UPDATE application

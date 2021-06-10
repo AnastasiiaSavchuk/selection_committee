@@ -272,7 +272,7 @@ VALUES (2, 1, 0, 0, 0),#2 1 'Faculty of Electronics and computer technologies' 1
        (8, 4, 0, 0, 0),#8 4 'Faculty of Financial Management and Business' 3 English(26) 4 Ukrainian language(27) 5 History(28)
        (9, 2, 0, 0, 0),#9 2 'Faculty of Foreign Languages' 3 English(30) 4 Ukrainian language(31)
        (9, 3, 0, 0, 0),#9 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(29) 3 English(30) 4 Ukrainian language(31)
-       (10, 1, 0, 0, 0),#10 1'Faculty of Electronics and computer technologies' 1 Maths(32) 2 Physics(33) 3 English(34) 4 Ukrainian language(35)
+       (10, 1, 0, 0, 0),#10 1 'Faculty of Electronics and computer technologies' 1 Maths(32) 2 Physics(33) 3 English(34) 4 Ukrainian language(35)
        (10, 3, 0, 0, 0),#10 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(32) 3 English(34) 4 Ukrainian language(35)
        (11, 2, 0, 0, 0),#11 2 'Faculty of Foreign Languages' 3 English(36) 4 Ukrainian language(37)
        (11, 4, 0, 0, 0);#11 4 'Faculty of Financial Management and Business' 3 English(36) 4 Ukrainian language(37) 5 History(38)

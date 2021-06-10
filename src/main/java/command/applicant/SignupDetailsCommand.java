@@ -5,12 +5,23 @@ import dao.impl.ApplicantDaoImpl;
 import dao.impl.FacultyDaoImpl;
 import domain.Applicant;
 import domain.Faculty;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import util.Path;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +30,7 @@ import java.util.List;
  *
  * @author A.Savchuk.
  */
+@MultipartConfig(maxFileSize = 4194304)
 public class SignupDetailsCommand extends Command {
     private static final long serialVersionUID = 2541032598652301457L;
     private static final Logger logger = Logger.getLogger(SignupDetailsCommand.class);
@@ -43,8 +55,8 @@ public class SignupDetailsCommand extends Command {
         String region = request.getParameter("region");
         String schoolName = request.getParameter("schoolName");
 
-        if (firstName.isEmpty() || middleName.isEmpty() || lastName.isEmpty() || city.isEmpty() || region.isEmpty()
-                || schoolName.isEmpty()) {
+        if (firstName == null || middleName == null || lastName == null || city == null || region == null
+                || schoolName == null) {
             errorMessage = "Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
@@ -72,6 +84,7 @@ public class SignupDetailsCommand extends Command {
 
             session.setAttribute("applicant", applicant);
             logger.info("Set the session attribute:applicant --> " + applicant);
+
 
             List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
             facultyList.sort(Faculty.COMPARE_BY_ID);

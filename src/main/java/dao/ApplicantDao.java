@@ -36,7 +36,7 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
      *
      * @param id        applicant's id.
      * @param isBlocked blocked status.
-     * @return
+     * @return true if status update.
      */
     boolean updateByAdmin(int id, boolean isBlocked);
 }

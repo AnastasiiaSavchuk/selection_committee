@@ -21,7 +21,6 @@ public class SQLConstants {
     public static final String GET_APPLICANT_BY_EMAIL = "SELECT u.id, u.email, u.password, r.role " +
             "FROM user u, role r " +
             "WHERE u.role_id = r.id AND u.email = ?";
-    public static final String UPDATE_CERTIFICATE = "UPDATE applicant SET certificate = ? WHERE user_id = ?";
     public static final String UPDATE_APPLICANT = "UPDATE user u, applicant a SET u.email = ?,u.password = ?, " +
             "a.first_name = ?, a.middle_name = ?, a.last_name = ?, a.city = ?, a.region = ?, a.school_name = ? " +
             "WHERE u.id = a.user_id AND a.user_id = ?";
