@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get list of subject entities from the db and forward to faculties page page and forward to create faculty page.
+ * Get list of subjects from faculty and forward to create application page.
  *
  * @author A.Savchuk
  */
@@ -34,7 +34,7 @@ public class ApplyToTheFacultyChoiceCommand extends Command {
         String facultyId = request.getParameter("facultyId");
 
         if (facultyId == null) {
-            errorMessage = "Something went wrong! FacultyId cannot be empty";
+            errorMessage = "FacultyId cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;

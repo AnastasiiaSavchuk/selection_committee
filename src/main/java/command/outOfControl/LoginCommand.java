@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Login command. Get email and password from the request,
- * compare password (SH-256) with available hash at db and check role.
+ * Get email and password from the request, compare password (SH-256) with available hash at db and check role.
  * Forward to different pages depending from user role.
  *
  * @author A.Savchuk

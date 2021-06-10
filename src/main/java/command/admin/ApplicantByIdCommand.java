@@ -15,17 +15,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get faculty from db by faculty id.
+ * Get faculty by id from db.
  *
  * @author A.Savchuk
  */
-public class ApplicantGetByIdCommand extends Command {
+public class ApplicantByIdCommand extends Command {
     private static final long serialVersionUID = 1254789652534569874L;
-    private static final Logger logger = Logger.getLogger(ApplicantGetByIdCommand.class);
+    private static final Logger logger = Logger.getLogger(ApplicantByIdCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("ApplicantGetByIdCommand starts");
+        logger.info("ApplicantByIdCommand starts");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
@@ -41,7 +41,7 @@ public class ApplicantGetByIdCommand extends Command {
         session.setAttribute("applicationList", applicationList);
         logger.info("Set the session attribute:applicationList --> " + applicationList);
 
-        logger.info("ApplicantGetByIdCommand finished");
+        logger.info("ApplicantByIdCommand finished");
         return Path.APPLICANT;
     }
 }

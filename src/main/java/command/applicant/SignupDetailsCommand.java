@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Signup details command. Get all details from the applicant for second registration.
+ * Get all details from request and save applicant details for finished registration.
  *
  * @author A.Savchuk.
  */
@@ -45,7 +45,7 @@ public class SignupDetailsCommand extends Command {
 
         if (firstName.isEmpty() || middleName.isEmpty() || lastName.isEmpty() || city.isEmpty() || region.isEmpty()
                 || schoolName.isEmpty()) {
-            errorMessage = "Something went wrong! Required fields cannot be empty!";
+            errorMessage = "Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -64,7 +64,7 @@ public class SignupDetailsCommand extends Command {
 
             boolean isInsert = new ApplicantDaoImpl().create(applicant);
             if (!isInsert) {
-                errorMessage = "Something went wrong! Unable to create new applicant!";
+                errorMessage = "Unable to create new applicant!";
                 request.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
                 return Path.ERROR;
@@ -76,7 +76,6 @@ public class SignupDetailsCommand extends Command {
             List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
             facultyList.sort(Faculty.COMPARE_BY_ID);
             session.setAttribute("facultyList", facultyList);
-            logger.info("Set the session attribute:facultyList --> " + facultyList);
 
             logger.info("SignupDetailsCommand finished");
             return Path.FACULTIES;

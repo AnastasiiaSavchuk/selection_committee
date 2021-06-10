@@ -1,7 +1,6 @@
 package command.admin;
 
 import command.Command;
-import command.outOfControl.GetFacultyByIdCommand;
 import dao.impl.ApplicationDaoImpl;
 import dao.impl.StatementDaoImpl;
 import domain.Application;
@@ -15,6 +14,11 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Roll back statement if list of applicants changes.
+ *
+ * @author A.Savchuk
+ */
 public class StatementRollBackCommand extends Command {
     private static final long serialVersionUID = 4789654154757215214L;
     private static final Logger logger = Logger.getLogger(StatementRollBackCommand.class);
@@ -35,7 +39,7 @@ public class StatementRollBackCommand extends Command {
 
         boolean isCompleted = new StatementDaoImpl().updateApplicationStatusByQTY(applicationList);
         if (!isCompleted) {
-            String errorMessage = "Something went wrong! Unable to roll back applications!";
+            String errorMessage = "Unable to roll back applications!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;

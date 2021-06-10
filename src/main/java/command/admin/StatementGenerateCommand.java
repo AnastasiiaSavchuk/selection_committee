@@ -14,6 +14,11 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Generate statement based on the applicants.
+ *
+ * @author A.Savchuk
+ */
 public class StatementGenerateCommand extends Command {
     private static final long serialVersionUID = 2145874596521354789L;
     private static final Logger logger = Logger.getLogger(StatementGenerateCommand.class);
@@ -21,7 +26,6 @@ public class StatementGenerateCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         logger.info("StatementGenerateCommand started");
-        String errorMessage;
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
@@ -35,7 +39,7 @@ public class StatementGenerateCommand extends Command {
 
         boolean isCompleted = new StatementDaoImpl().updateApplicationStatusByQTY(applicationList);
         if (!isCompleted) {
-            errorMessage = "Something went wrong! Unable to generate applications!";
+            String errorMessage = "Unable to generate applications!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;

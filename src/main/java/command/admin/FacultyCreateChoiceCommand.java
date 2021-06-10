@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get list of subject entities from the db and forward to faculties page page and forward to create faculty page.
+ * Get list of subject entities from the db and forward to faculty create page.
  *
  * @author A.Savchuk
  */
@@ -32,7 +32,7 @@ public class FacultyCreateChoiceCommand extends Command {
 
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         if (subjectList.size() == 0) {
-            errorMessage = "Something went wrong! Unable to find subjects!";
+            errorMessage = "Unable to find subjects!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.FACULTIES;

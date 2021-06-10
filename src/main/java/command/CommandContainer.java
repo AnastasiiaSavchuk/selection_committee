@@ -30,12 +30,12 @@ public class CommandContainer {
         commands.put("facultyCreate", new FacultyCreateCommand());
         commands.put("facultyUpdate", new FacultyUpdateCommand());
         commands.put("facultyDelete", new FacultyDeleteCommand());
-        commands.put("getSubjects", new GetSubjectsCommand());
+        commands.put("getSubjects", new SubjectsCommand());
         commands.put("subjectCreateChoice", new SubjectCreateChoiceCommand());
         commands.put("subjectCreate", new SubjectCreateCommand());
         commands.put("subjectUpdate", new SubjectUpdateCommand());
         commands.put("subjectDelete", new SubjectDeleteCommand());
-        commands.put("getApplicantById", new ApplicantGetByIdCommand());
+        commands.put("getApplicantById", new ApplicantByIdCommand());
         commands.put("applicantUpdateByAdmin", new ApplicantUpdateByAdminCommand());
         commands.put("generateStatement", new StatementGenerateCommand());
         commands.put("rollbackStatement", new StatementRollBackCommand());
@@ -58,8 +58,8 @@ public class CommandContainer {
         commands.put("login", new LoginCommand());
         commands.put("signupChoice", new SignupChoiceCommand());
         commands.put("signup", new SignupCommand());
-        commands.put("getFaculties", new GetFacultiesCommand());
-        commands.put("getFacultyById", new GetFacultyByIdCommand());
+        commands.put("getFaculties", new FacultiesCommand());
+        commands.put("getFacultyById", new FacultyByIdCommand());
     }
 
     public static Command get(String commandName) {

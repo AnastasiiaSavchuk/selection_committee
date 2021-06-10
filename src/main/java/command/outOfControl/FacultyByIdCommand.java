@@ -20,17 +20,17 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Retrieve faculty from db by faculty id.
+ * Get faculty from db by faculty id.
  *
  * @author A.Savchuk
  */
-public class GetFacultyByIdCommand extends Command {
+public class FacultyByIdCommand extends Command {
     private static final long serialVersionUID = 5648648604663405645L;
-    private static final Logger logger = Logger.getLogger(GetFacultyByIdCommand.class);
+    private static final Logger logger = Logger.getLogger(FacultyByIdCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("GetFacultyByIdCommand starts");
+        logger.info("FacultyByIdCommand starts");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
@@ -73,7 +73,7 @@ public class GetFacultyByIdCommand extends Command {
         logger.info("Set the session attribute:isSentStatement --> " + sentStatement);
 
 
-        logger.info("GetFacultyByIdCommand finished");
+        logger.info("FacultyByIdCommand finished");
         return Path.FACULTY_BY_id;
     }
 }

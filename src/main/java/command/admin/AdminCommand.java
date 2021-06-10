@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Retrieve list of applicants from db and show admin page.
+ * Get list of applicants from db and show admin page.
  *
  * @author A.Savchuk
  */

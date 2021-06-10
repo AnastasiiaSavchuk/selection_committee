@@ -20,6 +20,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Create new application and insert into db.
+ *
+ * @author A.Savchuk
+ */
 public class ApplyToTheFacultyCommand extends Command {
     private static final long serialVersionUID = 6532589541252014556L;
     private static final Logger logger = Logger.getLogger(ApplyToTheFacultyCommand.class);

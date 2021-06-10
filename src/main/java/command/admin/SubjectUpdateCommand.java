@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get change parameters of subject from request and update the subject in the db.
+ * Get change parameters from request and update the subject in the db.
  *
  * @author A.Savchuk
  */
@@ -45,7 +45,7 @@ public class SubjectUpdateCommand extends Command {
         String passingGrade = request.getParameter("passingGrade");
 
         if (id.isEmpty() && englishName.isEmpty() && ukrainianName.isEmpty() && passingGrade.isEmpty()) {
-            errorMessage = "Something went wrong! Required fields cannot be empty";
+            errorMessage = "Required fields cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -58,7 +58,7 @@ public class SubjectUpdateCommand extends Command {
 
         boolean isUpdated = new SubjectDaoImpl().update(updated);
         if (!isUpdated) {
-            errorMessage = "Something went wrong! Unable to update subject!";
+            errorMessage = "Unable to update subject!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -67,7 +67,6 @@ public class SubjectUpdateCommand extends Command {
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
-        logger.info("Set the session attribute:subjectList --> " + subjectList);
 
         logger.info("SubjectUpdateCommand finished");
         return Path.SUBJECTS;

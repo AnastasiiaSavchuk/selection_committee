@@ -32,7 +32,7 @@ public class SubjectDeleteCommand extends Command {
         String subjectIdToDelete = request.getParameter("subjectIdToDelete");
 
         if (subjectIdToDelete.isEmpty()) {
-            errorMessage = "Something went wrong! SubjectId cannot be empty";
+            errorMessage = "SubjectId cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -40,7 +40,7 @@ public class SubjectDeleteCommand extends Command {
 
         boolean isDeleted = new SubjectDaoImpl().delete(Integer.parseInt(subjectIdToDelete));
         if (!isDeleted) {
-            errorMessage = "Something went wrong! Unable to delete subject!";
+            errorMessage = "Unable to delete subject!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -49,7 +49,6 @@ public class SubjectDeleteCommand extends Command {
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
-        logger.info("Set the session attribute:facultyList --> " + subjectList);
 
         logger.debug("SubjectDeleteCommand finished");
         return Path.SUBJECTS;

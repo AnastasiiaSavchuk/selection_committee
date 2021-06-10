@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Retrieve list of application from db and show applicant page.
+ * Get list of application from db and show applicant page.
  *
  * @author A.Savchuk
  */

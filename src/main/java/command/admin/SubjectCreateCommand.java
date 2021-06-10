@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Get fields to create a new subject from subject create page and insert into db.
+ * Get fields to create a new subject and insert into db.
  *
  * @author A.Savchuk
  */
@@ -36,7 +36,7 @@ public class SubjectCreateCommand extends Command {
         String passingGrade = request.getParameter("passingGrade");
 
         if (englishName.isEmpty() || ukrainianName.isEmpty() || passingGrade.isEmpty()) {
-            errorMessage = "Something went wrong! Required fields cannot be empty!";
+            errorMessage = "Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -47,7 +47,7 @@ public class SubjectCreateCommand extends Command {
 
             boolean isInserted = new SubjectDaoImpl().create(newSubject);
             if (!isInserted) {
-                errorMessage = "Something went wrong! Required fields cannot be empty!";
+                errorMessage = "Unable to create a new subject!";
                 request.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
                 return Path.ERROR;
@@ -59,7 +59,6 @@ public class SubjectCreateCommand extends Command {
             List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
             subjectList.sort(Subject.COMPARE_BY_ID);
             session.setAttribute("subjectList", subjectList);
-            logger.info("Set the session attribute:subjectList --> " + subjectList);
 
             logger.info("SubjectCreateCommand finished");
             return Path.SUBJECTS;

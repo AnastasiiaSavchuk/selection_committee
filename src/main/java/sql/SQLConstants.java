@@ -66,7 +66,7 @@ public class SQLConstants {
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE f.id = ? AND l.lang_code = ?";
     public static final String GET_FACULTY_TO_UPDATE = "SELECT f.id, GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty, " +
-            "f.budget_qty, f.total_qty, f.average_passing_grade, " +
+            "f.budget_qty, f.total_qty, f.average_passing_grade " +
             "FROM faculty f " +
             "INNER JOIN faculty_translation ft ON f.id = ft.faculty_id " +
             "INNER JOIN language l ON l.id = ft.language_id " +

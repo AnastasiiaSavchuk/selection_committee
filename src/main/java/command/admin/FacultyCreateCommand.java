@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
- * Get fields to create a new faculty from facultyCreate page and insert into db.
+ * Get fields to create a new faculty and insert into db.
  *
  * @author A.Savchuk
  */
@@ -38,7 +38,7 @@ public class FacultyCreateCommand extends Command {
 
         if (englishName.isEmpty() || ukrainianName.isEmpty() || budgetQty.isEmpty()
                 || totalQty.isEmpty()) {
-            errorMessage = "Something went wrong! Required fields cannot be empty!";
+            errorMessage = "Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -48,7 +48,7 @@ public class FacultyCreateCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         } else if (Objects.isNull(subjectIdList)) {
-            errorMessage = "Something went wrong! Please choose subjects to faculty!";
+            errorMessage = "Please choose subjects to faculty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -70,7 +70,7 @@ public class FacultyCreateCommand extends Command {
 
         boolean isInserted = new FacultyDaoImpl().create(newFaculty);
         if (!isInserted) {
-            errorMessage = "Something went wrong! Unable to create new faculty!";
+            errorMessage = "Unable to create new faculty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;

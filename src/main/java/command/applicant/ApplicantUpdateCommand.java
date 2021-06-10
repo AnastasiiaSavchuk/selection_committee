@@ -15,9 +15,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Signup details command. Get all details from the applicant for second registration.
+ * Get all details from request and update applicant in the db.
  *
- * @author A.Savchuk.
+ * @author A.Savchuk
  */
 public class ApplicantUpdateCommand extends Command {
     private static final long serialVersionUID = 2541032598652301457L;
@@ -52,7 +52,7 @@ public class ApplicantUpdateCommand extends Command {
 
         if (email.isEmpty() || password.isEmpty() || firstName.isEmpty() || middleName.isEmpty() || lastName.isEmpty()
                 || city.isEmpty() || region.isEmpty() || schoolName.isEmpty()) {
-            errorMessage = "Something went wrong! Required fields cannot be empty!";
+            errorMessage = "Required fields cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -75,7 +75,7 @@ public class ApplicantUpdateCommand extends Command {
 
             boolean isInsert = new ApplicantDaoImpl().update(updated);
             if (!isInsert) {
-                errorMessage = "Something went wrong! Unable to update applicant!";
+                errorMessage = "Unable to update applicant!";
                 request.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
                 return Path.ERROR;
@@ -87,7 +87,6 @@ public class ApplicantUpdateCommand extends Command {
             List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(updated.getId(), Collections.singletonList(language == null ? localeLang : language));
             applicationList.sort(Application.COMPARE_BY_ID);
             session.setAttribute("applicationList", applicationList);
-            logger.info("Set the session attribute:applicationList --> " + applicationList);
 
             logger.info("ApplicantUpdateCommand finished");
             return Path.APPLICANT;

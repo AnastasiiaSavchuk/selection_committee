@@ -128,3 +128,8 @@ used to vertically center elements, may need modification if you're not using de
     line-height: 30px;
     vertical-align: middle;
 }
+
+.container .error_h3 {
+    margin: 15px 0;
+    color: brown;
+}

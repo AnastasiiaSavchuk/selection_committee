@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Get block status of applicant from request and update this field in the db.
+ * Get applicant's status from request and update it by admin.
  *
  * @author A.Savchuk
  */
@@ -24,7 +24,7 @@ public class ApplicantUpdateByAdminCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("ApplicantUpdateCommand starts");
+        logger.info("ApplicantUpdateByAdminCommand starts");
         String errorMessage;
 
         HttpSession session = request.getSession();
@@ -35,7 +35,7 @@ public class ApplicantUpdateByAdminCommand extends Command {
         String blocked = request.getParameter("blocked");
 
         if (Objects.isNull(applicant) && blocked.isEmpty()) {
-            errorMessage = "Something went wrong! Unable to find current applicant or blocked status is empty!";
+            errorMessage = "Unable to find current applicant or blocked status is empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -43,7 +43,7 @@ public class ApplicantUpdateByAdminCommand extends Command {
 
         boolean isUpdated = new ApplicantDaoImpl().updateByAdmin(applicant.getId(), Integer.parseInt(blocked) == 1);
         if (!isUpdated) {
-            errorMessage = "Something went wrong! Unable to update applicant blocked status!";
+            errorMessage = "Unable to update applicant blocked status!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -52,9 +52,8 @@ public class ApplicantUpdateByAdminCommand extends Command {
         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         applicantList.sort(Applicant.COMPARE_BY_ID);
         session.setAttribute("applicantList", applicantList);
-        logger.info("Set the session attribute to admin page:applicantList --> " + applicantList);
 
-        logger.info("ApplicantUpdateCommand finished");
+        logger.info("ApplicantUpdateByAdminCommand finished");
         return Path.ADMIN;
     }
 }

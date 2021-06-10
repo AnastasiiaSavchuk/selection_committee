@@ -13,17 +13,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Retrieve list of subjects from db
+ * Get list of subjects from db
  *
  * @author A.Savchuk.
  */
-public class GetSubjectsCommand extends Command {
+public class SubjectsCommand extends Command {
     private static final long serialVersionUID = 698564123547895412L;
-    private static final Logger logger = Logger.getLogger(GetSubjectsCommand.class);
+    private static final Logger logger = Logger.getLogger(SubjectsCommand.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("GetSubjectsCommand starts");
+        logger.info("SubjectsCommand starts");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
@@ -34,7 +34,7 @@ public class GetSubjectsCommand extends Command {
         session.setAttribute("subjectList", subjectList);
         logger.info("Set the session attribute:subjectList --> " + subjectList);
 
-        logger.info("GetSubjectsCommand finished");
+        logger.info("SubjectsCommand finished");
         return Path.SUBJECTS;
     }
 }

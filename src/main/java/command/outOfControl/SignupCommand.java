@@ -14,8 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
 /**
- * Signup command. Get email and password from the applicant for first registration.
- * Registration processed in 2 steps.
+ * Get email and password from the applicant for first registration. Registration processed in 2 steps.
  * Forwarded to second part for finished registration.
  *
  * @author A.Savchuk

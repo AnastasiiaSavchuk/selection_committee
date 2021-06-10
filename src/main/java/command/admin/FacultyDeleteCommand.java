@@ -32,7 +32,7 @@ public class FacultyDeleteCommand extends Command {
         String facultyIdToDelete = request.getParameter("facultyIdToDelete");
 
         if (facultyIdToDelete.isEmpty()) {
-            errorMessage = "Something went wrong! FacultyId cannot be empty";
+            errorMessage = "FacultyId cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -40,7 +40,7 @@ public class FacultyDeleteCommand extends Command {
 
         boolean isDeleted = new FacultyDaoImpl().delete(Integer.parseInt(facultyIdToDelete));
         if (!isDeleted) {
-            errorMessage = "Something went wrong! Unable to delete faculty!";
+            errorMessage = "Unable to delete faculty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -49,7 +49,6 @@ public class FacultyDeleteCommand extends Command {
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
         facultyList.sort(Faculty.COMPARE_BY_ID);
         session.setAttribute("facultyList", facultyList);
-        logger.info("Set the session attribute:facultyList --> " + facultyList);
 
         logger.debug("FacultyDeleteCommand finished");
         return Path.FACULTIES;

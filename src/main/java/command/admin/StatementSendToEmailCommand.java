@@ -14,6 +14,11 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Send mail to each applicant after closing statement.
+ *
+ * @author A.Savchuk
+ */
 public class StatementSendToEmailCommand extends Command {
     private static final long serialVersionUID = 6985321478451263535L;
     private static final Logger logger = Logger.getLogger(StatementSendToEmailCommand.class);
