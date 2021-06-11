@@ -1,6 +1,7 @@
 <%@ include file="/view/includes/init.jsp" %>
 <c:set var="applicant" value="${sessionScope['applicant']}"/>
 <c:set var="aList" value="${sessionScope['applicationList']}"/>
+<c:set var="certImage" value="${sessionScope['certImage']}"/>
 <html>
 <head>
     <title>Applicant Page</title>
@@ -34,7 +35,7 @@
             </c:if></h5>
         <div id="certificate" style="display:none">
             <h5><fmt:message key="applicant.Certificate"/></h5>
-            <img src="data:image/jpg;base64,${applicant.getCertificate()}" width="500"/>
+            <img src="data:image/jpg;base64,${certImage}" width="500"/>
         </div>
     </div>
 
@@ -61,7 +62,7 @@
                         <h5><fmt:message key="applicant.ChangStatus"/></h5>
                         <div>
                             <label class="form-check-label" for="unBlocked">
-                                <fmt:message key="applicant.UnBlockedApplicant"/>
+                                <fmt:message key="applicant.UnlockedApplicant"/>
                                 <input id="unBlocked" class="getStatus" type="radio" name="unBlocked"
                                        value="0"/></label>
                             <label class="form-check-label" for="isBlocked">
@@ -79,14 +80,23 @@
                     </div>
                 </c:when>
                 <c:when test="${role == 'USER'}">
-                    <div class="inRow">
-                        <form method="post" action="controller">
-                            <input type="hidden" name="command" value="applicantUpdate"/>
-                            <input type="hidden" name="applicantIdToUpdate"
-                                   value="<c:out value="${applicant.getId()}"/>">
-                            <button class="button"><fmt:message key="update.Update"/></button>
-                        </form>
-                    </div>
+                    <c:choose>
+                        <c:when test="${applicant.isBlocked() == true}">
+                            <div class="inRow">
+                                <h5 style="color: brown"><fmt:message key="applicant.ToUnlocked"/></h5>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="inRow">
+                                <form method="post" action="controller">
+                                    <input type="hidden" name="command" value="applicantUpdate"/>
+                                    <input type="hidden" name="applicantIdToUpdate"
+                                           value="<c:out value="${applicant.getId()}"/>">
+                                    <button class="button"><fmt:message key="update.Update"/></button>
+                                </form>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </c:when>
             </c:choose>
         </c:if>
@@ -119,6 +129,10 @@
                                         <c:when test="${application.getApplicationStatus() == 'IN_PROCESSING'}">
                                             <button disabled class="btn btn-info">
                                                 <fmt:message key="application.IN_PROCESSING"/></button>
+                                        </c:when>
+                                        <c:when test="${application.getApplicationStatus() == 'BLOCKED'}">
+                                            <button disabled class="btn btn-danger">
+                                                <fmt:message key="application.Blocked"/></button>
                                         </c:when>
                                         <c:when test="${application.getApplicationStatus() == 'REJECTED'}">
                                             <button disabled class="btn btn-danger">

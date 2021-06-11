@@ -1,3 +1,4 @@
+USE selection_committee;
 # applicant
 # INSERT_APPLICANT_USER_FIELDS 
 INSERT INTO user (email, password, role_id)
@@ -50,12 +51,12 @@ FROM user u
          INNER JOIN applicant a ON u.id = a.user_id,
      role r
 WHERE u.role_id = r.id
-  and u.id = 1;
+  and u.id = 12;
 
 SELECT a.certificate
 FROM user u
          INNER JOIN applicant a ON u.id = a.user_id
-WHERE user_id = 1;
+WHERE user_id = 12;
 
 # GET_APPLICANT_BY_EMAIL
 SELECT u.id, u.email, u.password, r.role
@@ -206,9 +207,9 @@ WHERE id = 5;
 # application
 # INSERT_APPLICATION 
 INSERT INTO application (user_id, faculty_id, application_status_id)
-SELECT 1, 0, id
+SELECT 2, 2, id
 FROM application_status
-WHERE id = 1;
+WHERE status = 'IN_PROCESSING';
 
 # GET_APPLICATION_BY_ID
 SELECT ap.id,
@@ -240,6 +241,7 @@ SELECT ap.id,
        a.last_name,
        a.first_name,
        a.middle_name,
+       a.is_blocked,
        ap.faculty_id,
        ft.faculty,
        ap.sum_of_grades,
@@ -263,6 +265,7 @@ SELECT ap.id,
        a.last_name,
        a.first_name,
        a.middle_name,
+       a.is_blocked,
        ap.faculty_id,
        ft.faculty,
        ap.sum_of_grades,
@@ -282,13 +285,13 @@ ORDER BY ap.average_grade DESC;
 
 # UPDATE_APPLICATION 
 UPDATE application
-SET application_status_id = (SELECT id FROM application_status WHERE status = 'BLOCKED')
+SET application_status_id = (SELECT id FROM application_status WHERE status = 'REJECTED')
 WHERE id = 5;
 
 # DELETE_APPLICATION
 DELETE
 FROM application
-WHERE application_status_id = 3;
+WHERE id = 3;
 
 #IS_EXIST
 SELECT *
@@ -307,11 +310,9 @@ VALUES (3, 196);
 
 # INSERT_APPLICATION_GRADE
 INSERT INTO application_grade(application_id, grade_id)
-VALUES (19, 59);
+VALUES (24, 40);
 INSERT INTO application_grade(application_id, grade_id)
-VALUES (18, 60);
-INSERT INTO application_grade(application_id, grade_id)
-VALUES (19, 61);
+VALUES (24, 41);
 
 # GET_GRADES_BY_APPLICATION_ID
 SELECT g.id as grade_id, s.id as subject_id, st.subject, s.passing_grade, g.grade

@@ -19,6 +19,10 @@ public class StatementDaoImpl implements StatementDao {
         int places = 1;
 
         for (Application application : applicationList) {
+            if (application.getApplicant().isBlocked()) {
+                continue;
+            }
+
             if (places <= faculty.getBudgetQty() &&
                     application.getAverageGrade() >= faculty.getAveragePassingGrade()) {
                 places++;
@@ -72,7 +76,8 @@ public class StatementDaoImpl implements StatementDao {
     @Override
     public boolean isExist(List<Application> applicationsList) {
         for (Application application : applicationsList) {
-            if (application.getApplicationStatus() == ApplicationStatus.IN_PROCESSING) {
+            if (application.getApplicationStatus() == ApplicationStatus.IN_PROCESSING ||
+                    application.getApplicationStatus() == ApplicationStatus.BLOCKED) {
                 return false;
             }
         }

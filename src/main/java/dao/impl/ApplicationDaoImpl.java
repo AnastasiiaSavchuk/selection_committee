@@ -238,6 +238,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
                 applicant.setLastName(rs.getString(SQLFields.APPLICANT_LAST_NAME));
                 applicant.setFirstName(rs.getString(SQLFields.APPLICANT_FIRST_NAME));
                 applicant.setMiddleName(rs.getString(SQLFields.APPLICANT_MIDDLE_NAME));
+                applicant.setBlocked(rs.getInt(SQLFields.APPLICANT_IS_BLOCKED) != 0);
 
                 Faculty faculty = new Faculty();
                 faculty.setId(rs.getInt(SQLFields.FACULTY_ID));

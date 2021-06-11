@@ -29,9 +29,8 @@ public class GradeDaoImpl implements GradleDao {
         try {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_GRADE, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, grade.getApplicant().getId());
-            ps.setInt(2, grade.getSubject().getId());
-            ps.setInt(3, grade.getGrade());
+            ps.setInt(1, grade.getSubject().getId());
+            ps.setInt(2, grade.getGrade());
             if (ps.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {

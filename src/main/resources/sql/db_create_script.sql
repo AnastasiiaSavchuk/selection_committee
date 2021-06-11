@@ -237,9 +237,10 @@ CREATE TABLE IF NOT EXISTS application_status
 
 INSERT INTO application_status(id, status)
 VALUES (0, 'IN_PROCESSING'),
-       (1, 'REJECTED'),
-       (2, 'BUDGET_APPROVED'),
-       (3, 'CONTRACT_APPROVED');
+       (1, 'BLOCKED'),
+       (2, 'REJECTED'),
+       (3, 'BUDGET_APPROVED'),
+       (4, 'CONTRACT_APPROVED');
 
 CREATE TABLE IF NOT EXISTS application
 (

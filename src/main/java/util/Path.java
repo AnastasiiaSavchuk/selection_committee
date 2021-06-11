@@ -6,6 +6,7 @@ public final class Path {
     public static final String LOGIN = "/view/login/login.jsp";
     public static final String SIGNUP = "/view/login/signup.jsp";
     public static final String SIGNUP_DETAILS = "/view/login/signupDetails.jsp";
+    public static final String SAVE_CERTIFICATE = "/view/login/saveCertificate.jsp";
     public static final String ERROR = "/view/errorPage.jsp";
     public static final String FACULTIES = "/view/facultiesPage.jsp";
     public static final String FACULTY_BY_id = "/view/facultyByIdPage.jsp";

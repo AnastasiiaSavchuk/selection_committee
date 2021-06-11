@@ -41,7 +41,7 @@
                     <c:choose>
                         <c:when test="${isExistStatement}">
                             <div class="inRow">
-                                <h5 style="color: #992600"><fmt:message key="application.AlreadyGenerate"/></h5>
+                                <h5 style="color: brown"><fmt:message key="application.AlreadyGenerate"/></h5>
                             </div>
                         </c:when>
                         <c:otherwise>
@@ -78,19 +78,29 @@
 
                 <c:when test="${role == 'USER'}">
                     <c:choose>
-                        <c:when test="${isExistApplication}">
+                        <c:when test="${applicant.isBlocked() == true}">
                             <div class="inRow">
-                                <h5 style="color: #992600"><fmt:message key="application.AlreadyApplied"/></h5>
+                                <h5 style="color: brown"><fmt:message key="applicant.ToUnlocked"/></h5>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="inRow">
-                                <form method="post" action="controller">
-                                    <input type="hidden" name="command" value="applyToTheFacultyCreateChoice"/>
-                                    <input type="hidden" name="facultyId" value="<c:out value="${faculty.getId()}"/>">
-                                    <button class="button"><fmt:message key="application.ApplyButton"/></button>
-                                </form>
-                            </div>
+                            <c:choose>
+                                <c:when test="${isExistApplication}">
+                                    <div class="inRow">
+                                        <h5 style="color: #992600"><fmt:message key="application.AlreadyApplied"/></h5>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="inRow">
+                                        <form method="post" action="controller">
+                                            <input type="hidden" name="command" value="applyToTheFacultyCreateChoice"/>
+                                            <input type="hidden" name="facultyId"
+                                                   value="<c:out value="${faculty.getId()}"/>">
+                                            <button class="button"><fmt:message key="application.ApplyButton"/></button>
+                                        </form>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </c:otherwise>
                     </c:choose>
                 </c:when>
@@ -158,6 +168,10 @@
                                             <c:when test="${application.getApplicationStatus() == 'IN_PROCESSING'}">
                                                 <button disabled class="btn btn-info">
                                                     <fmt:message key="application.IN_PROCESSING"/></button>
+                                            </c:when>
+                                            <c:when test="${application.getApplicationStatus() == 'BLOCKED'}">
+                                                <button disabled class="btn btn-danger">
+                                                    <fmt:message key="application.Blocked"/></button>
                                             </c:when>
                                             <c:when test="${application.getApplicationStatus() == 'REJECTED'}">
                                                 <button disabled class="btn btn-danger">

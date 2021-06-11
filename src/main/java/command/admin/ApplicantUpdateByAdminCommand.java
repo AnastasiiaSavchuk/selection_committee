@@ -2,7 +2,10 @@ package command.admin;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
+import dao.impl.ApplicationDaoImpl;
 import domain.Applicant;
+import domain.Application;
+import domain.enums.ApplicationStatus;
 import org.apache.log4j.Logger;
 import util.Path;
 
@@ -47,6 +50,12 @@ public class ApplicantUpdateByAdminCommand extends Command {
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
+        }
+
+        List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
+        for (Application application : applicationList) {
+            application.setApplicationStatus(ApplicationStatus.BLOCKED);
+            new ApplicationDaoImpl().update(application);
         }
 
         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));

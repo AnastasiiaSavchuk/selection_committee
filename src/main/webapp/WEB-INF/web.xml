@@ -77,11 +77,12 @@
         </init-param>
         <init-param>
             <param-name>USER</param-name>
-            <param-value>signupDetails applyToTheFacultyCreateChoice applyToTheFaculty</param-value>
+            <param-value>signupDetails saveCertificate applicantUpdate applyToTheFacultyCreateChoice applyToTheFaculty
+            </param-value>
         </init-param>
         <init-param>
             <param-name>COMMON</param-name>
-            <param-value>logout noCommand applicantPage applicantUpdate</param-value>
+            <param-value>logout noCommand applicantPage</param-value>
         </init-param>
         <init-param>
             <param-name>OUT-OF-CONTROL</param-name>

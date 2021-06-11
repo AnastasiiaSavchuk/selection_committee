@@ -43,8 +43,9 @@ public class ApplicantCommand extends Command {
 
         byte[] getCertificate = new ApplicantDaoImpl().getCertificate(applicant.getId());
         if (getCertificate.length > 0) {
-            String certificate = Base64.getEncoder().encodeToString(getCertificate);
-            session.setAttribute("Set the session attribute:certificate -->", certificate);
+            String certImage = Base64.getEncoder().encodeToString(getCertificate);
+            session.setAttribute("certImage", certImage);
+            logger.info("Set the session attribute:certImage --> " + certImage);
         }
 
         logger.info("ApplicantCommand finished");

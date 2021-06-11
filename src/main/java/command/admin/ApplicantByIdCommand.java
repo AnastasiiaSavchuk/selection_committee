@@ -11,6 +11,7 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,6 +36,13 @@ public class ApplicantByIdCommand extends Command {
         Applicant applicant = new ApplicantDaoImpl().readById(Integer.parseInt(applicantId), Collections.singletonList(language == null ? localeLang : language));
         session.setAttribute("applicant", applicant);
         logger.info("Set the session attribute:applicant --> " + applicant);
+
+        byte[] getCertificate = new ApplicantDaoImpl().getCertificate(applicant.getId());
+        if (getCertificate.length > 0) {
+            String certImage = Base64.getEncoder().encodeToString(getCertificate);
+            session.setAttribute("certImage", certImage);
+            logger.info("Set the session attribute:certImage --> " + certImage);
+        }
 
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
         applicationList.sort(Application.COMPARE_BY_ID);

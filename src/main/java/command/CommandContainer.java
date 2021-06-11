@@ -1,10 +1,7 @@
 package command;
 
 import command.admin.*;
-import command.applicant.ApplicantUpdateCommand;
-import command.applicant.ApplyToTheFacultyChoiceCommand;
-import command.applicant.ApplyToTheFacultyCommand;
-import command.applicant.SignupDetailsCommand;
+import command.applicant.*;
 import command.common.ApplicantCommand;
 import command.common.LogoutCommand;
 import command.common.NoCommand;
@@ -43,14 +40,15 @@ public class CommandContainer {
 
         //user commands
         commands.put("signupDetails", new SignupDetailsCommand());
+        commands.put("saveCertificate", new SaveCertificateCommand());
         commands.put("applicantUpdate", new ApplicantUpdateCommand());
+        commands.put("applyToTheFacultyCreateChoice", new ApplyToTheFacultyChoiceCommand());
+        commands.put("applyToTheFaculty", new ApplyToTheFacultyCommand());
 
         //common commands
         commands.put("noCommand", new NoCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("applicantPage", new ApplicantCommand());
-        commands.put("applyToTheFacultyCreateChoice", new ApplyToTheFacultyChoiceCommand());
-        commands.put("applyToTheFaculty", new ApplyToTheFacultyCommand());
 
         //out of control commands
         commands.put("setLanguage", new SetLanguageCommand());

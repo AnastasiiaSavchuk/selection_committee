@@ -2,28 +2,14 @@ package command.applicant;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
-import dao.impl.FacultyDaoImpl;
 import domain.Applicant;
-import domain.Faculty;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import util.Path;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Get all details from request and save applicant details for finished registration.
@@ -41,8 +27,6 @@ public class SignupDetailsCommand extends Command {
         String errorMessage;
 
         HttpSession session = request.getSession();
-        String localeLang = request.getLocale().getLanguage();
-        String language = (String) session.getAttribute("elanguage");
 
         Applicant sessionApplicant = (Applicant) session.getAttribute("applicant");
         int applicantId = sessionApplicant.getId();
@@ -85,13 +69,8 @@ public class SignupDetailsCommand extends Command {
             session.setAttribute("applicant", applicant);
             logger.info("Set the session attribute:applicant --> " + applicant);
 
-
-            List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-            facultyList.sort(Faculty.COMPARE_BY_ID);
-            session.setAttribute("facultyList", facultyList);
-
             logger.info("SignupDetailsCommand finished");
-            return Path.FACULTIES;
+            return Path.SAVE_CERTIFICATE;
         }
     }
 }

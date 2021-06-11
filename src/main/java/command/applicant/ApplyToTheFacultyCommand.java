@@ -57,7 +57,6 @@ public class ApplyToTheFacultyCommand extends Command {
 
             for (int i = 0; i < subjectIdList.length; i++) {
                 Grade newGrade = new Grade();
-                newGrade.setApplicant(applicant);
                 newGrade.setSubject(new SubjectDaoImpl().readById(Integer.parseInt(subjectIdList[i]), Collections.singletonList(language == null ? localeLang : language)));
                 newGrade.setGrade(Integer.parseInt(gradeValueList[i]));
                 gradeList.add(new GradeDaoImpl().createGrade(newGrade));
