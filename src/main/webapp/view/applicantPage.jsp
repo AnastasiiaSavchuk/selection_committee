@@ -14,7 +14,7 @@
 
 <div class="container">
     <div class="entityData">
-        <h2><c:out value="${applicant.getLastName()}"/> <c:out value="${applicant.getFirstName()}"/><c:out
+        <h2><c:out value="${applicant.getLastName()}"/> <c:out value="${applicant.getFirstName()}"/> <c:out
                 value="${applicant.getMiddleName()}"/>
         </h2>
         <hr>

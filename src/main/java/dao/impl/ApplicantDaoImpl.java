@@ -19,27 +19,6 @@ public class ApplicantDaoImpl implements ApplicantDao {
     private static final DBManager DB_MANAGER = DBManager.getInstance();
     private static final ApplicantCreator CREATOR = new ApplicantCreator();
 
-    public boolean updateCertificate(int applicantId, byte[] certificate) {
-        Connection con = null;
-        try {
-            con = DBManager.getInstance().getConnection();
-            PreparedStatement pstmt = con.prepareStatement("UPDATE applicant SET certificate = ? WHERE user_id = ?");
-            int k = 1;
-            pstmt.setBytes(k++, certificate);
-            pstmt.setInt(k, applicantId);
-            pstmt.executeUpdate();
-            pstmt.close();
-            return true;
-        } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(con);
-            ex.printStackTrace();
-            logger.debug("update enrollee got exception --> " + ex.getMessage());
-            return false;
-        } finally {
-            DBManager.getInstance().commitAndClose(con);
-        }
-    }
-
     @Override
     public Applicant loginApplicant(String email, String password) {
         Applicant applicant = null;
@@ -62,7 +41,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 }
             }
         } catch (SQLException ex) {
-            DBManager.getInstance().rollbackAndClose(connection);
+            DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert applicant: " + ex.getMessage());
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
@@ -238,6 +217,27 @@ public class ApplicantDaoImpl implements ApplicantDao {
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to update applicant's details: " + ex.getMessage());
+            return false;
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+        }
+    }
+
+    public boolean updateCertificate(int applicantId, byte[] certificate) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.UPDATE_CERTIFICATE);
+            ps.setBytes(1, certificate);
+            ps.setInt(2, applicantId);
+            ps.executeUpdate();
+            logger.error("Update applicant's certificate");
+            return true;
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to update applicant's certificate: " + ex.getMessage());
             return false;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));

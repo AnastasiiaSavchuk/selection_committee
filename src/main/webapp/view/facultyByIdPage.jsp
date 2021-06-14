@@ -2,9 +2,9 @@
 <c:set var="faculty" value="${sessionScope['faculty']}"/>
 <c:set var="sList" value="${sessionScope['subjectList']}"/>
 <c:set var="aList" value="${sessionScope['applicationList']}"/>
-<c:set var="isExistApplication" value="${sessionScope['applicantExist']}"/>
-<c:set var="isExistStatement" value="${sessionScope['statementExisted']}"/>
-<c:set var="isSentStatement" value="${sessionScope['sentStatement']}"/>
+<c:set var="applicantExist" value="${sessionScope['applicantExist']}"/>
+<c:set var="isExist" value="${sessionScope['isExist']}"/>
+<c:set var="isSent" value="${sessionScope['isSent']}"/>
 <html>
 <head>
     <title>Faculty by id</title>
@@ -39,37 +39,37 @@
             <c:choose>
                 <c:when test="${role == 'ADMIN'}">
                     <c:choose>
-                        <c:when test="${isExistStatement}">
+                        <c:when test="${isExist}">
                             <div class="inRow">
                                 <h5 style="color: brown"><fmt:message key="application.AlreadyGenerate"/></h5>
                             </div>
+                            <c:choose>
+                                <c:when test="${isSent}">
+                                    <div class="inRow">
+                                        <h5 style="color: #992600"><fmt:message key="application.AlreadySent"/></h5>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="inRow">
+                                        <a href="${pageContext.request.contextPath}/controller?command=rollbackStatement">
+                                            <button class="button" type="button">
+                                                <fmt:message key="statement.RollBackStatement"/></button>
+                                        </a>
+                                    </div>
+                                    <div class="inRow">
+                                        <a href="${pageContext.request.contextPath}/controller?command=sendStatement">
+                                            <button class="button" type="button">
+                                                <fmt:message key="statement.SendStatement"/></button>
+                                        </a>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </c:when>
                         <c:otherwise>
                             <div class="inRow">
                                 <a href="${pageContext.request.contextPath}/controller?command=generateStatement">
                                     <button class="button" type="button">
                                         <fmt:message key="statement.GenerateStatement"/></button>
-                                </a>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${isSentStatement}">
-                            <div class="inRow">
-                                <h5 style="color: #992600"><fmt:message key="application.AlreadySent"/></h5>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="inRow">
-                                <a href="${pageContext.request.contextPath}/controller?command=rollbackStatement">
-                                    <button class="button" type="button">
-                                        <fmt:message key="statement.RollBackStatement"/></button>
-                                </a>
-                            </div>
-                            <div class="inRow">
-                                <a href="${pageContext.request.contextPath}/controller?command=sendStatement">
-                                    <button class="button" type="button">
-                                        <fmt:message key="statement.SendStatement"/></button>
                                 </a>
                             </div>
                         </c:otherwise>
@@ -85,7 +85,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:choose>
-                                <c:when test="${isExistApplication}">
+                                <c:when test="${applicantExist}">
                                     <div class="inRow">
                                         <h5 style="color: #992600"><fmt:message key="application.AlreadyApplied"/></h5>
                                     </div>
@@ -156,7 +156,7 @@
                             <tr>
                                 <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
                                 <td class="td-to-align"><c:out
-                                        value="${application.getApplicant().getFirstName()}"/><c:out
+                                        value="${application.getApplicant().getFirstName()}"/> <c:out
                                         value="${application.getApplicant().getMiddleName()}"/> <c:out
                                         value="${application.getApplicant().getLastName()}"/>
                                 </td>

@@ -9,7 +9,7 @@ public final class Path {
     public static final String SAVE_CERTIFICATE = "/view/login/saveCertificate.jsp";
     public static final String ERROR = "/view/errorPage.jsp";
     public static final String FACULTIES = "/view/facultiesPage.jsp";
-    public static final String FACULTY_BY_id = "/view/facultyByIdPage.jsp";
+    public static final String FACULTY_BY_ID = "/view/facultyByIdPage.jsp";
     public static final String FACULTY_CREATE = "/view/facultyCreate.jsp";
     public static final String FACULTY_UPDATE = "/view/facultyUpdate.jsp";
     public static final String SUBJECTS = "/view/subjectsPage.jsp";

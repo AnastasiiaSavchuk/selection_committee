@@ -24,6 +24,7 @@ public class SQLConstants {
     public static final String UPDATE_APPLICANT = "UPDATE user u, applicant a SET u.email = ?,u.password = ?, " +
             "a.first_name = ?, a.middle_name = ?, a.last_name = ?, a.city = ?, a.region = ?, a.school_name = ? " +
             "WHERE u.id = a.user_id AND a.user_id = ?";
+    public static final String UPDATE_CERTIFICATE = "UPDATE applicant SET certificate = ? WHERE user_id = ?";
     public static final String UPDATE_APPLICANT_BY_ADMIN = "UPDATE applicant SET is_blocked = ? WHERE user_id = ?";
     public static final String DELETE_APPLICANT = "DELETE FROM user WHERE id = ?";
     //subject
@@ -79,25 +80,26 @@ public class SQLConstants {
             "WHERE faculty_id = ? AND language_id = ?";
     public static final String DELETE_FACULTY = "DELETE FROM faculty WHERE id = ?";
     //application
-    public static final String INSERT_APPLICATION = "INSERT INTO application (user_id, faculty_id, application_status_id) " +
-            "SELECT ?, ?, id FROM application_status WHERE status = ?";
+    public static final String INSERT_APPLICATION = "INSERT INTO application (user_id, faculty_id, is_sent, application_status_id) " +
+            "SELECT ?, ?, ?, id FROM application_status WHERE status = ?";
     public static final String GET_APPLICATION_BY_ID = "SELECT ap.id, ap.user_id, u.email, a.last_name, a.first_name, a.middle_name, a.is_blocked, " +
-            "ft.faculty, ap.sum_of_grades, ap.average_grade, ap.application_status_id " +
+            "ft.faculty, ap.sum_of_grades, ap.average_grade, ap.is_sent, ap.application_status_id " +
             "FROM application ap, user u, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE a.user_id = ap.user_id AND u.id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.id = ? AND l.lang_code = ?";
     public static final String GET_APPLICATIONS_BY_USER_ID = "SELECT ap.id, ap.user_id, u.email, a.last_name, a.first_name, a.middle_name, a.is_blocked, " +
-            "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.average_grade, ap.application_status_id " +
+            "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.average_grade, ap.is_sent, ap.application_status_id " +
             "FROM application ap, user u, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE a.user_id = ap.user_id AND u.id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.user_id = ? AND l.lang_code = ?";
     public static final String GET_APPLICATIONS_BY_FACULTY_ID = "SELECT ap.id, ap.user_id, u.email, a.last_name, a.first_name, a.middle_name, a.is_blocked, " +
-            "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.average_grade, ap.application_status_id " +
+            "ap.faculty_id, ft.faculty, ap.sum_of_grades, ap.average_grade, ap.is_sent, ap.application_status_id " +
             "FROM application ap, user u, applicant a, faculty_translation ft " +
             "INNER JOIN language l ON l.id = ft.language_id " +
             "WHERE a.user_id = ap.user_id AND u.id = ap.user_id AND ft.faculty_id = ap.faculty_id AND ap.faculty_id = ? AND l.lang_code = ? ORDER BY ap.average_grade DESC";
     public static final String UPDATE_APPLICATION = "UPDATE application SET application_status_id = " +
             "(SELECT id FROM application_status WHERE status = ?) WHERE id = ?";
+    public static final String UPDATE_SEND_EMAIL = "UPDATE application SET is_sent = ? WHERE id = ?";
     public static final String DELETE_APPLICATION = "DELETE FROM application WHERE id = ?";
     public static final String IS_EXIST = "SELECT * FROM application WHERE user_id = ? AND faculty_id = ?";
     //grade

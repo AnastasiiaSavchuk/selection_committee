@@ -20,6 +20,7 @@ public class Application implements Serializable {
     private int sumOfGrades;
     private int averageGrade;
     private ApplicationStatus applicationStatus;
+    private boolean isSent;
     private List<Grade> gradeList;
 
     public int getId() {
@@ -66,6 +67,14 @@ public class Application implements Serializable {
         return applicationStatus;
     }
 
+    public boolean isSent() {
+        return isSent;
+    }
+
+    public void setSent(boolean sent) {
+        isSent = sent;
+    }
+
     public void setApplicationStatus(ApplicationStatus applicationStatus) {
         this.applicationStatus = applicationStatus;
     }
@@ -85,14 +94,12 @@ public class Application implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Application that = (Application) o;
-        return id == that.id && sumOfGrades == that.sumOfGrades && averageGrade == that.averageGrade &&
-                Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) &&
-                applicationStatus == that.applicationStatus;
+        return id == that.id && sumOfGrades == that.sumOfGrades && averageGrade == that.averageGrade && isSent == that.isSent && Objects.equals(applicant, that.applicant) && Objects.equals(faculty, that.faculty) && applicationStatus == that.applicationStatus && Objects.equals(gradeList, that.gradeList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, applicant, faculty, sumOfGrades, averageGrade, applicationStatus);
+        return Objects.hash(id, applicant, faculty, sumOfGrades, averageGrade, applicationStatus, isSent, gradeList);
     }
 
     @Override
@@ -104,6 +111,7 @@ public class Application implements Serializable {
                 ", sumOfGrades=" + sumOfGrades +
                 ", averageGrade=" + averageGrade +
                 ", applicationStatus=" + applicationStatus +
+                ", isSent=" + isSent +
                 ", gradeList=" + gradeList +
                 '}';
     }

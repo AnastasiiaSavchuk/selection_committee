@@ -53,5 +53,5 @@ public interface StatementDao {
      * @param applicationsList list of applications.
      * @return true if exist or false if not exist.
      */
-    boolean isSentStatement(List<Application> applicationsList);
+    boolean isSent(List<Application> applicationsList);
 }

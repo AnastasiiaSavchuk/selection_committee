@@ -61,19 +61,18 @@ public class FacultyByIdCommand extends Command {
         if (Objects.nonNull(applicant)) {
             boolean applicantExist = new ApplicationDaoImpl().isExist(applicant, faculty);
             session.setAttribute("applicantExist", applicantExist);
-            logger.info("Set the session attribute:isExist --> " + applicantExist);
+            logger.info("Set the session attribute:applicantExist --> " + applicantExist);
         }
 
-        boolean statementExisted = new StatementDaoImpl().isExist(applicationList);
-        session.setAttribute("statementExisted", statementExisted);
-        logger.info("Set the session attribute:isExist --> " + statementExisted);
+        boolean isExist = new StatementDaoImpl().isExist(applicationList);
+        session.setAttribute("isExist", isExist);
+        logger.info("Set the session attribute:isExist --> " + isExist);
 
-        boolean sentStatement = new StatementDaoImpl().isSentStatement(applicationList);
-        session.setAttribute("sentStatement", sentStatement);
-        logger.info("Set the session attribute:isSentStatement --> " + sentStatement);
-
+        boolean isSent = new StatementDaoImpl().isSent(applicationList);
+        session.setAttribute("isSent", isSent);
+        logger.info("Set the session attribute:isSent --> " + isSent);
 
         logger.info("FacultyByIdCommand finished");
-        return Path.FACULTY_BY_id;
+        return Path.FACULTY_BY_ID;
     }
 }

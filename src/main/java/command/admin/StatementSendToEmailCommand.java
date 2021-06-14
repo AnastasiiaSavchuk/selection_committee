@@ -37,13 +37,7 @@ public class StatementSendToEmailCommand extends Command {
 
         new StatementDaoImpl().sendToEmail(applicationList);
 
-        boolean sentStatement = new StatementDaoImpl().isSentStatement(applicationList);
-        session.setAttribute("faculty", faculty);
-        session.setAttribute("applicationList", applicationList);
-        session.setAttribute("sentStatement", sentStatement);
-        logger.info("Set the session attribute:isSentStatement --> " + sentStatement);
-
         logger.info("StatementCloseCommand finished");
-        return Path.FACULTY_BY_id;
+        return Path.FACULTIES;
     }
 }

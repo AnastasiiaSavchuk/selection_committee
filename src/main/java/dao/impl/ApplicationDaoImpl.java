@@ -31,7 +31,8 @@ public class ApplicationDaoImpl implements ApplicationDao {
             ps = connection.prepareStatement(SQLConstants.INSERT_APPLICATION, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, application.getApplicant().getId());
             ps.setInt(2, application.getFaculty().getId());
-            ps.setString(3, String.valueOf(application.getApplicationStatus()));
+            ps.setInt(3, application.isSent() ? 1 : 0);
+            ps.setString(4, String.valueOf(application.getApplicationStatus()));
             if (ps.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -179,6 +180,25 @@ public class ApplicationDaoImpl implements ApplicationDao {
         }
     }
 
+    public void updateSendEmail(int id, boolean isSent) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.UPDATE_SEND_EMAIL);
+            ps.setInt(1, isSent ? 1 : 0);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+            logger.info("Updated applicant's send status");
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to update applicant's send status: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+        }
+    }
+
     public boolean isExist(Applicant applicant, Faculty faculty) {
         Connection connection = null;
         PreparedStatement ps = null;
@@ -249,6 +269,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
                 application.setFaculty(faculty);
                 application.setSumOfGrades(rs.getInt(SQLFields.APPLICATION_SUM_OF_GRADES));
                 application.setAverageGrade(rs.getInt(SQLFields.APPLICATION_AVERAGE_GRADE));
+                application.setSent(rs.getInt(SQLFields.APPLICATION_SET_EMAIL) != 0);
                 application.setApplicationStatus(ApplicationStatus.values()[rs.getInt(SQLFields.STATUS_ID)]);
             } catch (SQLException ex) {
                 logger.error("Couldn't to get and map application from DB: " + ex.getMessage());

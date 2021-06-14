@@ -18,7 +18,7 @@ public class MessageCreator {
         map.put("se.status", "You have been credited on a");
         map.put("se.faculty", "to the");
         map.put("use.subject", "Unsuccessful enrollment");
-        map.put("use.text", "You were not enrolled in the faculty");
+        map.put("use.text", "You were not enrolled in the ");
         map.put("all.end", "Best wishes University team");
     }
 

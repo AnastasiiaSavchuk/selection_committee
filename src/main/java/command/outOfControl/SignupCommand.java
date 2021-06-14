@@ -31,14 +31,20 @@ public class SignupCommand extends Command {
         HttpSession session = request.getSession();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            errorMessage = "Something went wrong! Email and password cannot be empty!";
+        if (email == null || password == null || confirmPassword == null) {
+            errorMessage = "Email, password and password for confirmation cannot be empty!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         } else if (password.length() < 8) {
             errorMessage = "The password must be at least 8 characters long!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
+        } else if (!password.equals(confirmPassword)) {
+            errorMessage = "The password for confirmation must match the password!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;

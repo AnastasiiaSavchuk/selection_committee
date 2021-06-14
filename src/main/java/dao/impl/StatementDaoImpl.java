@@ -48,6 +48,9 @@ public class StatementDaoImpl implements StatementDao {
     @Override
     public void rollbackApplicationStatusToInitial(List<Application> applicationList) {
         for (Application currentApp : applicationList) {
+            if (currentApp.getApplicationStatus() == ApplicationStatus.BLOCKED) {
+                continue;
+            }
             currentApp.setApplicationStatus(ApplicationStatus.IN_PROCESSING);
         }
     }
@@ -76,8 +79,7 @@ public class StatementDaoImpl implements StatementDao {
     @Override
     public boolean isExist(List<Application> applicationsList) {
         for (Application application : applicationsList) {
-            if (application.getApplicationStatus() == ApplicationStatus.IN_PROCESSING ||
-                    application.getApplicationStatus() == ApplicationStatus.BLOCKED) {
+            if (application.getApplicationStatus() == ApplicationStatus.IN_PROCESSING) {
                 return false;
             }
         }
@@ -98,13 +100,16 @@ public class StatementDaoImpl implements StatementDao {
                         application.getApplicant().getFirstName(), application.getApplicant().getLastName(),
                         application.getApplicant().getMiddleName(), application.getFaculty().getFacultyList().get(0));
             }
+            new ApplicationDaoImpl().updateSendEmail(application.getId(), true);
         }
     }
 
     @Override
-    public boolean isSentStatement(List<Application> applicationsList) {
-        if (!isExist(applicationsList)) {
-            return false;
+    public boolean isSent(List<Application> applicationsList) {
+        for (Application application : applicationsList) {
+            if (!application.isSent()) {
+                return false;
+            }
         }
         return true;
     }

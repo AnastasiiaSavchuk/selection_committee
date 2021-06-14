@@ -53,9 +53,16 @@ public class ApplicantUpdateByAdminCommand extends Command {
         }
 
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
-        for (Application application : applicationList) {
-            application.setApplicationStatus(ApplicationStatus.BLOCKED);
-            new ApplicationDaoImpl().update(application);
+        if (Integer.parseInt(blocked) == 1) {
+            for (Application application : applicationList) {
+                application.setApplicationStatus(ApplicationStatus.BLOCKED);
+                new ApplicationDaoImpl().update(application);
+            }
+        } else {
+            for (Application application : applicationList) {
+                application.setApplicationStatus(ApplicationStatus.IN_PROCESSING);
+                new ApplicationDaoImpl().update(application);
+            }
         }
 
         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));

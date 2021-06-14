@@ -249,34 +249,35 @@ CREATE TABLE IF NOT EXISTS application
     faculty_id            INT NOT NULL,
     sum_of_grades         INT,
     average_grade         INT,
+    is_sent               INT NOT NULL,
     application_status_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (faculty_id) REFERENCES faculty (id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (application_status_id) REFERENCES application_status (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO application (user_id, faculty_id, sum_of_grades, average_grade, application_status_id)
-VALUES (2, 1, 0, 0, 0),#2 1 'Faculty of Electronics and computer technologies' 1 Maths (1) 2 Physics (2) 3 English (3) 4 Ukrainian language (4)
-       (2, 2, 0, 0, 0),#2 2 'Faculty of Foreign Languages' 3 English (3) 4 Ukrainian language (4)
-       (2, 4, 0, 0, 0),#2 4 'Faculty of Financial Management and Business' 3 English (3) 4 Ukrainian language (4) 5 History(5)
-       (3, 2, 0, 0, 0),#3 2 'Faculty of Foreign Languages' 3 English(7) 4 Ukrainian language(8)
-       (3, 3, 0, 0, 0),#3 3 'Faculty of Applied Mathematics and Informatics' 1 Maths (6) 3 English (7) 4 Ukrainian language(8)
-       (4, 1, 0, 0, 0),#4 1 'Faculty of Electronics and computer technologies' 1 Maths(9) 2 Physics(10) 3 English(11) 4 Ukrainian language(12)
-       (4, 3, 0, 0, 0),#4 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(9) 3 English(11) 4 Ukrainian language(12)
-       (5, 1, 0, 0, 0),#5 1 'Faculty of Electronics and computer technologies' 1 Maths(13) 2 Physics(14) 3 English(15) 4 Ukrainian language(16)
-       (5, 3, 0, 0, 0),#5 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(13) 3 English(15) 4 Ukrainian language(16)
-       (5, 4, 0, 0, 0),#5 4 'Faculty of Financial Management and Business' 3 English(15) 4 Ukrainian language(16) 5 History(17)
-       (6, 2, 0, 0, 0),#6 2 'Faculty of Foreign Languages' 3 English(19) 4 Ukrainian language(20)
-       (6, 3, 0, 0, 0),#6 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(18) 3 English(19) 4 Ukrainian language(20)
-       (7, 1, 0, 0, 0),#7 1 'Faculty of Electronics and computer technologies' 1 Maths(21) 2 Physics(22) 3 English(23) 4 Ukrainian language(24)
-       (7, 4, 0, 0, 0),#7 4 'Faculty of Financial Management and Business' 3 English(23) 4 Ukrainian language(24) 5 History(25)
-       (8, 4, 0, 0, 0),#8 4 'Faculty of Financial Management and Business' 3 English(26) 4 Ukrainian language(27) 5 History(28)
-       (9, 2, 0, 0, 0),#9 2 'Faculty of Foreign Languages' 3 English(30) 4 Ukrainian language(31)
-       (9, 3, 0, 0, 0),#9 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(29) 3 English(30) 4 Ukrainian language(31)
-       (10, 1, 0, 0, 0),#10 1 'Faculty of Electronics and computer technologies' 1 Maths(32) 2 Physics(33) 3 English(34) 4 Ukrainian language(35)
-       (10, 3, 0, 0, 0),#10 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(32) 3 English(34) 4 Ukrainian language(35)
-       (11, 2, 0, 0, 0),#11 2 'Faculty of Foreign Languages' 3 English(36) 4 Ukrainian language(37)
-       (11, 4, 0, 0, 0);#11 4 'Faculty of Financial Management and Business' 3 English(36) 4 Ukrainian language(37) 5 History(38)
+INSERT INTO application (user_id, faculty_id, sum_of_grades, average_grade, is_sent, application_status_id)
+VALUES (2, 1, 0, 0, false, 0),#2 1 'Faculty of Electronics and computer technologies' 1 Maths (1) 2 Physics (2) 3 English (3) 4 Ukrainian language (4)
+       (2, 2, 0, 0, false, 0),#2 2 'Faculty of Foreign Languages' 3 English (3) 4 Ukrainian language (4)
+       (2, 4, 0, 0, false, 0),#2 4 'Faculty of Financial Management and Business' 3 English (3) 4 Ukrainian language (4) 5 History(5)
+       (3, 2, 0, 0, false, 0),#3 2 'Faculty of Foreign Languages' 3 English(7) 4 Ukrainian language(8)
+       (3, 3, 0, 0, false, 0),#3 3 'Faculty of Applied Mathematics and Informatics' 1 Maths (6) 3 English (7) 4 Ukrainian language(8)
+       (4, 1, 0, 0, false, 0),#4 1 'Faculty of Electronics and computer technologies' 1 Maths(9) 2 Physics(10) 3 English(11) 4 Ukrainian language(12)
+       (4, 3, 0, 0, false, 0),#4 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(9) 3 English(11) 4 Ukrainian language(12)
+       (5, 1, 0, 0, false, 0),#5 1 'Faculty of Electronics and computer technologies' 1 Maths(13) 2 Physics(14) 3 English(15) 4 Ukrainian language(16)
+       (5, 3, 0, 0, false, 0),#5 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(13) 3 English(15) 4 Ukrainian language(16)
+       (5, 4, 0, 0, false, 0),#5 4 'Faculty of Financial Management and Business' 3 English(15) 4 Ukrainian language(16) 5 History(17)
+       (6, 2, 0, 0, false, 0),#6 2 'Faculty of Foreign Languages' 3 English(19) 4 Ukrainian language(20)
+       (6, 3, 0, 0, false, 0),#6 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(18) 3 English(19) 4 Ukrainian language(20)
+       (7, 1, 0, 0, false, 0),#7 1 'Faculty of Electronics and computer technologies' 1 Maths(21) 2 Physics(22) 3 English(23) 4 Ukrainian language(24)
+       (7, 4, 0, 0, false, 0),#7 4 'Faculty of Financial Management and Business' 3 English(23) 4 Ukrainian language(24) 5 History(25)
+       (8, 4, 0, 0, false, 0),#8 4 'Faculty of Financial Management and Business' 3 English(26) 4 Ukrainian language(27) 5 History(28)
+       (9, 2, 0, 0, false, 0),#9 2 'Faculty of Foreign Languages' 3 English(30) 4 Ukrainian language(31)
+       (9, 3, 0, 0, false, 0),#9 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(29) 3 English(30) 4 Ukrainian language(31)
+       (10, 1, 0, 0, false, 0),#10 1 'Faculty of Electronics and computer technologies' 1 Maths(32) 2 Physics(33) 3 English(34) 4 Ukrainian language(35)
+       (10, 3, 0, 0, false, 0),#10 3 'Faculty of Applied Mathematics and Informatics' 1 Maths(32) 3 English(34) 4 Ukrainian language(35)
+       (11, 2, 0, 0, false, 0),#11 2 'Faculty of Foreign Languages' 3 English(36) 4 Ukrainian language(37)
+       (11, 4, 0, 0, false, 0);#11 4 'Faculty of Financial Management and Business' 3 English(36) 4 Ukrainian language(37) 5 History(38)
 
 CREATE TABLE IF NOT EXISTS application_grade
 (

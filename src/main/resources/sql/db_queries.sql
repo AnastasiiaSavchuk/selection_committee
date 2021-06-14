@@ -206,8 +206,8 @@ WHERE id = 5;
 
 # application
 # INSERT_APPLICATION 
-INSERT INTO application (user_id, faculty_id, application_status_id)
-SELECT 2, 2, id
+INSERT INTO application (user_id, faculty_id, is_sent, application_status_id)
+SELECT 2, 2, false, id
 FROM application_status
 WHERE status = 'IN_PROCESSING';
 
@@ -222,6 +222,7 @@ SELECT ap.id,
        ft.faculty,
        ap.sum_of_grades,
        ap.average_grade,
+       ap.is_sent,
        ap.application_status_id
 FROM application ap,
      user u,
@@ -246,6 +247,7 @@ SELECT ap.id,
        ft.faculty,
        ap.sum_of_grades,
        ap.average_grade,
+       ap.is_sent,
        ap.application_status_id
 FROM application ap,
      user u,
@@ -270,6 +272,7 @@ SELECT ap.id,
        ft.faculty,
        ap.sum_of_grades,
        ap.average_grade,
+       ap.is_sent,
        ap.application_status_id
 FROM application ap,
      user u,
