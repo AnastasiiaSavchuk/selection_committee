@@ -1,6 +1,7 @@
 <%@ include file="/view/includes/init.jsp" %>
 <c:set var="applicant" value="${sessionScope['applicant']}"/>
 <c:set var="aList" value="${sessionScope['applicationList']}"/>
+<c:set var="gList" value="${sessionScope['gradeList']}"/>
 <c:set var="certImage" value="${sessionScope['certImage']}"/>
 <html>
 <head>
@@ -22,21 +23,50 @@
         <h5><fmt:message key="applicant.City"/> : <c:out value="${applicant.getCity()}"/></h5>
         <h5><fmt:message key="applicant.Region"/> : <c:out value="${applicant.getRegion()}"/></h5>
         <h5><fmt:message key="applicant.SchoolName"/> : <c:out value="${applicant.getSchoolName()}"/></h5>
-        <h5><fmt:message key="applicant.Status"/> :
-            <c:if test="${not empty applicant.isBlocked()}">
-                <c:choose>
-                    <c:when test="${applicant.isBlocked() == true}">
+
+        <c:if test="${role == 'ADMIN'}">
+            <c:choose>
+                <c:when test="${applicant.isBlocked() == true}">
+                    <form id="updateForm" method="post" action="controller">
+                        <input type="hidden" name="command" value="applicantUpdateByAdmin"/>
+                        <input type="hidden" name="blocked" value="0">
+                        <h5><fmt:message key="applicant.Status"/> :
+                            <button disabled class="btn btn-danger"><fmt:message key="applicant.Blocked"/></button>
+                            <button class="btn btn-success"><fmt:message key="applicant.UnlockedApplicant"/></button>
+                        </h5>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <form id="updateForm" method="post" action="controller">
+                        <input type="hidden" name="command" value="applicantUpdateByAdmin"/>
+                        <input type="hidden" name="blocked" value="1">
+                        <h5><fmt:message key="applicant.Status"/> :
+                            <button disabled class="btn btn-success"><fmt:message key="applicant.Active"/></button>
+                            <button class="btn btn-danger"><fmt:message key="applicant.BlockedApplicant"/></button>
+                        </h5>
+                    </form>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+        <c:if test="${role == 'USER'}">
+            <c:choose>
+                <c:when test="${applicant.isBlocked() == true}">
+                    <h5><fmt:message key="applicant.Status"/> :
                         <button disabled class="btn btn-danger"><fmt:message key="applicant.Blocked"/></button>
-                    </c:when>
-                    <c:when test="${applicant.isBlocked() == false}">
+                    </h5>
+                </c:when>
+                <c:otherwise>
+                    <h5><fmt:message key="applicant.Status"/> :
                         <button disabled class="btn btn-success"><fmt:message key="applicant.Active"/></button>
-                    </c:when>
-                </c:choose>
-            </c:if></h5>
-        <div id="certificate" style="display:none">
-            <h5><fmt:message key="applicant.Certificate"/></h5>
-            <img src="data:image/jpg;base64,${certImage}" width="500"/>
-        </div>
+                    </h5>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
+        <hr>
+        <h2><fmt:message key="applicant.ZNOGrade"/></h2>
+        <c:forEach items="${gList}" var="grade">
+            <h5>${grade.getSubject().getSubjectList().get(0)} : ${grade.getGrade()}</h5>
+        </c:forEach>
     </div>
 
     <div class="align-right">
@@ -47,59 +77,28 @@
                 </a>
             </div>
         </c:if>
-        <div class="inRow">
-            <button class="button" type="button" onclick="getCertificate(this)">
-                <fmt:message key="applicant.DisplayCertificate"/></button>
-        </div>
-        <div class="inRow">
-            <button class="button" type="button" onclick="getGrades(this)"><fmt:message
-                    key="grade.DisplayGrade"/></button>
-        </div>
-        <c:if test="${not empty role}">
+        <c:if test="${role == 'USER'}">
             <c:choose>
-                <c:when test="${role == 'ADMIN'}">
+                <c:when test="${applicant.isBlocked() == true}">
                     <div class="inRow">
-                        <h5><fmt:message key="applicant.ChangStatus"/></h5>
-                        <div>
-                            <label class="form-check-label" for="unBlocked">
-                                <fmt:message key="applicant.UnlockedApplicant"/>
-                                <input id="unBlocked" class="getStatus" type="radio" name="unBlocked"
-                                       value="0"/></label>
-                            <label class="form-check-label" for="isBlocked">
-                                <fmt:message key="applicant.BlockedApplicant"/>
-                                <input id="isBlocked" class="getStatus" type="radio" name="isBlocked"
-                                       value="1"/></label>
-                        </div>
-                        <form id="updateForm" method="post" action="controller">
-                            <input type="hidden" name="command" value="applicantUpdateByAdmin"/>
-                            <input type="hidden" name="blocked" id="applicantUpdate" value="">
-                            <a onclick="applicantUpdate();">
-                                <button class="button"><fmt:message key="save.Save"/></button>
-                            </a>
-                        </form>
+                        <h5 style="color: brown"><fmt:message key="applicant.ToUnlocked"/></h5>
                     </div>
                 </c:when>
-                <c:when test="${role == 'USER'}">
-                    <c:choose>
-                        <c:when test="${applicant.isBlocked() == true}">
-                            <div class="inRow">
-                                <h5 style="color: brown"><fmt:message key="applicant.ToUnlocked"/></h5>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="inRow">
-                                <form method="post" action="controller">
-                                    <input type="hidden" name="command" value="applicantUpdate"/>
-                                    <input type="hidden" name="applicantIdToUpdate"
-                                           value="<c:out value="${applicant.getId()}"/>">
-                                    <button class="button"><fmt:message key="update.Update"/></button>
-                                </form>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
-                </c:when>
+                <c:otherwise>
+                    <div class="inRow">
+                        <form method="post" action="controller">
+                            <input type="hidden" name="command" value="applicantUpdate"/>
+                            <input type="hidden" name="applicantIdToUpdate"
+                                   value="<c:out value="${applicant.getId()}"/>">
+                            <button class="button"><fmt:message key="update.Update"/></button>
+                        </form>
+                    </div>
+                </c:otherwise>
             </c:choose>
         </c:if>
+        <div class="inRow">
+            <img src="data:image/jpg;base64,${certImage}" width="600" height="400" alt=""/>
+        </div>
     </div>
 
     <div class="panel-table">
@@ -153,38 +152,6 @@
                     </c:forEach>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="grade" style="display:none">
-        <div class="panel-table">
-            <div class="panel-heading">
-                <div class="panel-body">
-                    <h2 style="text-align: center"><fmt:message key="subject.Subjects"/></h2>
-                    <table class="table table-striped table-bordered table-list sortable">
-                        <thead>
-                        <tr>
-                            <th class="hidden-xs">№</th>
-                            <th><fmt:message key="faculty.Faculty"/></th>
-                            <th colspan="4"><fmt:message key="subject.Subject"/> : <fmt:message
-                                    key="subject.Grade"/></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${aList}" var="application" varStatus="loop">
-                            <tr>
-                                <td class="td-to-align">${loop.index + 1}</td>
-                                <td class="td-to-align">${application.getFaculty().getFacultyList().get(0)}</td>
-                                <c:forEach items="${application.getGradeList()}" var="grade">
-                                    <td class="td-to-align">${grade.getSubject().getSubjectList().get(0)}
-                                        : ${grade.getGrade()}</td>
-                                </c:forEach>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </div>

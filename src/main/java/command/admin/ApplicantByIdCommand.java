@@ -3,8 +3,10 @@ package command.admin;
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
 import dao.impl.ApplicationDaoImpl;
+import dao.impl.GradeDaoImpl;
 import domain.Applicant;
 import domain.Application;
+import domain.Grade;
 import org.apache.log4j.Logger;
 import util.Path;
 
@@ -26,7 +28,7 @@ public class ApplicantByIdCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("ApplicantByIdCommand starts");
+        logger.info("ApplicantByIdCommand started");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
@@ -36,6 +38,10 @@ public class ApplicantByIdCommand extends Command {
         Applicant applicant = new ApplicantDaoImpl().readById(Integer.parseInt(applicantId), Collections.singletonList(language == null ? localeLang : language));
         session.setAttribute("applicant", applicant);
         logger.info("Set the session attribute:applicant --> " + applicant);
+
+        List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicantId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
+        session.setAttribute("gradeList", gradeList);
+        logger.info("Set the session attribute:gradeList --> " + gradeList);
 
         byte[] getCertificate = new ApplicantDaoImpl().getCertificate(applicant.getId());
         if (getCertificate.length > 0) {

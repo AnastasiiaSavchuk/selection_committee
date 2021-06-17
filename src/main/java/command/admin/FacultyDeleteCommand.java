@@ -23,7 +23,7 @@ public class FacultyDeleteCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("FacultyDeleteCommand starts");
+        logger.info("FacultyDeleteCommand started");
         String errorMessage;
 
         HttpSession session = request.getSession();

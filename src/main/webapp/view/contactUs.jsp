@@ -19,37 +19,36 @@
             <div class="col-sm-12 col-md-6 col-lg-3 my-5">
                 <div class="card border-0">
                     <div class="card-body text-center">
-                        <i class="fa fa-phone fa-5x mb-3" aria-hidden="true"></i>
-                        <h4 class="text-uppercase mb-5"><fmt:message key="contacts.GeneralOffice"/></h4>
-                        <a href="tel:+380322394111"><tag:customTag contact="+38 (032) 239-41-11"/></a>
-                        <a href="tel:+380322394325"><tag:customTag contact="+38 (032) 239-43-25"/></a>
+                        <a href="tel:+380322394111"><i class="fa fa-phone fa-5x mb-3" aria-hidden="true"></i>
+                            <h4 class="text-uppercase mb-5"><fmt:message key="contacts.GeneralOffice"/></h4>
+                            <tag:customTag contact="+38 (032) 239-41-11"/></a>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-3 my-5">
                 <div class="card border-0">
                     <div class="card-body text-center">
-                        <i class="fa fa-phone fa-5x mb-3" aria-hidden="true"></i>
-                        <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Admissions"/></h4>
-                        <a href="tel: +380322553965"><tag:customTag contact="+38 (032) 255-39-65"/></a>
+                        <a href="tel: +380322553965"><i class="fa fa-phone fa-5x mb-3" aria-hidden="true"></i>
+                            <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Admissions"/></h4>
+                            <tag:customTag contact="+38 (032) 255-39-65"/></a>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-3 my-5">
                 <div class="card border-0">
                     <div class="card-body text-center">
-                        <i class="fa fa-map-marker fa-5x mb-3" aria-hidden="true"></i>
-                        <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Address"/></h4>
-                        <address><fmt:message key="contacts.Address1"/></address>
+                        <address><i class="fa fa-map-marker fa-5x mb-3" aria-hidden="true"></i>
+                            <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Address"/></h4>
+                            <fmt:message key="contacts.Address1"/></address>
                     </div>
                 </div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-3 my-5">
                 <div class="card border-0">
                     <div class="card-body text-center">
-                        <i class="fa fa-globe fa-5x mb-3" aria-hidden="true"></i>
-                        <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Email"/></h4>
-                        <a href="mailto:zag_kan@lnu.edu.ua"><tag:customTag contact="zag_kan@lnu.edu.ua"/></a>
+                        <a href="mailto:zag_kan@lnu.edu.ua"><i class="fa fa-globe fa-5x mb-3" aria-hidden="true"></i>
+                            <h4 class="text-uppercase mb-5"><fmt:message key="contacts.Email"/></h4>
+                            <tag:customTag contact="zag_kan@lnu.edu.ua"/></a>
                     </div>
                 </div>
             </div>

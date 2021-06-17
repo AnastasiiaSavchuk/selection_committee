@@ -27,7 +27,7 @@ public class ApplicantUpdateByAdminCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("ApplicantUpdateByAdminCommand starts");
+        logger.info("ApplicantUpdateByAdminCommand started");
         String errorMessage;
 
         HttpSession session = request.getSession();

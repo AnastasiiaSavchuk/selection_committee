@@ -2,7 +2,10 @@ package command.applicant;
 
 import command.Command;
 import dao.impl.ApplicantDaoImpl;
+import dao.impl.GradeDaoImpl;
+import dao.impl.SubjectDaoImpl;
 import domain.Applicant;
+import domain.Grade;
 import org.apache.log4j.Logger;
 import util.Path;
 
@@ -10,6 +13,8 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Get all details from request and save applicant details for finished registration.
@@ -23,10 +28,12 @@ public class SignupDetailsCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("SignupDetailsCommand starts");
+        logger.info("SignupDetailsCommand started");
         String errorMessage;
 
         HttpSession session = request.getSession();
+        String localeLang = request.getLocale().getLanguage();
+        String language = (String) session.getAttribute("elanguage");
 
         Applicant sessionApplicant = (Applicant) session.getAttribute("applicant");
         int applicantId = sessionApplicant.getId();
@@ -38,10 +45,22 @@ public class SignupDetailsCommand extends Command {
         String city = request.getParameter("city");
         String region = request.getParameter("region");
         String schoolName = request.getParameter("schoolName");
+        String[] subjectIdList = request.getParameterValues("subjectId");
+        String[] gradeValueList = request.getParameterValues("grade");
 
         if (firstName == null || middleName == null || lastName == null || city == null || region == null
                 || schoolName == null) {
             errorMessage = "Required fields cannot be empty!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
+        } else if (Objects.isNull(subjectIdList)) {
+            errorMessage = "SubjectId cannot be empty!";
+            request.setAttribute("errorMessage", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            return Path.ERROR;
+        } else if (Objects.isNull(gradeValueList)) {
+            errorMessage = "Please enter your ZNO grades!";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
@@ -64,6 +83,14 @@ public class SignupDetailsCommand extends Command {
                 request.setAttribute("errorMessage", errorMessage);
                 logger.error("errorMessage --> " + errorMessage);
                 return Path.ERROR;
+            }
+
+            for (int i = 0; i < subjectIdList.length; i++) {
+                Grade newGrade = new Grade();
+                newGrade.setApplicant(applicant);
+                newGrade.setSubject(new SubjectDaoImpl().readById(Integer.parseInt(subjectIdList[i]), Collections.singletonList(language == null ? localeLang : language)));
+                newGrade.setGrade(Integer.parseInt(gradeValueList[i]));
+                new GradeDaoImpl().createGrade(newGrade);
             }
 
             session.setAttribute("applicant", applicant);

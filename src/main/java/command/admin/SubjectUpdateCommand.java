@@ -24,7 +24,7 @@ public class SubjectUpdateCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("SubjectUpdateCommand starts");
+        logger.info("SubjectUpdateCommand started");
         String errorMessage;
 
         HttpSession session = request.getSession();

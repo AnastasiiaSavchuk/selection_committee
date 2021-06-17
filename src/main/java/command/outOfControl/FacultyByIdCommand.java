@@ -30,7 +30,7 @@ public class FacultyByIdCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("FacultyByIdCommand starts");
+        logger.info("FacultyByIdCommand started");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();

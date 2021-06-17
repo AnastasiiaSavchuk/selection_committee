@@ -25,7 +25,7 @@ public class AdminCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("AdminPageCommand starts");
+        logger.info("AdminPageCommand started");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();

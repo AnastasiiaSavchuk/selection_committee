@@ -14,7 +14,7 @@ public interface ApplicantDao extends AbstractCRUDOperations<Applicant> {
      * @param password applicant's password.
      * @return
      */
-    Applicant loginApplicant(String email, String password);
+    Applicant signupApplicant(String email, String password);
 
     /**
      * Get certificate image from applicant table

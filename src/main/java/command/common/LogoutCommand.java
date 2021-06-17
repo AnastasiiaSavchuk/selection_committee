@@ -18,7 +18,7 @@ public class LogoutCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("LogoutCommand starts");
+        logger.info("LogoutCommand started");
 
         request.getSession(false).invalidate();
 

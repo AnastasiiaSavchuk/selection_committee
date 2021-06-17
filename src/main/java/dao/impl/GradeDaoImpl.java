@@ -29,8 +29,9 @@ public class GradeDaoImpl implements GradleDao {
         try {
             connection = DB_MANAGER.getConnection();
             ps = connection.prepareStatement(SQLConstants.INSERT_GRADE, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, grade.getSubject().getId());
-            ps.setInt(2, grade.getGrade());
+            ps.setInt(1, grade.getApplicant().getId());
+            ps.setInt(2, grade.getSubject().getId());
+            ps.setInt(3, grade.getGrade());
             if (ps.executeUpdate() > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -75,7 +76,7 @@ public class GradeDaoImpl implements GradleDao {
     }
 
     @Override
-    public List<Grade> readGradesByApplicationId(int applicationId, List<String> locales) {
+    public List<Grade> readGradesByApplicantId(int applicantId, List<String> locales) {
         List<Grade> gradeList = new ArrayList<>();
         Connection connection = null;
         PreparedStatement ps = null;
@@ -85,17 +86,47 @@ public class GradeDaoImpl implements GradleDao {
 
         try {
             connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.GET_GRADES_BY_APPLICATION_ID);
-            ps.setInt(1, applicationId);
+            ps = connection.prepareStatement(SQLConstants.GET_GRADES_BY_APPLICANT_ID);
+            ps.setInt(1, applicantId);
             ps.setString(2, locales.get(0));
             rs = ps.executeQuery();
             while (rs.next()) {
                 gradeList.add(CREATOR.mapRow(rs));
             }
-            logger.info("Received list of grades by applicationId");
+            logger.info("Received list of grades by applicantId");
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to get list of grades by applicationId: " + ex.getMessage());
+            logger.error("Failed to get list of grades by applicantId: " + ex.getMessage());
+        } finally {
+            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
+            DB_MANAGER.close(Objects.requireNonNull(ps));
+            DB_MANAGER.close(Objects.requireNonNull(rs));
+        }
+        return gradeList;
+    }
+
+    public List<Grade> readApplicantGradesByFacultyId(int facultyId, int applicantId, List<String> locales) {
+        List<Grade> gradeList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        if (locales == null || locales.size() == 0)
+            return gradeList;
+
+        try {
+            connection = DB_MANAGER.getConnection();
+            ps = connection.prepareStatement(SQLConstants.GET_APPLICANT_GRADE_BY_FACULTY_ID);
+            ps.setInt(1, facultyId);
+            ps.setInt(2, applicantId);
+            ps.setString(3, locales.get(0));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                gradeList.add(CREATOR.mapRow(rs));
+            }
+            logger.info("Received list of applicant's grades by facultyId");
+        } catch (SQLException ex) {
+            DB_MANAGER.rollbackAndClose(connection);
+            logger.error("Failed to get list of applicant's grades by facultyId: " + ex.getMessage());
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));

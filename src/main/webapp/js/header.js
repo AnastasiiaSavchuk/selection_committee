@@ -19,6 +19,7 @@ function setLanguage(clickedObj) {
     let setLangLink = document.createElement('a');
     setLangLink.href = '${pageContext.request.contextPath}/controller?command=setLanguage&language=' + convertLang(selectedLang);
     setLangLink.click();
+    location.reload();
 }
 
 function convertLang(langInnerHtml) {
@@ -110,7 +111,7 @@ $(document).ready(function () {
     if (rowsTotal > rowsShown) {
         for (let i = 0; i < numPages; i++) {
             let pageNum = i + 1;
-            $('#nav').append('<a href="#" rel="'  + i + '">' + pageNum + '</a>');
+            $('#nav').append('<a href="#" rel="' + i + '">' + pageNum + '</a>');
         }
         $('#pagination thead tr').show();
         $('#pagination tbody tr').hide();

@@ -1,4 +1,3 @@
-USE selection_committee;
 # applicant
 # INSERT_APPLICANT_USER_FIELDS 
 INSERT INTO user (email, password, role_id)
@@ -27,11 +26,9 @@ SELECT a.user_id,
        a.region,
        a.school_name,
        a.is_blocked
-FROM applicant a,
-     user u,
-     role r
-WHERE a.user_id = u.id
-  AND u.role_id = r.id;
+FROM applicant a
+         INNER JOIN user u ON a.user_id = u.id
+         INNER JOIN role r ON u.role_id = r.id;
 
 # GET_APPLICANT_BY_ID
 SELECT u.id,
@@ -48,22 +45,26 @@ SELECT u.id,
        a.school_name,
        a.is_blocked
 FROM user u
-         INNER JOIN applicant a ON u.id = a.user_id,
-     role r
-WHERE u.role_id = r.id
-  and u.id = 12;
-
-SELECT a.certificate
-FROM user u
-         INNER JOIN applicant a ON u.id = a.user_id
-WHERE user_id = 12;
+         INNER JOIN applicant a ON a.user_id = u.id
+         INNER JOIN role r ON u.role_id = r.id
+WHERE u.id = 2;
 
 # GET_APPLICANT_BY_EMAIL
 SELECT u.id, u.email, u.password, r.role
-FROM user u,
-     role r
-WHERE u.role_id = r.id
-  AND u.email = 'LOomova@gmailcom';
+FROM user u
+         INNER JOIN role r ON u.role_id = r.id
+WHERE u.email = 'savchuknesty@gmail.com';
+
+# GET_CERTIFICATE
+SELECT a.certificate
+FROM user u
+         INNER JOIN applicant a ON u.id = a.user_id
+WHERE user_id = 2;
+
+# UPDATE_CERTIFICATE
+UPDATE applicant
+SET certificate = 'blob'
+WHERE user_id = 2;
 
 # UPDATE_APPLICANT 
 UPDATE user u, applicant a
@@ -107,24 +108,28 @@ WHERE l.lang_code = 'uk';
 
 # GET_SUBJECTS_BY_FACULTY_ID
 SELECT s.id, s.passing_grade, st.subject
-FROM faculty f,
-     faculty_subject fs,
-     subject s,
-     subject_translation st,
-     language l
-WHERE f.id = fs.faculty_id
-  AND fs.subject_id = s.id
-  AND s.id = st.subject_id
-  AND st.language_id = l.id
-  AND f.id = 1
+FROM subject s
+         INNER JOIN faculty_subject fs on s.id = fs.subject_id
+         INNER JOIN faculty f ON f.id = fs.faculty_id
+         INNER JOIN subject_translation st ON s.id = st.subject_id
+         INNER JOIN language l ON l.id = st.language_id
+WHERE f.id = 1
   AND l.lang_code = 'uk';
 
 # GET_SUBJECT_BY_ID
-SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject
+SELECT s.id, s.passing_grade, st.subject
 FROM subject s
          INNER JOIN subject_translation st ON s.id = st.subject_id
          INNER JOIN language l ON l.id = st.language_id
 WHERE s.id = 4
+GROUP BY s.id;
+
+# GET_SUBJECT_TO_UPDATE
+SELECT s.id, s.passing_grade, GROUP_CONCAT(st.subject SEPARATOR ' / ') as subject
+FROM subject s
+         INNER JOIN subject_translation st ON s.id = st.subject_id
+         INNER JOIN language l ON l.id = st.language_id
+WHERE s.id = 2
 GROUP BY s.id;
 
 # UPDATE_SUBJECT
@@ -160,7 +165,7 @@ INSERT INTO faculty_subject(faculty_id, subject_id)
 VALUES (5, 5);
 
 # GET_FACULTY_BY_ID
-SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, ft.faculty
+SELECT f.id, f.average_passing_grade, f.total_qty, f.budget_qty, ft.faculty
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
@@ -169,10 +174,10 @@ WHERE f.id = 1
 
 # GET_FACULTY_TO_UPDATE
 SELECT f.id,
-       GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty,
-       f.budget_qty,
+       f.average_passing_grade,
        f.total_qty,
-       f.average_passing_grade
+       f.budget_qty,
+       GROUP_CONCAT(ft.faculty SEPARATOR ' / ') as faculty
 FROM faculty f
          INNER JOIN faculty_translation ft ON f.id = ft.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
@@ -181,11 +186,10 @@ GROUP BY f.id;
 
 # GET_ALL_FACULTIES
 SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, ft.faculty
-FROM faculty f,
-     faculty_translation ft
+FROM faculty f
+         INNER JOIN faculty_translation ft on f.id = ft.faculty_id
          INNER JOIN language l ON ft.language_id = l.id
-WHERE f.id = ft.faculty_id
-  AND l.lang_code = 'uk';
+WHERE l.lang_code = 'uk';
 
 # UPDATE_FACULTY
 UPDATE faculty
@@ -224,16 +228,14 @@ SELECT ap.id,
        ap.average_grade,
        ap.is_sent,
        ap.application_status_id
-FROM application ap,
-     user u,
-     applicant a,
-     faculty_translation ft
+FROM application ap
+         INNER JOIN applicant a ON a.user_id = ap.user_id
+         INNER JOIN user u on a.user_id = u.id
+         INNER JOIN faculty_translation ft ON ft.faculty_id = ap.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
-WHERE a.user_id = ap.user_id
-  AND u.id = ap.user_id
-  AND ft.faculty_id = ap.faculty_id
-  AND ap.id = 2
-  AND l.lang_code = 'uk';
+WHERE ap.id = 2
+  AND l.lang_code = 'uk'
+ORDER BY ap.average_grade DESC;
 
 # GET_APPLICATIONS_BY_USER_ID
 SELECT ap.id,
@@ -249,16 +251,14 @@ SELECT ap.id,
        ap.average_grade,
        ap.is_sent,
        ap.application_status_id
-FROM application ap,
-     user u,
-     applicant a,
-     faculty_translation ft
+FROM application ap
+         INNER JOIN applicant a ON a.user_id = ap.user_id
+         INNER JOIN user u on a.user_id = u.id
+         INNER JOIN faculty_translation ft ON ft.faculty_id = ap.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
-WHERE a.user_id = ap.user_id
-  AND u.id = ap.user_id
-  AND ft.faculty_id = ap.faculty_id
-  AND ap.user_id = 2
-  AND l.lang_code = 'uk';
+WHERE ap.user_id = 2
+  AND l.lang_code = 'uk'
+ORDER BY ap.average_grade DESC;
 
 # GET_APPLICATIONS_BY_FACULTY_ID 
 SELECT ap.id,
@@ -274,15 +274,12 @@ SELECT ap.id,
        ap.average_grade,
        ap.is_sent,
        ap.application_status_id
-FROM application ap,
-     user u,
-     applicant a,
-     faculty_translation ft
+FROM application ap
+         INNER JOIN applicant a ON a.user_id = ap.user_id
+         INNER JOIN user u on a.user_id = u.id
+         INNER JOIN faculty_translation ft ON ft.faculty_id = ap.faculty_id
          INNER JOIN language l ON l.id = ft.language_id
-WHERE a.user_id = ap.user_id
-  AND u.id = ap.user_id
-  AND ft.faculty_id = ap.faculty_id
-  AND ap.faculty_id = 2
+WHERE ap.faculty_id = 2
   AND l.lang_code = 'uk'
 ORDER BY ap.average_grade DESC;
 
@@ -291,25 +288,30 @@ UPDATE application
 SET application_status_id = (SELECT id FROM application_status WHERE status = 'REJECTED')
 WHERE id = 5;
 
-# DELETE_APPLICATION
-DELETE
-FROM application
-WHERE id = 3;
-
 #IS_EXIST
 SELECT *
 FROM application
 WHERE user_id = 3
   AND faculty_id = 2;
 
+# UPDATE_SEND_EMAIL
+UPDATE application
+SET is_sent = 1
+WHERE id = 2;
+
+# DELETE_APPLICATION
+DELETE
+FROM application
+WHERE id = 3;
+
 # grade
 # INSERT_GRADE
-INSERT INTO grade(subject_id, grade)
-VALUES (5, 156);
-INSERT INTO grade(subject_id, grade)
-VALUES (4, 167);
-INSERT INTO grade(subject_id, grade)
-VALUES (3, 196);
+INSERT INTO grade(applicant_id, subject_id, grade)
+VALUES (12, 5, 156);
+INSERT INTO grade(applicant_id, subject_id, grade)
+VALUES (12, 4, 167);
+INSERT INTO grade(applicant_id, subject_id, grade)
+VALUES (12, 3, 196);
 
 # INSERT_APPLICATION_GRADE
 INSERT INTO application_grade(application_id, grade_id)
@@ -317,15 +319,28 @@ VALUES (24, 40);
 INSERT INTO application_grade(application_id, grade_id)
 VALUES (24, 41);
 
-# GET_GRADES_BY_APPLICATION_ID
+# GET_GRADES_BY_APPLICANT_ID
 SELECT g.id as grade_id, s.id as subject_id, st.subject, s.passing_grade, g.grade
 FROM grade g
-         INNER JOIN application_grade ag ON ag.grade_id = g.id
          INNER JOIN subject s ON s.id = g.subject_id
          INNER JOIN subject_translation st ON st.subject_id = s.id
          INNER JOIN language l ON l.id = st.language_id
-WHERE ag.application_id = 15
-  AND l.lang_code = 'en';
+WHERE g.applicant_id = 2
+  AND l.lang_code = 'en'
+ORDER BY s.id;
+
+
+# GET_APPLICANT_GRADE_BY_FACULTY_ID
+SELECT g.id as grade_id, s.id as subject_id, st.subject, s.passing_grade, g.grade
+FROM grade g
+         INNER JOIN subject s ON s.id = g.subject_id
+         INNER JOIN subject_translation st ON st.subject_id = s.id
+         INNER JOIN faculty_subject fs on s.id = fs.subject_id
+         INNER JOIN faculty f ON f.id = fs.faculty_id
+         INNER JOIN language l ON l.id = st.language_id
+WHERE f.id = 1
+  AND g.applicant_id = 2
+  AND l.lang_code = 'uk';
 
 # DELETE_GRADE 
 DELETE

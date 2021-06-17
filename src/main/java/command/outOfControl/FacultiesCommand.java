@@ -23,7 +23,7 @@ public class FacultiesCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("FacultiesCommand starts");
+        logger.info("FacultiesCommand started");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();

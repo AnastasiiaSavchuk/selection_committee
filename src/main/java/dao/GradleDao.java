@@ -28,7 +28,7 @@ public interface GradleDao {
      * @param locales       locales data.
      * @return list of grades.
      */
-    List<Grade> readGradesByApplicationId(int applicationId, List<String> locales);
+    List<Grade> readGradesByApplicantId(int applicationId, List<String> locales);
 
     /**
      * Delete grade based id from DB.

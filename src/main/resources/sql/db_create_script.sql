@@ -1,6 +1,7 @@
 drop database if exists selection_committee;
 CREATE DATABASE IF NOT EXISTS selection_committee;
 USE selection_committee;
+SET GLOBAL max_allowed_packet=1073741824;
 
 CREATE TABLE IF NOT EXISTS language
 (
@@ -108,60 +109,62 @@ VALUES (1, 1, 'Maths'),
 
 CREATE TABLE IF NOT EXISTS grade
 (
-    id         INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    subject_id INT NOT NULL,
-    grade      INT NOT NULL,
+    id           INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    applicant_id INT NOT NULL,
+    subject_id   INT NOT NULL,
+    grade        INT NOT NULL,
+    FOREIGN KEY (applicant_id) REFERENCES applicant (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (subject_id) REFERENCES subject (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO grade(subject_id, grade)
-VALUES (1, 140),
-       (2, 130),
-       (3, 128),
-       (4, 154),
-       (5, 137),
+INSERT INTO grade(applicant_id, subject_id, grade)
+VALUES (2, 1, 140),
+       (2, 2, 130),
+       (2, 3, 128),
+       (2, 4, 154),
+       (2, 5, 137),
 
-       (1, 148),
-       (3, 149),
-       (4, 134),
+       (3, 1, 148),
+       (3, 3, 149),
+       (3, 4, 134),
 
-       (1, 149),
-       (2, 163),
-       (3, 186),
-       (4, 158),
+       (4, 1, 149),
+       (4, 2, 163),
+       (4, 3, 186),
+       (4, 4, 158),
 
-       (1, 169),
-       (2, 174),
-       (3, 169),
-       (4, 148),
-       (5, 155),
+       (5, 1, 169),
+       (5, 2, 174),
+       (5, 3, 169),
+       (5, 4, 148),
+       (5, 5, 155),
 
-       (1, 196),
-       (3, 179),
-       (4, 169),
+       (6, 1, 196),
+       (6, 3, 179),
+       (6, 4, 169),
 
-       (1, 147),
-       (2, 154),
-       (3, 169),
-       (4, 167),
-       (5, 136),
+       (7, 1, 147),
+       (7, 2, 154),
+       (7, 3, 169),
+       (7, 4, 167),
+       (7, 5, 136),
 
-       (3, 163),
-       (4, 184),
-       (5, 196),
+       (8, 3, 163),
+       (8, 4, 184),
+       (8, 5, 196),
 
-       (1, 198),
-       (3, 179),
-       (4, 160),
+       (9, 1, 198),
+       (9, 3, 179),
+       (9, 4, 160),
 
-       (1, 138),
-       (2, 140),
-       (3, 159),
-       (4, 136),
+       (10, 1, 138),
+       (10, 2, 140),
+       (10, 3, 159),
+       (10, 4, 136),
 
-       (2, 163),
-       (4, 149),
-       (5, 170);
+       (11, 2, 163),
+       (11, 4, 149),
+       (11, 5, 170);
 
 CREATE TABLE IF NOT EXISTS faculty
 (

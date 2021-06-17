@@ -3,6 +3,7 @@ package command.applicant;
 import command.Command;
 import dao.impl.FacultyDaoImpl;
 import dao.impl.GradeDaoImpl;
+import domain.Applicant;
 import domain.Faculty;
 import domain.Grade;
 import org.apache.log4j.Logger;
@@ -26,23 +27,27 @@ public class ApplyToTheFacultyChoiceCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         logger.info("ApplyToTheFacultyChoiceCommand started");
-        String errorMessage;
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();
         String language = (String) session.getAttribute("elanguage");
+        Applicant applicant = (Applicant) session.getAttribute("applicant");
         String facultyId = request.getParameter("facultyId");
 
         if (facultyId == null) {
-            errorMessage = "FacultyId cannot be empty";
+            String errorMessage = "FacultyId cannot be empty";
             request.setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         }
 
-        Faculty faculty = new FacultyDaoImpl().readByIdForApply(Integer.parseInt(facultyId), Collections.singletonList(language == null ? localeLang : language));
+        Faculty faculty = new FacultyDaoImpl().readById(Integer.parseInt(facultyId), Collections.singletonList(language == null ? localeLang : language));
         session.setAttribute("faculty", faculty);
         logger.info("Set the session attribute:faculty --> " + faculty);
+
+        List<Grade> gradeList = new GradeDaoImpl().readApplicantGradesByFacultyId(Integer.parseInt(facultyId), applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
+        session.setAttribute("gradeList", gradeList);
+        logger.info("Set the session attribute:gradeList --> " + gradeList);
 
         logger.info("ApplyToTheFacultyChoiceCommand finished");
         return Path.APPLY_TO_THE_FACULTY;

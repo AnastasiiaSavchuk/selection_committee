@@ -93,15 +93,16 @@ public class FacultyDaoImpl implements FacultyDao {
                 facultyList.add(CREATOR.mapRow(rs));
             }
             logger.info("Received list of faculties");
+            return facultyList;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of faculties: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return facultyList;
     }
 
     @Override
@@ -119,44 +120,19 @@ public class FacultyDaoImpl implements FacultyDao {
             if (rs.next()) {
                 faculty = CREATOR.mapRow(rs);
             }
-            logger.info("Received faculty by id: " + id);
-        } catch (SQLException ex) {
-            DB_MANAGER.rollbackAndClose(connection);
-            logger.error("Failed to get faculty by id: " + ex.getMessage());
-        } finally {
-            DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
-            DB_MANAGER.close(Objects.requireNonNull(ps));
-            DB_MANAGER.close(Objects.requireNonNull(rs));
-        }
-        return faculty;
-    }
-
-    public Faculty readByIdForApply(int id, List<String> locales) {
-        Faculty faculty = null;
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = DB_MANAGER.getConnection();
-            ps = connection.prepareStatement(SQLConstants.GET_FACULTY_BY_ID);
-            ps.setInt(1, id);
-            ps.setString(2, locales.get(0));
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                faculty = CREATOR.mapRow(rs);
-            }
             List<Subject> subjectList = new SubjectDaoImpl().readSubjectsByFacultyId(Objects.requireNonNull(faculty).getId(), locales);
             faculty.setSubjectList(subjectList);
             logger.info("Received faculty by id: " + id);
+            return faculty;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get faculty by id: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return faculty;
     }
 
     @Override
@@ -174,15 +150,16 @@ public class FacultyDaoImpl implements FacultyDao {
                 faculty = CREATOR.mapRow(rs);
             }
             logger.info("Received faculty to update by id: " + id);
+            return faculty;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get faculty to update by id: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return faculty;
     }
 
     @Override

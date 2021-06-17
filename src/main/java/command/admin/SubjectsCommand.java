@@ -23,7 +23,7 @@ public class SubjectsCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("SubjectsCommand starts");
+        logger.info("SubjectsCommand started");
 
         HttpSession session = request.getSession();
         String localeLang = request.getLocale().getLanguage();

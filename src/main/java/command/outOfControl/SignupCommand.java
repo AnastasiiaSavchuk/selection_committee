@@ -5,7 +5,6 @@ import dao.impl.ApplicantDaoImpl;
 import domain.Applicant;
 import domain.enums.Role;
 import org.apache.log4j.Logger;
-import util.Helper;
 import util.Path;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ public class SignupCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("SingUpCommand starts");
+        logger.info("SingUpCommand started");
         String errorMessage;
 
         HttpSession session = request.getSession();
@@ -57,7 +56,7 @@ public class SignupCommand extends Command {
                 return Path.ERROR;
             }
 
-            Applicant applicant = new ApplicantDaoImpl().loginApplicant(email, password);
+            Applicant applicant = new ApplicantDaoImpl().signupApplicant(email, password);
             session.setAttribute("applicant", applicant);
             logger.info("Set the session attribute:applicant --> " + applicant);
 

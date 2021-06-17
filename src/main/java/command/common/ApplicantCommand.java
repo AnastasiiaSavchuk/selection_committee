@@ -36,8 +36,11 @@ public class ApplicantCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
         Applicant applicant = (Applicant) session.getAttribute("applicant");
 
+        List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicantId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
+        session.setAttribute("gradeList", gradeList);
+        logger.info("Set the session attribute:gradeList --> " + gradeList);
+
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
-        applicationList.sort(Application.COMPARE_BY_ID);
         session.setAttribute("applicationList", applicationList);
         logger.info("Set the session attribute:applicationList --> " + applicationList);
 

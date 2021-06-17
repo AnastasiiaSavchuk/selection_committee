@@ -17,7 +17,7 @@ public abstract class Command implements Serializable {
      *
      * @return Address to go once the command is executed.
      */
-    public abstract String execute(HttpServletRequest request, HttpServletResponse response);
+    public abstract Object execute(HttpServletRequest request, HttpServletResponse response);
 
     @Override
     public final String toString() {

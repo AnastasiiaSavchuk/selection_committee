@@ -15,10 +15,7 @@ import util.Path;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Get email and password from the request, compare password (SH-256) with available hash at db and check role.
@@ -32,7 +29,7 @@ public class LoginCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("SingInCommand starts");
+        logger.info("SingInCommand started");
         String errorMessage;
         String forward = Path.ERROR;
 
@@ -74,8 +71,18 @@ public class LoginCommand extends Command {
                     } else {
                         forward = Path.APPLICANT;
 
+                        List<Grade> gradeList = new GradeDaoImpl().readGradesByApplicantId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
+                        session.setAttribute("gradeList", gradeList);
+                        logger.info("Set the session attribute:gradeList --> " + gradeList);
+
+                        byte[] getCertificate = new ApplicantDaoImpl().getCertificate(applicantByEmail.getId());
+                        if (getCertificate.length > 0) {
+                            String certImage = Base64.getEncoder().encodeToString(getCertificate);
+                            session.setAttribute("certImage", certImage);
+                            logger.info("Set the session attribute:certImage --> " + certImage);
+                        }
+
                         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicantByEmail.getId(), Collections.singletonList(language == null ? localeLang : language));
-                        applicationList.sort(Application.COMPARE_BY_ID);
                         session.setAttribute("applicationList", applicationList);
                         logger.info("Set the session attribute  to applicant page:applicationList --> " + applicationList);
                     }

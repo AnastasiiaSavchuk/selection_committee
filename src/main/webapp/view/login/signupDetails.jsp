@@ -1,4 +1,5 @@
 <%@ include file="/view/includes/init.jsp" %>
+<c:set var="sList" value="${sessionScope['subjectList']}"/>
 <html>
 <head>
     <title>Signup Details</title>
@@ -30,6 +31,16 @@
             <div class="input-group mb-3"><input class="form-control" name="schoolName" type="text"
                                                  placeholder="<fmt:message key="applicant.SchoolName"/>" required/>
             </div>
+            <h4><fmt:message key="applicant.ZNOGrade"/></h4>
+            <hr>
+            <c:forEach items="${sList}" var="subject">
+                <div class="input-group mb-3">
+                    <label for="subject" class="applyLabel"><c:out value="${subject.getSubjectList().get(0)}"/></label>
+                    <input type="hidden" name="subjectId" value="${subject.getId()}"/>
+                    <input type="text" class="applyLabel" name="grade" id="subject" min="0" max="200"
+                           placeholder="<fmt:message key="application.YourZNOGrade"/>" required/>
+                </div>
+            </c:forEach>
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="signup.Signup"/></button>
             </div>

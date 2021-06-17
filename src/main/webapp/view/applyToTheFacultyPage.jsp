@@ -1,5 +1,6 @@
 <%@ include file="/view/includes/init.jsp" %>
 <c:set var="faculty" value="${sessionScope['faculty']}"/>
+<c:set var="gList" value="${sessionScope['gradeList']}"/>
 <html>
 <head>
     <title>Apply to the faculty</title>
@@ -17,14 +18,13 @@
             <h2><fmt:message key="application.Apply"/> : </h2>
             <h4><c:out value="${faculty.getFacultyList().get(0)}"/></h4>
             <hr>
-            <c:forEach items="${faculty.getSubjectList()}" var="subject">
-                <div class="input-group mb-3">
-                    <label for="subject" class="applyLabel"><c:out value="${subject.getSubjectList().get(0)}"/></label>
-                    <input type="hidden" name="subjectId" value="${subject.getId()}"/>
-                    <input type="text" class="applyLabel" name="grade" id="subject" min="0" max="200"
-                           placeholder="<fmt:message key="application.YourZNOGrade"/>" required/>
-                </div>
-            </c:forEach>
+            <div class="input-group mb-3">
+                <c:forEach items="${gList}" var="grade">
+                    <label class="applyLabel"><c:out value="${grade.getSubject().getSubjectList().get(0)}"/></label>
+                    <label class="applyLabel"><c:out value="${grade.getGrade()}"/></label>
+                </c:forEach>
+            </div>
+
             <div class="text-center">
                 <button type="submit" class="btn btn-customized"><fmt:message key="save.Save"/></button>
                 <a href="${pageContext.request.contextPath}/controller?command=applicantPage">

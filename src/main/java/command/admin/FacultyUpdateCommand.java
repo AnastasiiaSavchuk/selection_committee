@@ -24,7 +24,7 @@ public class FacultyUpdateCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("FacultyUpdateCommand starts");
+        logger.info("FacultyUpdateCommand started");
         String errorMessage;
 
         HttpSession session = request.getSession();

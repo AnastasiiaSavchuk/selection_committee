@@ -18,7 +18,7 @@ public class NoCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("Command starts");
+        logger.info("Command started");
 
         String errorMessage = "No such command";
         request.setAttribute("errorMessage", errorMessage);

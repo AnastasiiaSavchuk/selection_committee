@@ -20,7 +20,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     private static final ApplicantCreator CREATOR = new ApplicantCreator();
 
     @Override
-    public Applicant loginApplicant(String email, String password) {
+    public Applicant signupApplicant(String email, String password) {
         Applicant applicant = null;
         Connection connection = null;
         PreparedStatement ps = null;
@@ -36,18 +36,19 @@ public class ApplicantDaoImpl implements ApplicantDao {
                         applicant.setId(generatedKeys.getInt(1));
                         applicant.setEmail(email);
                         applicant.setRole(Role.USER);
-                        logger.info("Inserted applicant with login: " + email);
                     }
                 }
             }
+            logger.info("Inserted applicant with login: " + email);
+            return applicant;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to insert applicant: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
         }
-        return applicant;
     }
 
     @Override
@@ -99,15 +100,16 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 applicantList.add(CREATOR.mapRow(rs));
             }
             logger.info("Received list of applicants");
+            return applicantList;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of applicants: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return applicantList;
     }
 
     @Override
@@ -125,15 +127,16 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 applicant = CREATOR.mapRow(rs);
             }
             logger.info("Received applicant by id: " + id);
+            return applicant;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get applicant by id: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return applicant;
     }
 
     public byte[] getCertificate(int applicantId) {
@@ -184,15 +187,16 @@ public class ApplicantDaoImpl implements ApplicantDao {
                 applicant.setRole(Role.valueOf(rs.getString(SQLFields.USER_ROLE)));
             }
             logger.info("Received applicant by login: " + email);
+            return applicant;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get applicant by login: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return applicant;
     }
 
     @Override

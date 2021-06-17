@@ -3,6 +3,10 @@
 }
 
 .entityData {
+    width: 500px !important;
+    float: left;
+}
+.entityData_1{
     width: 700px !important;
     float: left;
 }

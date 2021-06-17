@@ -19,7 +19,7 @@ public class SetLanguageCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        logger.info("LanguageSetCommand starts");
+        logger.info("LanguageSetCommand started");
 
         HttpSession session = request.getSession();
         String locale = request.getParameter("language");

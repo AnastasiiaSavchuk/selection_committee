@@ -76,22 +76,17 @@ public class ApplicationDaoImpl implements ApplicationDao {
             while (rs.next()) {
                 applicationList.add(CREATOR.mapRow(rs));
             }
-
-            if (applicationList.size() > 0) {
-                for (Application application : applicationList) {
-                    application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
-                }
-            }
-            logger.info("Received list of application by userId: " + userId);
+            logger.info("Received list of application by userId");
+            return applicationList;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of application by userId: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return applicationList;
     }
 
     @Override
@@ -113,22 +108,17 @@ public class ApplicationDaoImpl implements ApplicationDao {
             while (rs.next()) {
                 applicationList.add(CREATOR.mapRow(rs));
             }
-
-            if (applicationList.size() > 0) {
-                for (Application application : applicationList) {
-                    application.setGradeList(new GradeDaoImpl().readGradesByApplicationId(application.getId(), locales));
-                }
-            }
-            logger.info("Received list of application by facultyId: " + facultyId);
+            logger.info("Received list of application by facultyId");
+            return applicationList;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get list of application by facultyId: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return applicationList;
     }
 
     @Override
@@ -147,15 +137,16 @@ public class ApplicationDaoImpl implements ApplicationDao {
                 application = CREATOR.mapRow(rs);
             }
             logger.info("Received application by id: " + id);
+            return application;
         } catch (SQLException ex) {
             DB_MANAGER.rollbackAndClose(connection);
             logger.error("Failed to get application by id: " + ex.getMessage());
+            return null;
         } finally {
             DB_MANAGER.commitAndClose(Objects.requireNonNull(connection));
             DB_MANAGER.close(Objects.requireNonNull(ps));
             DB_MANAGER.close(Objects.requireNonNull(rs));
         }
-        return application;
     }
 
     @Override

@@ -16,12 +16,18 @@
 <%@ include file="includes/header.jsp" %>
 
 <div class="container">
-    <div class="entityData">
+    <div class="entityData_1">
         <h3><c:out value="${faculty.getFacultyList().get(0)}"/></h3>
         <hr>
         <h5><fmt:message key="faculty.TotalPlaces"/> : <c:out value="${faculty.getTotalQty()}"/></h5>
         <h5><fmt:message key="faculty.BudgetPlaces"/> : <c:out value="${faculty.getBudgetQty()}"/></h5>
         <h5><fmt:message key="faculty.AveragePassingGrade"/> : <c:out value="${faculty.getAveragePassingGrade()}"/></h5>
+        <hr>
+        <h2><fmt:message key="subject.Subjects"/></h2>
+        <c:forEach items="${sList}" var="subject">
+            <h5>${subject.getSubjectList().get(0)} : ${subject.getPassingGrade()}</h5>
+        </c:forEach>
+
     </div>
 
     <div class="align-right">
@@ -30,12 +36,7 @@
                 <button class="button" type="button"><fmt:message key="return.Return"/></button>
             </a>
         </div>
-        <div class="inRow">
-            <button class="button" type="button" onclick="getSubjects(this)">
-                <fmt:message key="faculty.DisplaySubjects"/></button>
-        </div>
         <c:if test="${not empty role}">
-
             <c:choose>
                 <c:when test="${role == 'ADMIN'}">
                     <c:choose>
@@ -106,34 +107,6 @@
                 </c:when>
             </c:choose>
         </c:if>
-    </div>
-
-    <div id="subjects" style="display:none">
-        <div class="panel-table">
-            <div class="panel-heading">
-                <div class="panel-body">
-                    <h2 style="text-align: center"><fmt:message key="subject.Subjects"/></h2>
-                    <table class="table table-striped table-bordered table-list sortable">
-                        <thead>
-                        <tr>
-                            <th class="hidden-xs">№</th>
-                            <th><fmt:message key="subject.Subject"/></th>
-                            <th><fmt:message key="subject.PassingGrade"/></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${sList}" var="subject" varStatus="loop">
-                            <tr>
-                                <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
-                                <td class="td-to-align"><c:out value="${subject.getSubjectList().get(0)}"/></td>
-                                <td class="td-to-align"><c:out value="${subject.getPassingGrade()}"/></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 
     <c:if test="${role == 'ADMIN'}">

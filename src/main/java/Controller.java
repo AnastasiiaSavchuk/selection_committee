@@ -42,7 +42,7 @@ public class Controller extends HttpServlet {
         logger.trace("Obtained command --> " + command);
 
         // execute command and get forward address
-        String forward = command.execute(request, response);
+        String forward = (String) command.execute(request, response);
         logger.trace("Forward address --> " + forward);
 
         logger.info("Controller finished, now go to forward address --> " + forward);
