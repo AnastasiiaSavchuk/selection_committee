@@ -51,7 +51,6 @@ public class ApplicantByIdCommand extends Command {
         }
 
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(applicant.getId(), Collections.singletonList(language == null ? localeLang : language));
-        applicationList.sort(Application.COMPARE_BY_ID);
         session.setAttribute("applicationList", applicationList);
         logger.info("Set the session attribute:applicationList --> " + applicationList);
 

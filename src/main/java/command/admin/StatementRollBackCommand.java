@@ -32,8 +32,7 @@ public class StatementRollBackCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
         Faculty faculty = (Faculty) session.getAttribute("faculty");
 
-        List<Application> applicationList = new ApplicationDaoImpl().readApplicationByFacultyId(faculty.getId(),
-                Collections.singletonList(language == null ? localeLang : language));
+        List<Application> applicationList = new ApplicationDaoImpl().readApplicationByFacultyId(faculty.getId(), Collections.singletonList(language == null ? localeLang : language));
 
         new StatementDaoImpl().rollbackApplicationStatusToInitial(applicationList);
 

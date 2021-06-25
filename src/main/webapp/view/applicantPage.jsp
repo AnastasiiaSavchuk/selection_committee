@@ -70,13 +70,6 @@
     </div>
 
     <div class="align-right">
-        <c:if test="${role == 'ADMIN'}">
-            <div class="inRow">
-                <a href="${pageContext.request.contextPath}/controller?command=adminPage">
-                    <button class="button" type="button"><fmt:message key="return.Return"/></button>
-                </a>
-            </div>
-        </c:if>
         <c:if test="${role == 'USER'}">
             <c:choose>
                 <c:when test="${applicant.isBlocked() == true}">
@@ -118,36 +111,44 @@
                     <tbody>
                     <c:forEach items="${aList}" var="application" varStatus="loop">
                         <tr>
-                            <td class="td-to-align">${loop.index + 1}</td>
-                            <td class="td-to-align">${application.getFaculty().getFacultyList().get(0)}</td>
-                            <td class="td-to-align">${application.getSumOfGrades()}</td>
-                            <td class="td-to-align">${application.getAverageGrade()}</td>
-                            <td align="center">
-                                <c:if test="${not empty application.getApplicationStatus()}">
-                                    <c:choose>
-                                        <c:when test="${application.getApplicationStatus() == 'IN_PROCESSING'}">
+                            <td>${loop.index + 1}</td>
+                            <td>${application.getFaculty().getFacultyList().get(0)}</td>
+                            <td>${application.getSumOfGrades()}</td>
+                            <td>${application.getAverageGrade()}</td>
+                            <c:if test="${not empty application.getApplicationStatus()}">
+                                <c:choose>
+                                    <c:when test="${application.getApplicationStatus() == 'IN_PROCESSING'}">
+                                        <td>
                                             <button disabled class="btn btn-info">
                                                 <fmt:message key="application.IN_PROCESSING"/></button>
-                                        </c:when>
-                                        <c:when test="${application.getApplicationStatus() == 'BLOCKED'}">
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${application.getApplicationStatus() == 'BLOCKED'}">
+                                        <td>
                                             <button disabled class="btn btn-danger">
                                                 <fmt:message key="application.Blocked"/></button>
-                                        </c:when>
-                                        <c:when test="${application.getApplicationStatus() == 'REJECTED'}">
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${application.getApplicationStatus() == 'REJECTED'}">
+                                        <td>
                                             <button disabled class="btn btn-danger">
                                                 <fmt:message key="application.REJECTED"/></button>
-                                        </c:when>
-                                        <c:when test="${application.getApplicationStatus() == 'BUDGET_APPROVED'}">
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${application.getApplicationStatus() == 'BUDGET_APPROVED'}">
+                                        <td>
                                             <button disabled class="btn btn-success">
                                                 <fmt:message key="application.BUDGET_APPROVED"/></button>
-                                        </c:when>
-                                        <c:when test="${application.getApplicationStatus() == 'CONTRACT_APPROVED'}">
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${application.getApplicationStatus() == 'CONTRACT_APPROVED'}">
+                                        <td>
                                             <button disabled class="btn btn-warning">
                                                 <fmt:message key="application.CONTRACT_APPROVED"/></button>
-                                        </c:when>
-                                    </c:choose>
-                                </c:if>
-                            </td>
+                                        </td>
+                                    </c:when>
+                                </c:choose>
+                            </c:if>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -156,8 +157,5 @@
         </div>
     </div>
 </div>
-<script>
-    <%@include file="../js/applicant.js" %>
-</script>
 </body>
 </html>

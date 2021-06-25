@@ -39,8 +39,8 @@
                         <tr>
                             <td>${loop.index + 1}</td>
                             <td><c:out value="${subject.getSubjectList().get(0)}"/></td>
-                            <td class="td-to-align"><c:out value="${subject.getPassingGrade()}"/></td>
-                            <td align="center" class="tdWidth">
+                            <td><c:out value="${subject.getPassingGrade()}"/></td>
+                            <td class="tdWidth">
                                 <form method="post" action="controller">
                                     <input type="hidden" name="command" value="subjectUpdate"/>
                                     <input type="hidden" name="subjectIdToUpdate"
@@ -48,7 +48,7 @@
                                     <button class="tdButton"><fmt:message key="update.Update"/></button>
                                 </form>
                             </td>
-                            <td align="center" class="tdWidth">
+                            <td class="tdWidth">
                                 <form method="post" action="controller">
                                     <input type="hidden" name="command" value="subjectDelete"/>
                                     <input type="hidden" name="subjectIdToDelete"

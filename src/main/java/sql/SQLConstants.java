@@ -10,7 +10,7 @@ public class SQLConstants {
             "a.middle_name, a.last_name, a.city, a.region, a.school_name, a.is_blocked " +
             "FROM applicant a " +
             "INNER JOIN user u ON a.user_id = u.id " +
-            "INNER JOIN role r ON u.role_id = r.id";
+            "INNER JOIN role r ON u.role_id = r.id ORDER BY a.user_id";
     public static final String GET_APPLICANT_BY_ID = "SELECT a.user_id, u.email, u.password, u.role_id, r.role, a.first_name, " +
             "a.middle_name, a.last_name, a.city, a.region, a.school_name, a.is_blocked " +
             "FROM user u " +
@@ -40,14 +40,14 @@ public class SQLConstants {
             "FROM subject s " +
             "INNER JOIN subject_translation st ON s.id = st.subject_id " +
             "INNER JOIN language l ON l.id = st.language_id " +
-            "WHERE l.lang_code = ?";
+            "WHERE l.lang_code = ? ORDER BY s.id";
     public static final String GET_SUBJECTS_BY_FACULTY_ID = "SELECT s.id, s.passing_grade, st.subject " +
             "FROM subject s " +
             "INNER JOIN faculty_subject fs on s.id = fs.subject_id " +
             "INNER JOIN faculty f ON f.id = fs.faculty_id " +
             "INNER JOIN subject_translation st ON s.id = st.subject_id " +
             "INNER JOIN language l ON l.id = st.language_id " +
-            "WHERE f.id = ? AND l.lang_code = ?";
+            "WHERE f.id = ? AND l.lang_code = ? ORDER BY s.id";
     public static final String GET_SUBJECT_BY_ID = "SELECT s.id, s.passing_grade, st.subject " +
             "FROM subject s " +
             "INNER JOIN subject_translation st ON s.id = st.subject_id " +
@@ -83,7 +83,7 @@ public class SQLConstants {
             "FROM faculty f " +
             "INNER JOIN faculty_translation ft on f.id = ft.faculty_id " +
             "INNER JOIN language l ON ft.language_id = l.id " +
-            "WHERE l.lang_code = ?";
+            "WHERE l.lang_code = ? ORDER BY f.id";
     public static final String UPDATE_FACULTY = "UPDATE faculty SET  budget_qty = ?, total_qty = ? WHERE id = ?";
     public static final String UPDATE_FACULTY_TRANSLATION = "UPDATE faculty_translation SET faculty = ? " +
             "WHERE faculty_id = ? AND language_id = ?";
@@ -138,6 +138,6 @@ public class SQLConstants {
             "INNER JOIN language l ON l.id = st.language_id " +
             "WHERE f.id = ? " +
             "AND g.applicant_id = ? " +
-            "AND l.lang_code = ?";
+            "AND l.lang_code = ? ORDER BY g.id";
     public static final String DELETE_GRADE = "DELETE FROM grade WHERE id = ?";
 }

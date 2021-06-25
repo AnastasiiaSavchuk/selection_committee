@@ -38,8 +38,6 @@ public class SignupChoiceCommand extends Command {
             logger.error("errorMessage --> " + errorMessage);
             return Path.ERROR;
         }
-
-        subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
         logger.info("Set the session attribute:subjectList --> " + subjectList);
 

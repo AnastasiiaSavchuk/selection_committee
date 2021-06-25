@@ -57,7 +57,6 @@ public class SubjectCreateCommand extends Command {
             logger.info("Set the request attribute:subject --> " + newSubject);
 
             List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-            subjectList.sort(Subject.COMPARE_BY_ID);
             session.setAttribute("subjectList", subjectList);
 
             logger.info("SubjectCreateCommand finished");

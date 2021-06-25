@@ -105,7 +105,7 @@ $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function () {
 //pagination
 $(document).ready(function () {
     $('#pagination').after('<div id="nav"></div>');
-    let rowsShown = 10;
+    let rowsShown = 7;
     let rowsTotal = $('#pagination tbody tr').length;
     let numPages = rowsTotal / rowsShown;
     if (rowsTotal > rowsShown) {

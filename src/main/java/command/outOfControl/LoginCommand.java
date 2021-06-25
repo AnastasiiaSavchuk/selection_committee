@@ -65,7 +65,6 @@ public class LoginCommand extends Command {
                     if (applicantRole == Role.ADMIN) {
                         forward = Path.ADMIN;
                         List<Applicant> applicantList = new ApplicantDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-                        applicantList.sort(Applicant.COMPARE_BY_ID);
                         session.setAttribute("applicantList", applicantList);
                         logger.info("Set the session attribute for admin page:applicant --> " + applicantList);
                     } else {

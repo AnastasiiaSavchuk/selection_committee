@@ -54,7 +54,6 @@ public class FacultyByIdCommand extends Command {
         logger.info("Set the session attribute:faculty --> " + faculty);
 
         List<Application> applicationList = new ApplicationDaoImpl().readApplicationByFacultyId(Integer.parseInt(facultyId), Collections.singletonList(language == null ? localeLang : language));
-        applicationList.sort(Application.COMPARE_BY_ID);
         session.setAttribute("applicationList", applicationList);
         logger.info("Set the session attribute:applicationList --> " + applicationList);
 

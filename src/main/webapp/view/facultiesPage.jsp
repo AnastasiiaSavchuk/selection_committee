@@ -40,8 +40,8 @@
                     <tbody>
                     <c:forEach items="${fList}" var="faculty" varStatus="loop">
                     <tr>
-                        <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
-                        <td class="td-to-align">
+                        <td><c:out value="${loop.index + 1}"/></td>
+                        <td>
                             <form method="post" action="controller">
                                 <input type="hidden" name="command" value="getFacultyById"/>
                                 <input type="hidden" name="facultyId"
@@ -52,7 +52,7 @@
                         <td class="td-to-align"><c:out value="${faculty.getTotalQty()}"/></td>
                         <td class="td-to-align"><c:out value="${faculty.getBudgetQty()}"/></td>
                         <c:if test="${role == 'ADMIN'}">
-                        <td align="center" class="tdWidth">
+                        <td class="tdWidth">
                             <form method="post" action="controller">
                                 <input type="hidden" name="command" value="facultyUpdate"/>
                                 <input type="hidden" name="facultyIdToUpdate"
@@ -60,7 +60,7 @@
                                 <button class="tdButton"><fmt:message key="update.Update"/></button>
                             </form>
                         </td>
-                        <td align="center" class="tdWidth">
+                        <td class="tdWidth">
                             <form method="post" action="controller">
                                 <input type="hidden" name="command" value="facultyDelete"/>
                                 <input type="hidden" name="facultyIdToDelete"

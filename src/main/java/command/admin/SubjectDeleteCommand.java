@@ -31,13 +31,6 @@ public class SubjectDeleteCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
         String subjectIdToDelete = request.getParameter("subjectIdToDelete");
 
-        if (subjectIdToDelete.isEmpty()) {
-            errorMessage = "SubjectId cannot be empty";
-            request.setAttribute("errorMessage", errorMessage);
-            logger.error("errorMessage --> " + errorMessage);
-            return Path.ERROR;
-        }
-
         boolean isDeleted = new SubjectDaoImpl().delete(Integer.parseInt(subjectIdToDelete));
         if (!isDeleted) {
             errorMessage = "Unable to delete subject!";
@@ -47,7 +40,6 @@ public class SubjectDeleteCommand extends Command {
         }
 
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-        subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
 
         logger.debug("SubjectDeleteCommand finished");

@@ -16,7 +16,7 @@
 <header id="header">
     <a href="${pageContext.request.contextPath}/index.jsp">
         <div class="pull-left">
-            <h1 class="scrollto"><fmt:message key="title.Title"/></h1></div>
+            <h2 class="scrollto"><fmt:message key="title.Title"/></h2></div>
     </a>
     <nav id="nav-menu-container">
         <div class="nav-menu">

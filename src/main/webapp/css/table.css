@@ -6,12 +6,14 @@
     width: 500px !important;
     float: left;
 }
-.entityData_1{
+
+.entityData_1 {
     width: 700px !important;
     float: left;
 }
 
 .container h2 {
+    margin-bottom: 20px;
     color: #262626;
 }
 
@@ -30,7 +32,7 @@
 }
 
 .container .button {
-    margin: 5px 0;
+    margin-bottom: 20px;
     width: 250px;
     height: 40px;
     border-color: #334d4d;
@@ -41,12 +43,12 @@
 }
 
 .container .buttonChose {
+    margin-top: 15px !important;
     text-align: left !important;
     border: none !important;
     width: 100%;
     border-radius: 5px;
     outline: none;
-    vertical-align: middle;
     cursor: pointer;
 }
 
@@ -56,6 +58,7 @@
 }
 
 .container .tdButton {
+    margin: 15px 0 0 !important;
     width: 100px;
     height: 40px;
     border-color: #334d4d;
@@ -66,8 +69,8 @@
 }
 
 .container .tdButton:hover, .container .button:hover, .container .buttonChose:hover {
-    background-color: #334d4d;
-    border-color: #334d4d;
+    background-color: #75a3a3;
+    border-color: #75a3a3;
     color: white;
     outline: none;
     transition: background-color 1s ease;
@@ -88,13 +91,16 @@
     margin: 0;
 }
 
-.panel-table .panel-body .table-bordered > thead > tr > th {
+.panel-table .panel-body .table-bordered > thead > tr > th,
+.panel-table .panel-body .table-bordered > thead > tr > td {
+    vertical-align: middle !important;
     text-align: center !important;
 }
 
-.panel-table .panel-body .table-bordered > thead > tr > th:first-of-type {
-    text-align: center;
-    vertical-align: middle;
+.panel-table .panel-body .table-bordered > thead > tr > th:first-of-type,
+.panel-table .panel-body .table-bordered > tbody > tr > td:last-of-type {
+    text-align: center !important;
+    vertical-align: middle !important;
     width: 100px;
 }
 

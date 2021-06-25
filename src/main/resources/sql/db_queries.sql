@@ -28,7 +28,8 @@ SELECT a.user_id,
        a.is_blocked
 FROM applicant a
          INNER JOIN user u ON a.user_id = u.id
-         INNER JOIN role r ON u.role_id = r.id;
+         INNER JOIN role r ON u.role_id = r.id
+ORDER BY a.user_id;
 
 # GET_APPLICANT_BY_ID
 SELECT u.id,
@@ -104,7 +105,8 @@ SELECT s.id, s.passing_grade, st.subject
 FROM subject s
          INNER JOIN subject_translation st ON s.id = st.subject_id
          INNER JOIN language l ON l.id = st.language_id
-WHERE l.lang_code = 'uk';
+WHERE l.lang_code = 'uk'
+ORDER BY s.id;
 
 # GET_SUBJECTS_BY_FACULTY_ID
 SELECT s.id, s.passing_grade, st.subject
@@ -114,7 +116,8 @@ FROM subject s
          INNER JOIN subject_translation st ON s.id = st.subject_id
          INNER JOIN language l ON l.id = st.language_id
 WHERE f.id = 1
-  AND l.lang_code = 'uk';
+  AND l.lang_code = 'uk'
+ORDER BY s.id;
 
 # GET_SUBJECT_BY_ID
 SELECT s.id, s.passing_grade, st.subject
@@ -189,7 +192,8 @@ SELECT f.id, f.average_passing_grade, f.budget_qty, f.total_qty, ft.faculty
 FROM faculty f
          INNER JOIN faculty_translation ft on f.id = ft.faculty_id
          INNER JOIN language l ON ft.language_id = l.id
-WHERE l.lang_code = 'uk';
+WHERE l.lang_code = 'uk'
+ORDER BY f.id;
 
 # UPDATE_FACULTY
 UPDATE faculty
@@ -320,7 +324,7 @@ INSERT INTO application_grade(application_id, grade_id)
 VALUES (24, 41);
 
 # GET_GRADES_BY_APPLICANT_ID
-SELECT g.id as grade_id, s.id as subject_id, st.subject, s.passing_grade, g.grade
+SELECT g.id, s.id, st.subject, s.passing_grade, g.grade
 FROM grade g
          INNER JOIN subject s ON s.id = g.subject_id
          INNER JOIN subject_translation st ON st.subject_id = s.id
@@ -331,7 +335,7 @@ ORDER BY s.id;
 
 
 # GET_APPLICANT_GRADE_BY_FACULTY_ID
-SELECT g.id as grade_id, s.id as subject_id, st.subject, s.passing_grade, g.grade
+SELECT g.id, s.id, st.subject, s.passing_grade, g.grade
 FROM grade g
          INNER JOIN subject s ON s.id = g.subject_id
          INNER JOIN subject_translation st ON st.subject_id = s.id
@@ -340,7 +344,8 @@ FROM grade g
          INNER JOIN language l ON l.id = st.language_id
 WHERE f.id = 1
   AND g.applicant_id = 2
-  AND l.lang_code = 'uk';
+  AND l.lang_code = 'uk'
+ORDER BY g.id;
 
 # DELETE_GRADE 
 DELETE

@@ -72,7 +72,6 @@ public class FacultyUpdateCommand extends Command {
         }
 
         List<Faculty> facultyList = new FacultyDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-        facultyList.sort(Faculty.COMPARE_BY_ID);
         session.setAttribute("facultyList", facultyList);
 
         logger.info("UpdateFacultyCommand finished");

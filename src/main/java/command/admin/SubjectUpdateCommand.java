@@ -65,7 +65,6 @@ public class SubjectUpdateCommand extends Command {
         }
 
         List<Subject> subjectList = new SubjectDaoImpl().readAll(Collections.singletonList(language == null ? localeLang : language));
-        subjectList.sort(Subject.COMPARE_BY_ID);
         session.setAttribute("subjectList", subjectList);
 
         logger.info("SubjectUpdateCommand finished");

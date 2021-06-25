@@ -85,7 +85,6 @@ public class ApplicantUpdateCommand extends Command {
             logger.info("Set the session attribute:applicant --> " + updated);
 
             List<Application> applicationList = new ApplicationDaoImpl().readApplicationsByUserId(updated.getId(), Collections.singletonList(language == null ? localeLang : language));
-            applicationList.sort(Application.COMPARE_BY_ID);
             session.setAttribute("applicationList", applicationList);
 
             logger.info("ApplicantUpdateCommand finished");

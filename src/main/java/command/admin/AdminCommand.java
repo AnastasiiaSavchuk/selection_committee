@@ -32,7 +32,6 @@ public class AdminCommand extends Command {
         String language = (String) session.getAttribute("elanguage");
 
         List<Applicant> applicantList = APPLICANT_DAO.readAll(Collections.singletonList(language == null ? localeLang : language));
-        applicantList.sort(Applicant.COMPARE_BY_ID);
         session.setAttribute("applicantList", applicantList);
         logger.info("Set the session attribute to admin page:applicantList --> " + applicantList);
 

@@ -27,8 +27,8 @@
                     <tbody>
                     <c:forEach items="${aList}" var="applicant" varStatus="loop">
                         <tr>
-                            <td class="td-to-align"><c:out value="${loop.index + 1}"/></td>
-                            <td class="td-to-align">
+                            <td><c:out value="${loop.index + 1}"/></td>
+                            <td>
                                 <form method="post" action="controller">
                                     <input type="hidden" name="command" value="getApplicantById"/>
                                     <input type="hidden" name="applicantId"
@@ -38,22 +38,19 @@
                                             value="${applicant.getMiddleName()}"/>
                                     </button>
                                 </form>
-                            <td class="td-to-align"><c:out value="${applicant.getCity()}"/></td>
-                            <c:if test="${not empty applicant.isBlocked()}">
-                                <c:choose>
-                                    <c:when test="${applicant.isBlocked() == true}">
-                                        <td align="center">
-                                            <button disabled class="btn btn-danger">
-                                                <fmt:message key="applicant.Blocked"/></button>
-                                        </td>
-                                    </c:when>
-                                    <c:when test="${applicant.isBlocked() == false}">
-                                        <td align="center">
-                                            <button disabled class="btn btn-success">
-                                                <fmt:message key="applicant.Active"/></button>
-                                        </td>
-                                    </c:when>
-                                </c:choose>
+                            </td>
+                            <td><c:out value="${applicant.getCity()}"/></td>
+                            <c:if test="${applicant.isBlocked() == true}">
+                                <td>
+                                    <button disabled class="btn btn-danger">
+                                        <fmt:message key="applicant.Blocked"/></button>
+                                </td>
+                            </c:if>
+                            <c:if test="${applicant.isBlocked() == false}">
+                                <td>
+                                    <button disabled class="btn btn-success">
+                                        <fmt:message key="applicant.Active"/></button>
+                                </td>
                             </c:if>
                         </tr>
                     </c:forEach>
